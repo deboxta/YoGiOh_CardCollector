@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">YOGIOH</string>
+    <string name="deck_title_text">Your Deck</string>
 </resources>
