@@ -3,7 +3,6 @@
     package="ca.csf.mobile1.yogioh">
 
     <uses-permission android:name="android.permission.NFC" />
-    <uses-sdk android:minSdkVersion="10" />
 
     <application
         android:allowBackup="true"
