@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -33,10 +35,13 @@ public class MainActivity extends AppCompatActivity
 
 //        myDeck = findViewById(R.id.myDeck);
 
-        myDeck.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        myDeck.setLayoutManager(layoutManager);
+//        myDeck.setHasFixedSize(true);
+//        layoutManager = new LinearLayoutManager(this);
+//        myDeck.setLayoutManager(layoutManager);
 
+        Intent intent = new Intent(this, BeamActivity.class);
+        intent.putExtra("EXTRA_ID", "15");
+        startActivity(intent);
 
     }
 

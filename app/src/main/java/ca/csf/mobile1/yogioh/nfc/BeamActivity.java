@@ -7,6 +7,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,16 +21,16 @@ public class BeamActivity extends AppCompatActivity implements NfcAdapter.Create
     private String idGivenCard;
     private NdefMessage msg;
     private NfcAdapter nfcAdapter;
-    private TextView idShower;
-    private Button buttonBeam;
+    private TextView idView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beam);
 
-        idShower = findViewById(R.id.textView);
-        buttonBeam = findViewById(R.id.button);
+        idGivenCard = getIntent().getStringExtra("EXTRA_ID");
+
+        idView = findViewById(R.id.textView);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null){
@@ -37,13 +38,16 @@ public class BeamActivity extends AppCompatActivity implements NfcAdapter.Create
             finish();
             return;
         }
+        if (!nfcAdapter.isEnabled()) {
+            Toast.makeText(this, "Enable NFC via settings", Toast.LENGTH_LONG).show();
+        }
+
         nfcAdapter.setNdefPushMessageCallback(this,this);
     }
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        idGivenCard = "15";
-        msg = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "application/com.example.android.beam", idGivenCard.getBytes())});
+        msg = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "text/plain", idGivenCard.getBytes())});
 
         return msg;
     }
@@ -59,12 +63,12 @@ public class BeamActivity extends AppCompatActivity implements NfcAdapter.Create
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     void processIntentData(Intent intent){
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         msg = (NdefMessage) rawMsgs[0];
-        idShower.setText(new String(msg.getRecords()[0].getPayload()));
+        idView.setText(new String(msg.getRecords()[0].getPayload()));
     }
 }

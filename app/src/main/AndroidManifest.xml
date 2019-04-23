@@ -4,6 +4,10 @@
     package="ca.csf.mobile1.yogioh">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true"
+    />
 
     <application
         android:allowBackup="true"
@@ -23,7 +27,7 @@
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/vnd.com.example.android.beam"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
