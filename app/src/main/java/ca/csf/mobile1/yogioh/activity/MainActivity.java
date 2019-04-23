@@ -5,6 +5,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,6 +15,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.repository.database.Database;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Database db = Room.databaseBuilder(getApplicationContext(), Database.class, "database-name").build();
+        db.yugiohDAO().insertAll();
 
         //myDeck = findViewById(R.id.myDeck);
 
