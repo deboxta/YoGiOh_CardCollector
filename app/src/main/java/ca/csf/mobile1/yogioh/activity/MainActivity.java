@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myDeck = findViewById(R.id.myDeck);
+        //myDeck = findViewById(R.id.myDeck);
 
-        myDeck.setHasFixedSize(true);
+        //myDeck.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        myDeck.setLayoutManager(layoutManager);
+        //myDeck.setLayoutManager(layoutManager);
     }
 
     private void notificationBuild()

@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.sql.Blob;
-
 @Entity
 public class YugiohCard
 {
@@ -27,8 +25,8 @@ public class YugiohCard
     @ColumnInfo(name = "nb_Stars")
     public int nbStars;
 
-    @ColumnInfo(name = "card_picture")
-    public Blob cardPicture;
+    @ColumnInfo(name = "card_picture", typeAffinity = ColumnInfo.BLOB)
+    public byte[] cardPicture;
 
     @ColumnInfo(name = "description")
     public String cardDescription;
