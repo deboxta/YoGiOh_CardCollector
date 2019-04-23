@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.repository.database.Database;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
@@ -38,16 +39,16 @@ public class MainActivity extends AppCompatActivity
 
         Database db = Room.databaseBuilder(getApplicationContext(), Database.class, "database-name").build();
 
-        //myDeck = findViewById(R.id.myDeck);
-
-        //myDeck.setHasFixedSize(true);
+        myDeck = findViewById(R.id.myDeck);
+        myDeck.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        //myDeck.setLayoutManager(layoutManager);
+        myDeck.setLayoutManager(layoutManager);
+        deckAdapter = new DeckAdapter(this);
+        myDeck.setAdapter(deckAdapter);
 
         Intent intent = new Intent(this, BeamActivity.class);
         intent.putExtra("EXTRA_ID", "15");
         startActivity(intent);
-
     }
 
     private void notificationBuild()
