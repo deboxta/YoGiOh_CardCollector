@@ -5,6 +5,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.repository.database.Database;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
 import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -33,11 +36,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        myDeck = findViewById(R.id.myDeck);
+        Database db = Room.databaseBuilder(getApplicationContext(), Database.class, "database-name").build();
+        db.yugiohDAO().insertAll();
 
-//        myDeck.setHasFixedSize(true);
-//        layoutManager = new LinearLayoutManager(this);
-//        myDeck.setLayoutManager(layoutManager);
+        //myDeck = findViewById(R.id.myDeck);
+
+        //myDeck.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        //myDeck.setLayoutManager(layoutManager);
 
         Intent intent = new Intent(this, BeamActivity.class);
         intent.putExtra("EXTRA_ID", "15");
