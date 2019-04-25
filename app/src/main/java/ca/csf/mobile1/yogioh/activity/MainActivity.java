@@ -1,35 +1,33 @@
 package ca.csf.mobile1.yogioh.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.app.Notification;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.repository.database.Database;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
-import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
 {
+    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 24000;
     private RecyclerView myDeck;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public static final String CHANNEL_ID = "channel";
-    private NotificationManagerCompat notificationManagerCompat;
-    Notification notification;
+    private PendingIntent pendingNotificationIntent;
+    private AlarmManager notificationAlarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,42 +44,42 @@ public class MainActivity extends AppCompatActivity
         deckAdapter = new DeckAdapter(this);
         myDeck.setAdapter(deckAdapter);
 
-        Intent intent = new Intent(this, BeamActivity.class);
-        intent.putExtra("EXTRA_ID", "15");
-        startActivity(intent);
+        createNotificationChannel();
+        createPendingNotificationIntent();
+        notificationAlarmSetup();
     }
 
-    private void notificationBuild()
+    private void notificationAlarmSetup()
     {
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Une notification")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
+        notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_TIME_TRIGGER_IN_MILLIS, pendingNotificationIntent);
     }
 
-    private void sendNotification(View view)
+    private void createPendingNotificationIntent()
     {
-        notificationManagerCompat.notify(2, notification);
+        Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
+        notificationIntent.putExtra("NotificationText", "some text");
+        pendingNotificationIntent = PendingIntent.getBroadcast(this, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private void createNotification()
+    private void createNotificationChannel()
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O )
         {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Channel",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-
-            channel.setDescription("This is a notification");
-            channel.shouldVibrate();
-
             NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            if (manager.getNotificationChannel(CHANNEL_ID) == null)
+            {
+                NotificationChannel channel = new NotificationChannel(
+                        CHANNEL_ID,
+                        "Channel",
+                        NotificationManager.IMPORTANCE_HIGH
+                );
+
+                channel.setDescription("This is a notification");
+                channel.shouldVibrate();
+
+                manager.createNotificationChannel(channel);
+            }
         }
     }
 }
