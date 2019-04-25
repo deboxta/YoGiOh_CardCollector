@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity
         myDeck.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         myDeck.setLayoutManager(layoutManager);
-        deckAdapter = new DeckAdapter(this);
-        myDeck.setAdapter(deckAdapter);
+        //deckAdapter = new DeckAdapter(this, db.yugiohDAO().selectAll());
+       // myDeck.setAdapter(deckAdapter);
 
         //This is te action to do when a card is selectionned on the deck to transfer via nfc
         Intent intent = new Intent(this, ExchangeActivity.class);

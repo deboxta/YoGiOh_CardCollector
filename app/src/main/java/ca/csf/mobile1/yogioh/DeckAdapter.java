@@ -9,26 +9,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
 import java.util.List;
+
+import ca.csf.mobile1.yogioh.repository.database.Enum.CardTypes;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
 
 
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 {
-    private final Context context;
-    public List<String> dataSet;
+    public static final String LEVEL_TEXT = "Level : ";
+    public static final String ATK_TEXT = "ATK : ";
+    public static final String DEF_TEXT = "DEF : ";
 
-    public void setDataSet(List<String> dataSet)
+    private final Context context;
+    public List<YugiohCard> dataSet;
+
+    public void setDataSet(List<YugiohCard> dataSet)
     {
         this.dataSet = dataSet;
 
         notifyDataSetChanged();
     }
 
-    public DeckAdapter(Context context)
+    public DeckAdapter(Context context, List<YugiohCard> dataSet)
     {
         this.context = context;
-        this.dataSet = Collections.emptyList();
+        this.dataSet = dataSet;
     }
 
     @NonNull
@@ -43,9 +49,27 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull DeckAdapter.ViewHolder holder, int position)
     {
-        String data = dataSet.get(position);
-        TextView textView = holder.itemView.findViewById(R.id.textView);
-        textView.setText(data);
+        TextView cardName = holder.itemView.findViewById(R.id.cardName);
+        cardName.setText(dataSet.get(position).cardName);
+
+        String type = dataSet.get(position).type;
+
+        TextView cardType = holder.itemView.findViewById(R.id.cardType);
+        cardType.setText(type);
+
+        TextView cardLevel = holder.itemView.findViewById(R.id.cardLevel);
+        TextView cardAttackAndDefense = holder.itemView.findViewById(R.id.cardAttackAndDefense);
+
+        if (type.equals(CardTypes.Monster))
+        {
+            cardLevel.setText(LEVEL_TEXT + dataSet.get(position).nbStars);
+            cardAttackAndDefense.setText(ATK_TEXT + dataSet.get(position).cardAttack + DEF_TEXT + dataSet.get(position).cardDefense);
+        }
+        else
+        {
+            cardLevel.setText("");
+            cardAttackAndDefense.setText("");
+        }
     }
 
     @Override
