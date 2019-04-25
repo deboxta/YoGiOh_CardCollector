@@ -16,7 +16,10 @@ import android.os.Bundle;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.repository.database.Database;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
+import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -43,6 +46,11 @@ public class MainActivity extends AppCompatActivity
         myDeck.setLayoutManager(layoutManager);
         deckAdapter = new DeckAdapter(this);
         myDeck.setAdapter(deckAdapter);
+
+        //This is te action to do when a card is selectionned on the deck to transfer via nfc
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
+        startActivity(intent);
 
         createNotificationChannel();
         createPendingNotificationIntent();
