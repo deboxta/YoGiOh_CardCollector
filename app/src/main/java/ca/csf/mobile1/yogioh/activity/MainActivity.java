@@ -1,11 +1,14 @@
 package ca.csf.mobile1.yogioh.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +16,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
+import java.util.Calendar;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
@@ -31,6 +36,10 @@ public class MainActivity extends AppCompatActivity
     public static final String CHANNEL_ID = "channel";
     private PendingIntent pendingNotificationIntent;
     private AlarmManager notificationAlarmManager;
+    private NotificationManagerCompat notificationManagerCompat;
+    private Notification notification;
+    private Calendar calendar;
+    private AlarmManager notificationAlarmManagerREAPEAT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,9 +61,51 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);
 
-        createNotificationChannel();
-        createPendingNotificationIntent();
-        notificationAlarmSetup();
+        //TO A.B : j'doit demander à BEN si les daily sont font spécifiquement (on peut genre tricher en se moment si on change la date)
+        //Tout est en commentaire pour pas faire chier le projet.
+        //setupCalendar(); //Setup le calendrier pour les rapelles
+        //createNotificationChannel(); //Creer le channel de notif
+        //createNotification(); //Cree une notification
+        //createPendingNotificationIntent(); //Cree une notif pendante
+        //notificationAlarmSetup(); //Setup un "alarm"
+        //repeatNotification(); //Setup un alarm repetif
+
+    }
+
+    private void repeatNotification()
+    {
+        Intent reapeatingNotif = new Intent(this, DailyNotificationSetup.class);
+
+        PendingIntent repeatIntentPending = PendingIntent.getBroadcast(this, 0, reapeatingNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationAlarmManagerREAPEAT = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        notificationAlarmManagerREAPEAT.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, repeatIntentPending);
+    }
+
+    private void setupCalendar()
+    {
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND,0);
+    }
+
+    private void createNotification()
+    {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Daily Reward Available")
+                .setContentText("Come and get ur reward!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(notificationPendingIntent)
+                .build();
+
+        notificationManagerCompat.notify(0, notification);
     }
 
     private void notificationAlarmSetup()
@@ -83,8 +134,11 @@ public class MainActivity extends AppCompatActivity
                         NotificationManager.IMPORTANCE_HIGH
                 );
 
-                channel.setDescription("This is a notification");
-                channel.shouldVibrate();
+                channel.setDescription("Daily Rewards");
+                channel.enableLights(true);
+                channel.enableVibration(true);
+                channel.setLightColor(R.color.colorPrimary);
+                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
                 manager.createNotificationChannel(channel);
             }
