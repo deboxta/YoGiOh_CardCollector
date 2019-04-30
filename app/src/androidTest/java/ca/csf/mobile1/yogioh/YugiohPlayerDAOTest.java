@@ -27,6 +27,7 @@ public class YugiohPlayerDAOTest
 {
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDatabase db;
+
     @Before
     public void createDb()
     {
@@ -53,8 +54,8 @@ public class YugiohPlayerDAOTest
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
-        yugiohPlayer.id = (int)newId;
-        assertEquals(yugiohPlayer,yugiohPlayerDAO.selectAll().get(0));
+        yugiohPlayer.id = (int) newId;
+        assertEquals(yugiohPlayer, yugiohPlayerDAO.selectAll().get(0));
     }
 
     @Test
@@ -62,9 +63,9 @@ public class YugiohPlayerDAOTest
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
-        yugiohPlayer.id = (int)newId;
+        yugiohPlayer.id = (int) newId;
         yugiohPlayerDAO.delete(yugiohPlayer);
-        assertEquals(0,yugiohPlayerDAO.selectAll().size());
+        assertEquals(0, yugiohPlayerDAO.selectAll().size());
     }
 
     @Test
@@ -72,17 +73,19 @@ public class YugiohPlayerDAOTest
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
-        yugiohPlayer.id = (int)newId;
+        yugiohPlayer.id = (int) newId;
 
         YugiohPlayer yugiohPlayer1 = new YugiohPlayer();
         newId = yugiohPlayerDAO.insertOne(yugiohPlayer1);
-        yugiohPlayer1.id = (int)newId;
+        yugiohPlayer1.id = (int) newId;
 
         long[] ids = {yugiohPlayer.id};
+        List<YugiohPlayer> foundPlayer = yugiohPlayerDAO.FindAllByIds(ids);
 
-        assertEquals(yugiohPlayer,yugiohPlayerDAO.FindAllByIds(ids));
+
+        assertEquals(yugiohPlayer, foundPlayer.get(0));
+
     }
-
 
 
 }

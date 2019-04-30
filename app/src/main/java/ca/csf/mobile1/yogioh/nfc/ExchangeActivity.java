@@ -21,7 +21,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
 
-
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
     private String idGivenCard;
     private NdefMessage operationMessage;
