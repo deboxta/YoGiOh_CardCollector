@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
+import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 public class FetchPlayerCardsAsyncTask extends AsyncTask<Void, Void, List<YugiohCard>>
 {

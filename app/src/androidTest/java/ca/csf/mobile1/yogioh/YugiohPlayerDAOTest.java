@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
@@ -68,6 +67,21 @@ public class YugiohPlayerDAOTest
         assertEquals(0,yugiohPlayerDAO.selectAll().size());
     }
 
+    @Test
+    public void findPlayerById()
+    {
+        YugiohPlayer yugiohPlayer = new YugiohPlayer();
+        long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
+        yugiohPlayer.id = (int)newId;
+
+        YugiohPlayer yugiohPlayer1 = new YugiohPlayer();
+        newId = yugiohPlayerDAO.insertOne(yugiohPlayer1);
+        yugiohPlayer1.id = (int)newId;
+
+        long[] ids = {yugiohPlayer.id};
+
+        assertEquals(yugiohPlayer,yugiohPlayerDAO.FindAllByIds(ids));
+    }
 
 
 

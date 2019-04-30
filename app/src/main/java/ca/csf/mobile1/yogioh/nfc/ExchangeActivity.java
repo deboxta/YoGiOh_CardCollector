@@ -20,8 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
-import ca.csf.mobile1.yogioh.repository.database.YugiohDAO;
+
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
     private String idGivenCard;
@@ -29,8 +28,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private NfcAdapter nfcAdapter;
     private TextView idView;
     private PendingIntent pendingIntent;
-    private View rootView;
-    private ImageView cardView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +37,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         idGivenCard = getIntent().getStringExtra("EXTRA_ID");
 
         idView = findViewById(R.id.textView);
-        rootView = findViewById(R.id.rootView);
-        cardView = findViewById(R.id.cardView);
+        View rootView = findViewById(R.id.rootView);
+        ImageView cardView = findViewById(R.id.cardView);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null){

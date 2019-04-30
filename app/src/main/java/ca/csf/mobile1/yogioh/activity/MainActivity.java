@@ -19,14 +19,9 @@ import android.os.Bundle;
 
 import java.util.Calendar;
 
-import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
-import ca.csf.mobile1.yogioh.repository.database.Database;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
-import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
-import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
 {
