@@ -21,6 +21,8 @@ import java.util.Calendar;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
@@ -41,13 +43,19 @@ public class MainActivity extends AppCompatActivity
     private Calendar calendar;
     private AlarmManager notificationAlarmManagerREAPEAT;
 
+    private YugiohDatabase yugiohDatabase;
+    private YugiohCardDAO yugiohCardDAO;
+    private YugiohPlayerDAO yugiohPlayerDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        YugiohDatabase db = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "database-name").build();
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "yugiohDatabase").build();
+        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
+        yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
 
         myDeck = findViewById(R.id.myDeck);
         myDeck.setHasFixedSize(true);
