@@ -16,8 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.repository.database.Database;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
+import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Database db = Room.databaseBuilder(getApplicationContext(), Database.class, "database-name").build();
+        YugiohDatabase db = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "database-name").build();
 
         //myDeck = findViewById(R.id.myDeck);
 

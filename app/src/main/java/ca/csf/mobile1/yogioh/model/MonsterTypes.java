@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.repository.database.Enum;
+package ca.csf.mobile1.yogioh.model;
 
 public enum MonsterTypes
 {
