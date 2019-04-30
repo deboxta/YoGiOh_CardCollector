@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.repository.database.Enum.CardTypes;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
+import ca.csf.mobile1.yogioh.model.CardTypes;
+import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>

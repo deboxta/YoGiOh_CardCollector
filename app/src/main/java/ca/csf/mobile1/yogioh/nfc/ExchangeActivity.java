@@ -20,8 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
-import ca.csf.mobile1.yogioh.repository.database.YugiohDAO;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
     private String idGivenCard;
