@@ -23,8 +23,6 @@ import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
-import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
-import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         //deckAdapter = new DeckAdapter(this, db.yugiohDAO().selectAll());
        // myDeck.setAdapter(deckAdapter);
 
-        //This is te action to do when a card is selectionned on the deck to transfer via nfc
+        //This is the action to do when a card is selected on the deck to transfer via nfc
         Intent intent = new Intent(this, ExchangeActivity.class);
         intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);

@@ -1,12 +1,13 @@
-package ca.csf.mobile1.yogioh.activity;
+package ca.csf.mobile1.yogioh.activity.Queries.Card;
 
 import android.os.AsyncTask;
 
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class FetchPlayerCardsAsyncTask extends AsyncTask<Integer, Void, List<YugiohCard>>
+public class FetchCardsByIdAsyncTask extends AsyncTask<Long,Void,List<YugiohCard>>
 {
     private boolean isDataBaseError;
 
@@ -14,7 +15,9 @@ public class FetchPlayerCardsAsyncTask extends AsyncTask<Integer, Void, List<Yug
     private ListenerFetched onSuccess;
     private final Runnable onDataBaseError;
 
-    public FetchPlayerCardsAsyncTask(ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    private YugiohCardDAO yugiohCardDAO;
+
+    public FetchCardsByIdAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -24,14 +27,29 @@ public class FetchPlayerCardsAsyncTask extends AsyncTask<Integer, Void, List<Yug
         this.onSuccess = onSuccess;
         this.onDataBaseError = onDataBaseError;
 
+        this.yugiohCardDAO = yugiohCardDAO;
+
         isDataBaseError = false;
     }
 
     @Override
-    protected List<YugiohCard> doInBackground(Integer... integers)
+    protected List<YugiohCard> doInBackground(Long... longs)
     {
+        List<YugiohCard> yugiohCards = null;
+        try {
+            yugiohCards =  yugiohCardDAO.findAllByIds(convertWrapperToPrimitive(longs));
+        }catch (Exception e){
+            onDataBaseError.run();
+        }
+        return yugiohCards;
+    }
 
-        return null;
+    private long[] convertWrapperToPrimitive(Long[] longs) {
+        long[] result = new long[longs.length];
+        for (int i = 0; i < longs.length; i++) {
+            result[i] = longs[i];
+        }
+        return result;
     }
 
     @Override
