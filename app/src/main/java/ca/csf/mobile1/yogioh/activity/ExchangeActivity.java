@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.nfc;
+package ca.csf.mobile1.yogioh.activity;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -21,7 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
 
-public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
+public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
+{
     private String idGivenCard;
     private NdefMessage operationMessage;
     private NfcAdapter nfcAdapter;
@@ -29,7 +30,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private PendingIntent pendingIntent;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
         
@@ -40,12 +42,14 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         ImageView cardView = findViewById(R.id.cardView);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (nfcAdapter == null){
+        if (nfcAdapter == null)
+        {
             Toast.makeText(this, R.string.ERROR_TEXT_NFC, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
-        if (!nfcAdapter.isEnabled()) {
+        if (!nfcAdapter.isEnabled())
+        {
             Snackbar.make(rootView, R.string.ERROR_TEXT_NFC_NOT_ACTIVATED, Snackbar.LENGTH_INDEFINITE).setAction(R.string.SNACK_NFC_ACTIVATION_TEXT, this::activateNFC).show();
         }
 
@@ -54,12 +58,14 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     }
 
-    private void activateNFC(View view) {
+    private void activateNFC(View view)
+    {
         startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
     }
 
     @Override
-    public NdefMessage createNdefMessage(NfcEvent event) {
+    public NdefMessage createNdefMessage(NfcEvent event)
+    {
 
         operationMessage = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "text/plain", idGivenCard.getBytes())});
 
@@ -67,28 +73,33 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
 
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())){
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
+        {
             processIntentData(getIntent());
         }
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
 
         nfcAdapter.disableForegroundDispatch(this);
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(Intent intent)
+    {
         setIntent(intent);
     }
 
-    void processIntentData(Intent intent){
+    void processIntentData(Intent intent)
+    {
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idView.setText(new String(operationMessage.getRecords()[0].getPayload()));
