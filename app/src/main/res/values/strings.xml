@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">YOGIOH</string>
     <string name="TEXT_BEAM_RESULT">Result will be here</string>
-    <string name="TEXT_BUTTON">Beamer!</string>
     <string name="deck_title_text">Your Deck</string>
+    <string name="ERROR_TEXT_NFC">NFC not working properly</string>
+    <string name="ERROR_TEXT_NFC_NOT_ACTIVATED">Enable NFC via settings</string>
+    <string name="SNACK_NFC_ACTIVATION_TEXT">Settings</string>
+    <string name="TEXT_CARD_DESCRIPTION">Card image default</string>
 </resources>

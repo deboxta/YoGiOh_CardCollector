@@ -7,27 +7,41 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
+import java.util.Calendar;
+
+import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
+import ca.csf.mobile1.yogioh.repository.database.Database;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCard;
+import ca.csf.mobile1.yogioh.nfc.ExchangeActivity;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.nfc.BeamActivity;
 
 public class MainActivity extends AppCompatActivity
 {
+    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 24000;
     private RecyclerView myDeck;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public static final String CHANNEL_ID = "channel";
+    private PendingIntent pendingNotificationIntent;
+    private AlarmManager notificationAlarmManager;
     private NotificationManagerCompat notificationManagerCompat;
-    Notification notification;
+    private Notification notification;
+    private Calendar calendar;
+    private AlarmManager notificationAlarmManagerREAPEAT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,49 +51,99 @@ public class MainActivity extends AppCompatActivity
 
         YugiohDatabase db = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "database-name").build();
 
-        //myDeck = findViewById(R.id.myDeck);
-
-        //myDeck.setHasFixedSize(true);
+        myDeck = findViewById(R.id.myDeck);
+        myDeck.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        //myDeck.setLayoutManager(layoutManager);
+        myDeck.setLayoutManager(layoutManager);
+        //deckAdapter = new DeckAdapter(this, db.yugiohDAO().selectAll());
+       // myDeck.setAdapter(deckAdapter);
 
-        Intent intent = new Intent(this, BeamActivity.class);
-        intent.putExtra("EXTRA_ID", "15");
+        //This is te action to do when a card is selectionned on the deck to transfer via nfc
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);
 
+        //TO A.B : j'doit demander à BEN si les daily sont font spécifiquement (on peut genre tricher en se moment si on change la date)
+        //Tout est en commentaire pour pas faire chier le projet.
+        //setupCalendar(); //Setup le calendrier pour les rapelles
+        //createNotificationChannel(); //Creer le channel de notif
+        //createNotification(); //Cree une notification
+        //createPendingNotificationIntent(); //Cree une notif pendante
+        //notificationAlarmSetup(); //Setup un "alarm"
+        //repeatNotification(); //Setup un alarm repetif
+
     }
 
-    private void notificationBuild()
+    private void repeatNotification()
     {
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Une notification")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
+        Intent reapeatingNotif = new Intent(this, DailyNotificationSetup.class);
+
+        PendingIntent repeatIntentPending = PendingIntent.getBroadcast(this, 0, reapeatingNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationAlarmManagerREAPEAT = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        notificationAlarmManagerREAPEAT.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, repeatIntentPending);
     }
 
-    private void sendNotification(View view)
+    private void setupCalendar()
     {
-        notificationManagerCompat.notify(2, notification);
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND,0);
     }
 
     private void createNotification()
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Daily Reward Available")
+                .setContentText("Come and get ur reward!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(notificationPendingIntent)
+                .build();
+
+        notificationManagerCompat.notify(0, notification);
+    }
+
+    private void notificationAlarmSetup()
+    {
+        notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_TIME_TRIGGER_IN_MILLIS, pendingNotificationIntent);
+    }
+
+    private void createPendingNotificationIntent()
+    {
+        Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
+        notificationIntent.putExtra("NotificationText", "some text");
+        pendingNotificationIntent = PendingIntent.getBroadcast(this, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void createNotificationChannel()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O )
         {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Channel",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-
-            channel.setDescription("This is a notification");
-            channel.shouldVibrate();
-
             NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            if (manager.getNotificationChannel(CHANNEL_ID) == null)
+            {
+                NotificationChannel channel = new NotificationChannel(
+                        CHANNEL_ID,
+                        "Channel",
+                        NotificationManager.IMPORTANCE_HIGH
+                );
+
+                channel.setDescription("Daily Rewards");
+                channel.enableLights(true);
+                channel.enableVibration(true);
+                channel.setLightColor(R.color.colorPrimary);
+                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+                manager.createNotificationChannel(channel);
+            }
         }
     }
 }
