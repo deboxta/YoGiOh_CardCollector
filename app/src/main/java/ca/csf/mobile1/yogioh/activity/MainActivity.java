@@ -28,7 +28,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 public class MainActivity extends AppCompatActivity
 {
-    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 24000;
+    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 2000;
     private RecyclerView myDeck;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);
 
-        //TO A.B : j'doit demander à BEN si les daily sont font spécifiquement (on peut genre tricher en se moment si on change la date)
         //Tout est en commentaire pour pas faire chier le projet.
         //setupCalendar(); //Setup le calendrier pour les rapelles
         //createNotificationChannel(); //Creer le channel de notif
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         //createPendingNotificationIntent(); //Cree une notif pendante
         //notificationAlarmSetup(); //Setup un "alarm"
         //repeatNotification(); //Setup un alarm repetif
-
+        //startService(new Intent(this, DailyNotificationService.class));
     }
 
     private void repeatNotification()
@@ -91,8 +90,8 @@ public class MainActivity extends AppCompatActivity
     private void setupCalendar()
     {
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 18);
         calendar.set(Calendar.SECOND,0);
     }
 
@@ -129,9 +128,10 @@ public class MainActivity extends AppCompatActivity
 
     private void createNotificationChannel()
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationManager manager = getSystemService(NotificationManager.class);
+
             if (manager.getNotificationChannel(CHANNEL_ID) == null)
             {
                 NotificationChannel channel = new NotificationChannel(
