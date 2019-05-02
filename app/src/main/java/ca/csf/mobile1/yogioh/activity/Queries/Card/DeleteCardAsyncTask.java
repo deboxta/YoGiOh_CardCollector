@@ -2,12 +2,10 @@ package ca.csf.mobile1.yogioh.activity.Queries.Card;
 
 import android.os.AsyncTask;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class FetchCardsByIdAsyncTask extends AsyncTask<Long,Void,List<YugiohCard>>
+public class DeleteCardAsyncTask extends AsyncTask<YugiohCard, Void, Void>
 {
     private boolean isDataBaseError;
 
@@ -17,7 +15,7 @@ public class FetchCardsByIdAsyncTask extends AsyncTask<Long,Void,List<YugiohCard
 
     private YugiohCardDAO yugiohCardDAO;
 
-    public FetchCardsByIdAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public DeleteCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -33,24 +31,16 @@ public class FetchCardsByIdAsyncTask extends AsyncTask<Long,Void,List<YugiohCard
     }
 
     @Override
-    protected List<YugiohCard> doInBackground(Long... ids)
+    protected Void doInBackground(YugiohCard... yugiohCards)
     {
-        List<YugiohCard> yugiohCards = null;
         try {
-            yugiohCards =  yugiohCardDAO.findAllByIds(convertWrapperToPrimitive(ids));
+            yugiohCardDAO.delete(yugiohCards[0]);
         }catch (Exception e){
             isDataBaseError = true;
         }
-        return yugiohCards;
+        return null;
     }
 
-    private long[] convertWrapperToPrimitive(Long[] wrapperIds) {
-        long[] ids = new long[wrapperIds.length];
-        for (int i = 0; i < wrapperIds.length; i++) {
-            ids[i] = wrapperIds[i];
-        }
-        return ids;
-    }
 
     @Override
     protected void onPreExecute()
@@ -59,15 +49,15 @@ public class FetchCardsByIdAsyncTask extends AsyncTask<Long,Void,List<YugiohCard
     }
 
     @Override
-    protected void onPostExecute(List<YugiohCard> yugiohCards)
+    protected void onPostExecute(Void aVoid)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched(yugiohCards);
+        else onSuccess.onCardsFetched();
     }
 
     public interface ListenerFetched
     {
-        void onCardsFetched(List<YugiohCard> playerDeck);
+        void onCardsFetched();
     }
 
     public interface ListenerFetching

@@ -35,21 +35,21 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     @Override
     protected Long[] doInBackground(YugiohCard... yugiohCards)
     {
-        Long[] longs = null;
+        Long[] ids = null;
         try {
-            longs = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
+            ids = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
         }catch (Exception e){
-            onDataBaseError.run();
+            isDataBaseError = true;
         }
-        return longs;
+        return ids;
     }
 
-    private Long[] convertPrimitiveToWrapper(long[] longs) {
-        Long[] result = new Long[longs.length];
-        for (int i = 0; i < longs.length; i++) {
-            result[i] = longs[i];
+    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
+        Long[] ids = new Long[primitiveIds.length];
+        for (int i = 0; i < primitiveIds.length; i++) {
+            ids[i] = primitiveIds[i];
         }
-        return result;
+        return ids;
     }
 
     @Override
