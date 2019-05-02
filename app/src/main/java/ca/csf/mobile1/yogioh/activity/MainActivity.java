@@ -67,63 +67,8 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);
 
-        //Tout est en commentaire pour pas faire chier le projet.
-        //setupCalendar(); //Setup le calendrier pour les rapelles
         //createNotificationChannel(); //Creer le channel de notif
-        //createNotification(); //Cree une notification
-        //createPendingNotificationIntent(); //Cree une notif pendante
-        //notificationAlarmSetup(); //Setup un "alarm"
-        //repeatNotification(); //Setup un alarm repetif
         //startService(new Intent(this, DailyNotificationService.class));
-    }
-
-    private void repeatNotification()
-    {
-        Intent reapeatingNotif = new Intent(this, DailyNotificationSetup.class);
-
-        PendingIntent repeatIntentPending = PendingIntent.getBroadcast(this, 0, reapeatingNotif, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        notificationAlarmManagerREAPEAT = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        notificationAlarmManagerREAPEAT.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, repeatIntentPending);
-    }
-
-    private void setupCalendar()
-    {
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 18);
-        calendar.set(Calendar.SECOND,0);
-    }
-
-    private void createNotification()
-    {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Daily Reward Available")
-                .setContentText("Come and get ur reward!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setContentIntent(notificationPendingIntent)
-                .build();
-
-        notificationManagerCompat.notify(0, notification);
-    }
-
-    private void notificationAlarmSetup()
-    {
-        notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_TIME_TRIGGER_IN_MILLIS, pendingNotificationIntent);
-    }
-
-    private void createPendingNotificationIntent()
-    {
-        Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
-        notificationIntent.putExtra("NotificationText", "some text");
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void createNotificationChannel()
