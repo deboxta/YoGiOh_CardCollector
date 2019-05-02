@@ -2,22 +2,20 @@ package ca.csf.mobile1.yogioh.activity.Queries.Card;
 
 import android.os.AsyncTask;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
+public class DeleteCardAsyncTask extends AsyncTask<YugiohCard, Void, Void>
 {
     private boolean isDataBaseError;
 
-    private ListenerInserting onExecute;
-    private ListenerInserted onSuccess;
+    private ListenerDeleting onExecute;
+    private ListenerDeleted onSuccess;
     private final Runnable onDataBaseError;
 
     private YugiohCardDAO yugiohCardDAO;
 
-    public InsertCardsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public DeleteCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerDeleting onExecute, ListenerDeleted onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -33,45 +31,37 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     }
 
     @Override
-    protected Long[] doInBackground(YugiohCard... yugiohCards)
+    protected Void doInBackground(YugiohCard... yugiohCards)
     {
-        Long[] ids = null;
         try {
-            ids = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
+            yugiohCardDAO.delete(yugiohCards[0]);
         }catch (Exception e){
             isDataBaseError = true;
         }
-        return ids;
+        return null;
     }
 
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
-        }
-        return ids;
-    }
 
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsInserting();
+        onExecute.onCardsDeleting();
     }
 
     @Override
-    protected void onPostExecute(Long[] longs)
+    protected void onPostExecute(Void aVoid)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsInserted(longs);
+        else onSuccess.onCardsDeleted();
     }
 
-    public interface ListenerInserted
+    public interface ListenerDeleted
     {
-        void onCardsInserted(Long[] longs);
+        void onCardsDeleted();
     }
 
-    public interface ListenerInserting
+    public interface ListenerDeleting
     {
-        void onCardsInserting();
+        void onCardsDeleting();
     }
 }

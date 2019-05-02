@@ -40,17 +40,9 @@ public class FetchCardsByTypeAsyncTask extends AsyncTask<CardTypes,Void, List<Yu
         try {
             yugiohCards =  yugiohCardDAO.findCardByType(cardType[0].toString());
         }catch (Exception e){
-            onDataBaseError.run();
+            isDataBaseError = true;
         }
         return yugiohCards;
-    }
-
-    private long[] convertWrapperToPrimitive(Long[] longs) {
-        long[] result = new long[longs.length];
-        for (int i = 0; i < longs.length; i++) {
-            result[i] = longs[i];
-        }
-        return result;
     }
 
     @Override
