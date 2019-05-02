@@ -1,10 +1,13 @@
-package ca.csf.mobile1.yogioh.activity;
+package ca.csf.mobile1.yogioh.activity.Queries.Card;
 
 import android.os.AsyncTask;
+
+import java.util.List;
+
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class FetchCardByNameAsyncTask extends AsyncTask<String, Void, YugiohCard>
+public class FetchCardsAsyncTask extends AsyncTask<Void, Void, List<YugiohCard>>
 {
     private boolean isDataBaseError;
 
@@ -13,7 +16,7 @@ public class FetchCardByNameAsyncTask extends AsyncTask<String, Void, YugiohCard
     private final Runnable onDataBaseError;
     private YugiohCardDAO yugiohCardDAO;
 
-    public FetchCardByNameAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public FetchCardsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (yugiohCardDAO == null) throw new IllegalArgumentException("yugiohCardDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -29,20 +32,20 @@ public class FetchCardByNameAsyncTask extends AsyncTask<String, Void, YugiohCard
     }
 
     @Override
-    protected YugiohCard doInBackground(String... strings)
+    protected List<YugiohCard> doInBackground(Void... voids)
     {
-        YugiohCard wantedCard = null;
+        List<YugiohCard> wantedCards = null;
 
         try
         {
-            wantedCard = yugiohCardDAO.findCardByName(strings[0]);
+            wantedCards = yugiohCardDAO.selectAll();
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
 
-        return wantedCard;
+        return wantedCards;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class FetchCardByNameAsyncTask extends AsyncTask<String, Void, YugiohCard
     }
 
     @Override
-    protected void onPostExecute(YugiohCard yugiohCards)
+    protected void onPostExecute(List<YugiohCard> yugiohCards)
     {
         if (isDataBaseError) onDataBaseError.run();
         else onSuccess.onCardsFetched(yugiohCards);
@@ -60,7 +63,7 @@ public class FetchCardByNameAsyncTask extends AsyncTask<String, Void, YugiohCard
 
     public interface ListenerFetched
     {
-        void onCardsFetched(YugiohCard playerDeck);
+        void onCardsFetched(List<YugiohCard> yugiohCards);
     }
 
     public interface ListenerFetching
