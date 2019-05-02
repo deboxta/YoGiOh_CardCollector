@@ -28,18 +28,11 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 public class MainActivity extends AppCompatActivity
 {
-    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 24000;
     private RecyclerView myDeck;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public static final String CHANNEL_ID = "channel";
-    private PendingIntent pendingNotificationIntent;
-    private AlarmManager notificationAlarmManager;
-    private NotificationManagerCompat notificationManagerCompat;
-    private Notification notification;
-    private Calendar calendar;
-    private AlarmManager notificationAlarmManagerREAPEAT;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
@@ -67,71 +60,16 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
         startActivity(intent);
 
-        //TO A.B : j'doit demander à BEN si les daily sont font spécifiquement (on peut genre tricher en se moment si on change la date)
-        //Tout est en commentaire pour pas faire chier le projet.
-        //setupCalendar(); //Setup le calendrier pour les rapelles
         //createNotificationChannel(); //Creer le channel de notif
-        //createNotification(); //Cree une notification
-        //createPendingNotificationIntent(); //Cree une notif pendante
-        //notificationAlarmSetup(); //Setup un "alarm"
-        //repeatNotification(); //Setup un alarm repetif
-
-    }
-
-    private void repeatNotification()
-    {
-        Intent reapeatingNotif = new Intent(this, DailyNotificationSetup.class);
-
-        PendingIntent repeatIntentPending = PendingIntent.getBroadcast(this, 0, reapeatingNotif, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        notificationAlarmManagerREAPEAT = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        notificationAlarmManagerREAPEAT.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, repeatIntentPending);
-    }
-
-    private void setupCalendar()
-    {
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND,0);
-    }
-
-    private void createNotification()
-    {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-        notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Daily Reward Available")
-                .setContentText("Come and get ur reward!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setContentIntent(notificationPendingIntent)
-                .build();
-
-        notificationManagerCompat.notify(0, notification);
-    }
-
-    private void notificationAlarmSetup()
-    {
-        notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_TIME_TRIGGER_IN_MILLIS, pendingNotificationIntent);
-    }
-
-    private void createPendingNotificationIntent()
-    {
-        Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
-        notificationIntent.putExtra("NotificationText", "some text");
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, 5, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //startService(new Intent(this, DailyNotificationService.class));
     }
 
     private void createNotificationChannel()
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationManager manager = getSystemService(NotificationManager.class);
+
             if (manager.getNotificationChannel(CHANNEL_ID) == null)
             {
                 NotificationChannel channel = new NotificationChannel(

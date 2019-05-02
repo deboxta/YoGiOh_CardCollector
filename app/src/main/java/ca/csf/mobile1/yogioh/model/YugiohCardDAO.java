@@ -17,7 +17,7 @@ public interface YugiohCardDAO
     List<YugiohCard> findAllByIds(long[] cardsID);
 
     @Query("SELECT * FROM yugiohcard WHERE card_name IN(:cardName)")
-    List<YugiohCard>findCardByName(String cardName);
+    YugiohCard findCardByName(String cardName);
 
     @Query("SELECT * FROM yugiohcard WHERE card_name IN(:cardType)")
     List<YugiohCard>findCardByType(String cardType);

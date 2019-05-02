@@ -20,17 +20,8 @@ public class DailyNotificationSetup extends BroadcastReceiver
     private PendingIntent notificationPendingIntent;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-
-        /*notificationManagerCompat = NotificationManagerCompat.from(context);
-        notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Une notification")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        notificationManagerCompat.notify(8, notification);*/
+    public void onReceive(Context context, Intent intent)
+    {
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
@@ -50,6 +41,7 @@ public class DailyNotificationSetup extends BroadcastReceiver
                 .setAutoCancel(true)
                 .build();
 
-        notificationManagerCompat.notify(8, notification);
+        notificationManagerCompat.notify(9, notification);
+        context.startService(new Intent(context, DailyNotificationService.class));
     }
 }

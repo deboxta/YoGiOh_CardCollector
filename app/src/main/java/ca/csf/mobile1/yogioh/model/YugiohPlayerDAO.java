@@ -17,7 +17,7 @@ public interface YugiohPlayerDAO
     List<YugiohPlayer> FindAllByIds(long[] playersId);
 
     @Query("SELECT * FROM yugiohplayer WHERE user_name IN(:username)")
-    List<YugiohPlayer> findByUsername(String username);
+    YugiohPlayer findByUsername(String username);
 
     @Query("SELECT * FROM yugiohplayer WHERE name IN(:playerName)")
     List<YugiohPlayer> findByName(String playerName);

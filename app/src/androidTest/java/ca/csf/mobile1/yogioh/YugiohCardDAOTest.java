@@ -61,8 +61,8 @@ public class YugiohCardDAOTest
         YugiohCard card = new YugiohCard();
         card.cardName = BLACKMAGICIANCARDNAME;
         card.id = (int) yugiohCardDAO.insertOne(card);
-        List<YugiohCard> byName = yugiohCardDAO.findCardByName(BLACKMAGICIANCARDNAME);
-        assertEquals(card, byName.get(0));
+        YugiohCard byName = yugiohCardDAO.findCardByName(BLACKMAGICIANCARDNAME);
+        assertEquals(card, byName);
     }
 
     @Test
