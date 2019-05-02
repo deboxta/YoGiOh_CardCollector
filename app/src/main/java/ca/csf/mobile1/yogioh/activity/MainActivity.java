@@ -28,18 +28,11 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 public class MainActivity extends AppCompatActivity
 {
-    public static final int NOTIFICATION_TIME_TRIGGER_IN_MILLIS = 2000;
     private RecyclerView myDeck;
     private RecyclerView.Adapter deckAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public static final String CHANNEL_ID = "channel";
-    private PendingIntent pendingNotificationIntent;
-    private AlarmManager notificationAlarmManager;
-    private NotificationManagerCompat notificationManagerCompat;
-    private Notification notification;
-    private Calendar calendar;
-    private AlarmManager notificationAlarmManagerREAPEAT;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
