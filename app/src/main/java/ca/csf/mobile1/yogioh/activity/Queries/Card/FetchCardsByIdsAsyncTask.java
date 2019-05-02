@@ -7,17 +7,17 @@ import java.util.List;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
+public class FetchCardsByIdsAsyncTask extends AsyncTask<Long,Void,List<YugiohCard>>
 {
     private boolean isDataBaseError;
 
-    private ListenerInserting onExecute;
-    private ListenerInserted onSuccess;
+    private ListenerFetching onExecute;
+    private ListenerFetched onSuccess;
     private final Runnable onDataBaseError;
 
     private YugiohCardDAO yugiohCardDAO;
 
-    public InsertCardsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public FetchCardsByIdsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -33,21 +33,21 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     }
 
     @Override
-    protected Long[] doInBackground(YugiohCard... yugiohCards)
+    protected List<YugiohCard> doInBackground(Long... ids)
     {
-        Long[] ids = null;
+        List<YugiohCard> yugiohCards = null;
         try {
-            ids = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
+            yugiohCards =  yugiohCardDAO.findAllByIds(convertWrapperToPrimitive(ids));
         }catch (Exception e){
             isDataBaseError = true;
         }
-        return ids;
+        return yugiohCards;
     }
 
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
+    private long[] convertWrapperToPrimitive(Long[] wrapperIds) {
+        long[] ids = new long[wrapperIds.length];
+        for (int i = 0; i < wrapperIds.length; i++) {
+            ids[i] = wrapperIds[i];
         }
         return ids;
     }
@@ -55,23 +55,23 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsInserting();
+        onExecute.onCardsFetching();
     }
 
     @Override
-    protected void onPostExecute(Long[] longs)
+    protected void onPostExecute(List<YugiohCard> yugiohCards)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsInserted(longs);
+        else onSuccess.onCardsFetched(yugiohCards);
     }
 
-    public interface ListenerInserted
+    public interface ListenerFetched
     {
-        void onCardsInserted(Long[] longs);
+        void onCardsFetched(List<YugiohCard> playerDeck);
     }
 
-    public interface ListenerInserting
+    public interface ListenerFetching
     {
-        void onCardsInserting();
+        void onCardsFetching();
     }
 }

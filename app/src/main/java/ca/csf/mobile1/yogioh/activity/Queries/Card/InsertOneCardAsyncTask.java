@@ -9,13 +9,13 @@ public class InsertOneCardAsyncTask extends AsyncTask<YugiohCard, Void, Long>
 {
     private boolean isDataBaseError;
 
-    private ListenerFetching onExecute;
-    private ListenerFetched onSuccess;
+    private ListenerInserting onExecute;
+    private ListenerInserted onSuccess;
     private final Runnable onDataBaseError;
 
     private YugiohCardDAO yugiohCardDAO;
 
-    public InsertOneCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public InsertOneCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -45,23 +45,23 @@ public class InsertOneCardAsyncTask extends AsyncTask<YugiohCard, Void, Long>
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsFetching();
+        onExecute.onCardsInserted();
     }
 
     @Override
     protected void onPostExecute(Long id)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched(id);
+        else onSuccess.onCardsInserted(id);
     }
 
-    public interface ListenerFetched
+    public interface ListenerInserted
     {
-        void onCardsFetched(Long id);
+        void onCardsInserted(Long id);
     }
 
-    public interface ListenerFetching
+    public interface ListenerInserting
     {
-        void onCardsFetching();
+        void onCardsInserted();
     }
 }

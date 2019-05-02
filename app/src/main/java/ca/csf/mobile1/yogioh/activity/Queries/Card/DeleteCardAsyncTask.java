@@ -9,13 +9,13 @@ public class DeleteCardAsyncTask extends AsyncTask<YugiohCard, Void, Void>
 {
     private boolean isDataBaseError;
 
-    private ListenerFetching onExecute;
-    private ListenerFetched onSuccess;
+    private ListenerDeleting onExecute;
+    private ListenerDeleted onSuccess;
     private final Runnable onDataBaseError;
 
     private YugiohCardDAO yugiohCardDAO;
 
-    public DeleteCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public DeleteCardAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerDeleting onExecute, ListenerDeleted onSuccess, Runnable onDataBaseError)
     {
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
@@ -45,23 +45,23 @@ public class DeleteCardAsyncTask extends AsyncTask<YugiohCard, Void, Void>
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsFetching();
+        onExecute.onCardsDeleting();
     }
 
     @Override
     protected void onPostExecute(Void aVoid)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched();
+        else onSuccess.onCardsDeleted();
     }
 
-    public interface ListenerFetched
+    public interface ListenerDeleted
     {
-        void onCardsFetched();
+        void onCardsDeleted();
     }
 
-    public interface ListenerFetching
+    public interface ListenerDeleting
     {
-        void onCardsFetching();
+        void onCardsDeleting();
     }
 }

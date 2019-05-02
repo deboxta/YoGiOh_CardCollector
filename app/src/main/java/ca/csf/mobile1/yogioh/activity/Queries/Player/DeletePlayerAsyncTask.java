@@ -2,21 +2,20 @@ package ca.csf.mobile1.yogioh.activity.Queries.Player;
 
 import android.os.AsyncTask;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 
-public class FetchPlayerByNameAsyncTask extends AsyncTask<String, Void, List<YugiohPlayer>>
+public class DeletePlayerAsyncTask extends AsyncTask<YugiohPlayer, Void, Void> 
 {
     private boolean isDataBaseError;
 
-    private ListenerFetching onExecute;
-    private ListenerFetched onSuccess;
+    private ListenerDeleting onExecute;
+    private ListenerDeleted onSuccess;
     private final Runnable onDataBaseError;
+
     private YugiohPlayerDAO yugiohPlayerDAO;
 
-    public FetchPlayerByNameAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public DeletePlayerAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerDeleting onExecute, ListenerDeleted onSuccess, Runnable onDataBaseError)
     {
         if (yugiohPlayerDAO == null) throw new IllegalArgumentException("yugiohPlayerDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -32,20 +31,18 @@ public class FetchPlayerByNameAsyncTask extends AsyncTask<String, Void, List<Yug
     }
 
     @Override
-    protected List<YugiohPlayer> doInBackground(String... name)
+    protected Void doInBackground(YugiohPlayer... yugiohPlayers)
     {
-        List<YugiohPlayer> wantedPlayer = null;
-
         try
         {
-            wantedPlayer = yugiohPlayerDAO.findByName(name[0]);
+            yugiohPlayerDAO.delete(yugiohPlayers[0]);
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
 
-        return wantedPlayer;
+        return null;
     }
 
     @Override
@@ -55,18 +52,18 @@ public class FetchPlayerByNameAsyncTask extends AsyncTask<String, Void, List<Yug
     }
 
     @Override
-    protected void onPostExecute(List<YugiohPlayer> yugiohPlayers)
+    protected void onPostExecute(Void aVoid)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onPlayerFetched(yugiohPlayers);
+        else onSuccess.onPlayerFetched();
     }
 
-    public interface ListenerFetched
+    public interface ListenerDeleted
     {
-        void onPlayerFetched(List<YugiohPlayer> yugiohPlayers);
+        void onPlayerFetched();
     }
 
-    public interface ListenerFetching
+    public interface ListenerDeleting
     {
         void onPlayerFetching();
     }
