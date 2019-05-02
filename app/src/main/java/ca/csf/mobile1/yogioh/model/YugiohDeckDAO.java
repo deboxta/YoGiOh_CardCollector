@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface YugiohDeckDAO
 
     @Insert
     long[] insertAll(YugiohDeckCard...yugiohDeckCards);
+
+    @Update
+    void updateCardAmount(YugiohDeckCard yugiohDeckCard);
 
     @Delete
     void delete(YugiohDeckCard yugiohDeckCard);
