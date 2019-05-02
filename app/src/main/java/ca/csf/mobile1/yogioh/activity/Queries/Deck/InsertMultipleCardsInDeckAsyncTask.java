@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
 import ca.csf.mobile1.yogioh.model.YugiohDeckDAO;
 
-public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void, Long>
+public class InsertMultipleCardsInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void, Long[]>
 {
     private boolean isDataBaseError;
 
@@ -14,7 +14,7 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
     private final Runnable onDataBaseError;
     private YugiohDeckDAO yugiohDeckDAO;
 
-    public InsertOneCardInDeckAsyncTask(YugiohDeckDAO yugiohDeckDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public InsertMultipleCardsInDeckAsyncTask(YugiohDeckDAO yugiohDeckDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
     {
         if (yugiohDeckDAO == null) throw new IllegalArgumentException("yugiohDeckDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -30,20 +30,33 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
     }
 
     @Override
-    protected Long doInBackground(YugiohDeckCard... yugiohDeckCards)
+    protected Long[] doInBackground(YugiohDeckCard... yugiohDeckCards)
     {
-        Long cardId = null;
+        Long[] cardsIds = null;
 
         try
         {
-            cardId = yugiohDeckDAO.insertOne(yugiohDeckCards[0]);
+            cardsIds = convertPrimitiveToWrapper(yugiohDeckDAO.insertAll(yugiohDeckCards));
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             isDataBaseError = true;
         }
+        return cardsIds;
+    }
 
-        return cardId;
+    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
+        Long[] ids = new Long[primitiveIds.length];
+        for (int i = 0; i < primitiveIds.length; i++) {
+            ids[i] = primitiveIds[i];
+        }
+        return ids;
+    }
+
+    @Override
+    protected void onPostExecute(Long[] cardsAdded)
+    {
+        onSuccess.onCardInserted(cardsAdded);
     }
 
     @Override
@@ -52,15 +65,9 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
         onExecute.onCardInserting();
     }
 
-    @Override
-    protected void onPostExecute(Long cardAdded)
-    {
-        onSuccess.onCardInserted(cardAdded);
-    }
-
     public interface ListenerInserted
     {
-        void onCardInserted(Long cardAdded);
+        void onCardInserted(Long[] cardsAdded);
     }
 
     public interface ListenerInserting
