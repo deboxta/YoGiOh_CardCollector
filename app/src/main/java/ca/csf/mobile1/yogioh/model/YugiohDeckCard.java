@@ -11,7 +11,7 @@ import androidx.room.ForeignKey;
         ),
         @ForeignKey(entity = YugiohCard.class,
                 parentColumns = "id",
-                childColumns = "")
+                childColumns = "card_id")
 })
 public class YugiohDeckCard
 {
