@@ -2,13 +2,10 @@ package ca.csf.mobile1.yogioh.activity.Queries.Deck;
 
 import android.os.AsyncTask;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
 import ca.csf.mobile1.yogioh.model.YugiohDeckDAO;
-import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 
-public class FetchPlayerDeckAsyncTask extends AsyncTask<YugiohPlayer, Void, List<YugiohDeckCard>>
+public class FetchCardInDeckAsyncTask extends AsyncTask<Integer, Void, YugiohDeckCard>
 {
     private boolean isDataBaseError;
 
@@ -17,7 +14,7 @@ public class FetchPlayerDeckAsyncTask extends AsyncTask<YugiohPlayer, Void, List
     private final Runnable onDataBaseError;
     private YugiohDeckDAO yugiohDeckDAO;
 
-    public FetchPlayerDeckAsyncTask(YugiohDeckDAO yugiohDeckDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public FetchCardInDeckAsyncTask(YugiohDeckDAO yugiohDeckDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (yugiohDeckDAO == null) throw new IllegalArgumentException("yugiohDeckDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -33,19 +30,19 @@ public class FetchPlayerDeckAsyncTask extends AsyncTask<YugiohPlayer, Void, List
     }
 
     @Override
-    protected List<YugiohDeckCard> doInBackground(YugiohPlayer... yugiohPlayers)
+    protected YugiohDeckCard doInBackground(Integer... integers)
     {
-        List<YugiohDeckCard> playerDeck = null;
+        YugiohDeckCard cardInDeck = null;
 
         try
         {
-            playerDeck = yugiohDeckDAO.selectAll(yugiohPlayers[0].id);
+            cardInDeck = yugiohDeckDAO.selectOwnedCardById(integers[0], integers[1]);
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
-        return playerDeck;
+        return cardInDeck;
     }
 
     @Override
@@ -55,15 +52,15 @@ public class FetchPlayerDeckAsyncTask extends AsyncTask<YugiohPlayer, Void, List
     }
 
     @Override
-    protected void onPostExecute(List<YugiohDeckCard> playerDeck)
+    protected void onPostExecute(YugiohDeckCard cardInDeck)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched(playerDeck);
+        else onSuccess.onCardsFetched(cardInDeck);
     }
 
     public interface ListenerFetched
     {
-        void onCardsFetched(List<YugiohDeckCard> playerDeck);
+        void onCardsFetched(YugiohDeckCard cardInDeck);
     }
 
     public interface ListenerFetching
