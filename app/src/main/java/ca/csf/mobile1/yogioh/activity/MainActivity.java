@@ -74,16 +74,16 @@ public class MainActivity extends AppCompatActivity
 //        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
 //        startActivity(intent);
 
-        gift = false;
+        //gift = false;
 
-        myDialog = new Dialog(this);
-        myDialog.setContentView(R.layout.notificationpopup);
-        myDialog.show();
+        //myDialog = new Dialog(this);
+        //myDialog.setContentView(R.layout.notificationpopup);
+        //myDialog.show();
 
-        createNotificationChannel(); //Creer le channel de notif
-        startService(new Intent(this, DailyNotificationService.class));
-        SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        gift = sharedPreferences.getBoolean("gift", false);
+        //createNotificationChannel(); //Creer le channel de notif
+        //startService(new Intent(this, DailyNotificationService.class));
+        //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        //gift = sharedPreferences.getBoolean("gift", false);
 
     }
 
