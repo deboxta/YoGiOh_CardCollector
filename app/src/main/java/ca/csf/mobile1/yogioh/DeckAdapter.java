@@ -17,12 +17,14 @@ import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 {
-    public static final String LEVEL_TEXT = "Level : ";
-    public static final String ATK_TEXT = "ATK : ";
-    public static final String DEF_TEXT = "DEF : ";
-
     private final Context context;
-    public List<YugiohCard> dataSet;
+    private List<YugiohCard> dataSet;
+
+    public DeckAdapter(Context context, List<YugiohCard> dataSet)
+    {
+        this.context = context;
+        this.dataSet = dataSet;
+    }
 
     public void setDataSet(List<YugiohCard> dataSet)
     {
@@ -31,28 +33,24 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public DeckAdapter(Context context, List<YugiohCard> dataSet)
-    {
-        this.context = context;
-        this.dataSet = dataSet;
-    }
-
     @NonNull
     @Override
     public DeckAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_layout ,parent, false);
+        View view = LayoutInflater.from(context)
+                    .inflate(R.layout.item_layout , parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DeckAdapter.ViewHolder holder, int position)
     {
-        TextView cardName = holder.itemView.findViewById(R.id.cardName);
-        cardName.setText(dataSet.get(position).cardName);
+        YugiohCard card = dataSet.get(position);
 
-        String type = dataSet.get(position).type;
+        TextView cardName = holder.itemView.findViewById(R.id.cardName);
+        cardName.setText(card.cardName);
+
+        String type = card.type;
 
         TextView cardType = holder.itemView.findViewById(R.id.cardType);
         cardType.setText(type);
@@ -60,10 +58,21 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         TextView cardLevel = holder.itemView.findViewById(R.id.cardLevel);
         TextView cardAttackAndDefense = holder.itemView.findViewById(R.id.cardAttackAndDefense);
 
-        if (type.equals(CardTypes.Monster))
+        if (type.equals(CardTypes.Monster.toString()))
         {
-            cardLevel.setText(LEVEL_TEXT + dataSet.get(position).nbStars);
-            cardAttackAndDefense.setText(ATK_TEXT + dataSet.get(position).cardAttack + DEF_TEXT + dataSet.get(position).cardDefense);
+            StringBuilder attackAndDefenseBuilder = new StringBuilder();
+            attackAndDefenseBuilder.append(context.getString(R.string.ATK_TEXT));
+            attackAndDefenseBuilder.append(card.cardAttack);
+            attackAndDefenseBuilder.append("\t");
+            attackAndDefenseBuilder.append(context.getString(R.string.DEF_TEXT));
+            attackAndDefenseBuilder.append(card.cardDefense);
+
+            StringBuilder levelBuilder = new StringBuilder();
+            levelBuilder.append(context.getString(R.string.LEVEL_TEXT));
+            levelBuilder.append(card.nbStars);
+
+            cardLevel.setText(levelBuilder.toString());
+            cardAttackAndDefense.setText(attackAndDefenseBuilder.toString());
         }
         else
         {
