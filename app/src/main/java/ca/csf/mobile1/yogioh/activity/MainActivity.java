@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
@@ -33,7 +34,6 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 public class MainActivity extends AppCompatActivity
 {
     private RecyclerView yugiohDeckRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private DeckAdapter deckAdapter;
 
     public static final String CHANNEL_ID = "channel";
@@ -67,18 +67,19 @@ public class MainActivity extends AppCompatActivity
         InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
         insertCardsAsyncTask.execute(new YugiohCard());
 
+        currentDeck = new ArrayList<>();
+
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        yugiohDeckRecyclerView.setLayoutManager(layoutManager);
-        deckAdapter = new DeckAdapter(this, null);
+        yugiohDeckRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        deckAdapter = new DeckAdapter(this, currentDeck);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
 
         FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
-        ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
+        //ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
 
         //gift = false;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         //myDialog.show();
 
         createNotificationChannel(); //Creer le channel de notif
-        startService(new Intent(this, DailyNotificationService.class));
+        //startService(new Intent(this, DailyNotificationService.class));
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
 
