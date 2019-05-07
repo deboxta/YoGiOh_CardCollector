@@ -3,7 +3,7 @@ package ca.csf.mobile1.yogioh.activity.queries.deck;
 import android.os.AsyncTask;
 
 import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
-import ca.csf.mobile1.yogioh.model.YugiohDeckDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 
 public class FetchCardInDeckAsyncTask extends AsyncTask<Integer, Void, YugiohDeckCard>
 {

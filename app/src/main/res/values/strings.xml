@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">YOGIOH</string>
-    <string name="TEXT_BEAM_RESULT">Result will be here</string>
+    <string name="text_beam_result">Result will be here</string>
     <string name="deck_title_text">Your Deck</string>
-    <string name="ERROR_TEXT_NFC">NFC not working properly</string>
-    <string name="ERROR_TEXT_NFC_NOT_ACTIVATED">Enable NFC via settings</string>
-    <string name="SNACK_NFC_ACTIVATION_TEXT">Settings</string>
-    <string name="TEXT_CARD_DESCRIPTION">Card image default</string>
+    <string name="error_text_nfc">NFC not working properly</string>
+    <string name="error_text_nfc_not_activated">Enable NFC via settings</string>
+    <string name="snack_nfc_activation_text">Settings</string>
+    <string name="text_card_description">Card image default</string>
     <string name="close">Close</string>
     <string name="open">Open</string>
     <string name="LEVEL_TEXT">Level : </string>

@@ -35,11 +35,11 @@ public class InitialInsetionAsynchTask extends AsyncTask<Void, Void, YugiohCard>
                 text.append(line);
                 text.append('\n');
             }
-            br.close();;
+            br.close();
         }
         catch(Exception e)
         {
-            //Bonjour
+            throw new RuntimeException(e);
         }
 
     }

@@ -31,6 +31,8 @@ public class DailyNotificationSetup extends BroadcastReceiver
 
         notificationPendingIntent = PendingIntent.getActivity(context, 1, reapeatingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        //TODO context.getResources().getString()
+
         notificationManagerCompat = NotificationManagerCompat.from(context);
         notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
