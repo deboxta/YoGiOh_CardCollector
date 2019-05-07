@@ -8,4 +8,5 @@
     <string name="TEXT_CARD_DESCRIPTION">Card image default</string>
     <string name="close">Close</string>
     <string name="open">Open</string>
+    <string name="notification_reward_title">Daily Reward Available</string>
 </resources>

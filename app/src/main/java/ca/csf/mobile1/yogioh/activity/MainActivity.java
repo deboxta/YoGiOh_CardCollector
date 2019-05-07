@@ -8,16 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.app.AlarmManager;
-import android.app.Dialog;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,8 +35,6 @@ public class MainActivity extends AppCompatActivity
 
     public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
-    private boolean gift;
-    private Dialog myDialog;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
@@ -89,6 +81,8 @@ public class MainActivity extends AppCompatActivity
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
 
+        createNotificationChannel(); //Creer le channel de notif
+        startService(new Intent(this, DailyNotificationService.class));
     }
 
     private void onPlayerInserted(Long[] longs) {
