@@ -1,8 +1,6 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Player;
+package ca.csf.mobile1.yogioh.activity.queries.player;
 
 import android.os.AsyncTask;
-
-import java.util.List;
 
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
