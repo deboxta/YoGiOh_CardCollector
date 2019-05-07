@@ -34,9 +34,12 @@ public class InsertOneCardAsyncTask extends AsyncTask<YugiohCard, Void, Long>
     protected Long doInBackground(YugiohCard... yugiohCard)
     {
         Long id = null;
-        try {
+        try
+        {
             id = yugiohCardDAO.insertOne(yugiohCard[0]);
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
         return id;

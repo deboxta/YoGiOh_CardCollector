@@ -3,6 +3,7 @@ package ca.csf.mobile1.yogioh.activity.queries.player;
 import android.os.AsyncTask;
 
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 
 public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]>
@@ -37,21 +38,13 @@ public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]
         Long[] ids = null;
         try
         {
-            ids = convertPrimitiveToWrapper(yugiohPlayerDAO.insertAll(yugiohPlayers));
+            ids = ConvertUtil.convertPrimitiveToWrapper(yugiohPlayerDAO.insertAll(yugiohPlayers));
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
 
-        return ids;
-    }
-
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
-        }
         return ids;
     }
 

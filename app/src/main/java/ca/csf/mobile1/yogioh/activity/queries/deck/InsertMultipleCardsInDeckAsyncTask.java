@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
+
 public class InsertMultipleCardsInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void, Long[]>
 {
     private boolean isDataBaseError;
@@ -36,21 +38,13 @@ public class InsertMultipleCardsInDeckAsyncTask extends AsyncTask<YugiohDeckCard
 
         try
         {
-            cardsIds = convertPrimitiveToWrapper(yugiohDeckDAO.insertAll(yugiohDeckCards));
+            cardsIds = ConvertUtil.convertPrimitiveToWrapper(yugiohDeckDAO.insertAll(yugiohDeckCards));
         }
         catch(Exception e)
         {
             isDataBaseError = true;
         }
         return cardsIds;
-    }
-
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
-        }
-        return ids;
     }
 
     @Override
