@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -33,8 +34,8 @@ public class DailyNotificationSetup extends BroadcastReceiver
         notificationManagerCompat = NotificationManagerCompat.from(context);
         notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Daily Reward Available")
-                .setContentText("Come and get ur reward!")
+                .setContentTitle("Daily Reward Available") //TODO : STRING RESSOURCE
+                .setContentText("Come and get ur reward!") //TODO : STRING RESSOURCE
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(notificationPendingIntent)
@@ -42,6 +43,12 @@ public class DailyNotificationSetup extends BroadcastReceiver
                 .build();
 
         notificationManagerCompat.notify(9, notification);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("gift", true);
+        editor.commit();
+
         context.startService(new Intent(context, DailyNotificationService.class));
     }
 }

@@ -54,7 +54,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         }
 
         nfcAdapter.setNdefPushMessageCallback(this,this);
-
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     }
 
@@ -66,7 +65,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     @Override
     public NdefMessage createNdefMessage(NfcEvent event)
     {
-
         operationMessage = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "text/plain", idGivenCard.getBytes())});
 
         return operationMessage;
@@ -103,6 +101,5 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idView.setText(new String(operationMessage.getRecords()[0].getPayload()));
-
     }
 }
