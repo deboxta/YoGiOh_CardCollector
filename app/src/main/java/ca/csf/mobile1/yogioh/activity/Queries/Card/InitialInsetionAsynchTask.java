@@ -10,7 +10,6 @@ public class InitialInsetionAsynchTask extends AsyncTask<Void, Void, YugiohCard>
     @Override
     protected YugiohCard doInBackground(Void... voids)
     {
-
         return null;
     }
 }

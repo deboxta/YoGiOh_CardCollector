@@ -25,9 +25,11 @@ import android.util.Log;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.Queries.Card.InsertCardsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.Queries.Player.InsertPlayersAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.model.YugiohDeckDAO;
+import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity
         InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
         insertCardsAsyncTask.execute(new YugiohCard());
 
+//        InsertPlayersAsyncTask insertPlayersAsyncTask = new InsertPlayersAsyncTask(yugiohPlayerDAO, this::onInsertingPlayer, this::onPlayerInserted, this::onDatabaseError);
+//        insertPlayersAsyncTask.execute(new YugiohPlayer());
+
         myDeck = findViewById(R.id.myDeck);
         myDeck.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -84,6 +89,14 @@ public class MainActivity extends AppCompatActivity
         //startService(new Intent(this, DailyNotificationService.class));
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
+
+    }
+
+    private void onPlayerInserted(Long[] longs) {
+
+    }
+
+    private void onInsertingPlayer() {
 
     }
 
