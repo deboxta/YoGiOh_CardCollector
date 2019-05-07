@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 
 
@@ -33,6 +34,10 @@ public class DailyNotificationService extends Service
 
         notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, 5500, pendingNotificationIntent);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        boolean gift = sharedPreferences.getBoolean("gift", false);
+        int x = 5;
 
         return super.onStartCommand(intent, flags, startId);
     }

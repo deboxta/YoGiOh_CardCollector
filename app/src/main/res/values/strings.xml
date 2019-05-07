@@ -6,4 +6,6 @@
     <string name="ERROR_TEXT_NFC_NOT_ACTIVATED">Enable NFC via settings</string>
     <string name="SNACK_NFC_ACTIVATION_TEXT">Settings</string>
     <string name="TEXT_CARD_DESCRIPTION">Card image default</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
 </resources>
