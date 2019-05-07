@@ -1,6 +1,5 @@
 package ca.csf.mobile1.yogioh.repository.database;
 
-
 import androidx.room.RoomDatabase;
 
 import ca.csf.mobile1.yogioh.model.YugiohCard;

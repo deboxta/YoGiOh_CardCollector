@@ -1,6 +1,5 @@
 package ca.csf.mobile1.yogioh;
 
-
 import android.content.Context;
 
 import androidx.room.Room;
@@ -26,9 +25,9 @@ import static org.junit.Assert.assertSame;
 @RunWith(AndroidJUnit4.class)
 public class YugiohCardDAOTest
 {
-    public static final String ANTHONYCARDNAME = "Anthony le furry aspect";
-    public static final String ANTOINECARDNAME = "Antoine l'aspect du temps";
-    public static final String BLACKMAGICIANCARDNAME = "Black Magician";
+    private static final String ANTHONYCARDNAME = "Anthony le furry aspect";
+    private static final String ANTOINECARDNAME = "Antoine l'aspect du temps";
+    private static final String BLACKMAGICIANCARDNAME = "Black Magician";
     private YugiohCardDAO yugiohCardDAO;
     private YugiohDatabase db;
 

@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

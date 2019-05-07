@@ -1,8 +1,5 @@
 package ca.csf.mobile1.yogioh.model;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -45,11 +42,6 @@ public class YugiohCard
     @ColumnInfo(name = "card_defense")
     public int cardDefense;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-
-
-
-
     public YugiohCard()
     {
         cardName = DEFAULTNAME;
@@ -62,6 +54,18 @@ public class YugiohCard
         cardDefense = DEFAULTDEFENSEVALUE;
     }
 
+    public YugiohCard(int id, String cardName, String type, String attribute, String monsterType, int nbStars, String cardDescription, int cardAttack, int cardDefense)
+    {
+        this.id = id;
+        this.cardName = cardName;
+        this.type = type;
+        this.attribute = attribute;
+        this.monsterType = monsterType;
+        this.nbStars = nbStars;
+        this.cardDescription = cardDescription;
+        this.cardAttack = cardAttack;
+        this.cardDefense = cardDefense;
+    }
 
     @Override
     public boolean equals(Object o)

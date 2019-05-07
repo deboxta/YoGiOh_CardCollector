@@ -26,6 +26,18 @@ public class YugiohDeckCard
     @ColumnInfo(name = "amount_owned")
     public int amountOwned;
 
+    public YugiohDeckCard()
+    {
+
+    }
+
+    public YugiohDeckCard(int playerId, int cardId, int amountOwned)
+    {
+        this.playerId = playerId;
+        this.cardId = cardId;
+        this.amountOwned = amountOwned;
+    }
+
     @Override
     public boolean equals(Object o)
     {

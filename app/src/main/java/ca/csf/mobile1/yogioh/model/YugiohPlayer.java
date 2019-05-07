@@ -25,6 +25,13 @@ public class YugiohPlayer
         name = DEFAULTUSERNAME;
     }
 
+    public YugiohPlayer(int id, String playerUserName, String name)
+    {
+        this.id = id;
+        this.playerUserName = playerUserName;
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o)
     {

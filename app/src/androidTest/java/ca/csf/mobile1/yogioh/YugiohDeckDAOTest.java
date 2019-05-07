@@ -69,7 +69,6 @@ public class YugiohDeckDAOTest
         List<YugiohDeckCard> yugiohDeckCardList = yugiohDeckDAO.selectAll(1);
 
         assertEquals(yugiohDeckCard,yugiohDeckCardList.get(0));
-
     }
 
     @Test
@@ -101,6 +100,4 @@ public class YugiohDeckDAOTest
 
         assertEquals(1,yugiohDeckDAO.selectAll(1).size());
     }
-
-
 }
