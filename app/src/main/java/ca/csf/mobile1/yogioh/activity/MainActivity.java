@@ -21,8 +21,8 @@ import java.util.List;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.activity.queries.card.InsertCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.card.InsertCardsAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
