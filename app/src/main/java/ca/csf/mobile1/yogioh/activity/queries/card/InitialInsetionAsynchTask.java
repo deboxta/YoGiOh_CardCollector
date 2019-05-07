@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Card;
+package ca.csf.mobile1.yogioh.activity.queries.card;
 
 import android.os.AsyncTask;
 import android.os.Environment;

@@ -1,21 +1,20 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Player;
+package ca.csf.mobile1.yogioh.activity.queries.player;
 
 import android.os.AsyncTask;
 
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 
-public class InsertOnePlayerAsyncTask extends AsyncTask<YugiohPlayer, Void, Long>
+public class FetchPlayerByUsernameAsyncTask extends AsyncTask<String, Void, YugiohPlayer>
 {
     private boolean isDataBaseError;
 
-    private ListenerInserting onExecute;
-    private ListenerInserted onSuccess;
+    private ListenerFetching onExecute;
+    private ListenerFetched onSuccess;
     private final Runnable onDataBaseError;
-
     private YugiohPlayerDAO yugiohPlayerDAO;
 
-    public InsertOnePlayerAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public FetchPlayerByUsernameAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
         if (yugiohPlayerDAO == null) throw new IllegalArgumentException("yugiohPlayerDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -31,42 +30,42 @@ public class InsertOnePlayerAsyncTask extends AsyncTask<YugiohPlayer, Void, Long
     }
 
     @Override
-    protected  Long doInBackground(YugiohPlayer... yugiohPlayers)
+    protected YugiohPlayer doInBackground(String... username)
     {
+        YugiohPlayer wantedPlayer = null;
 
-        Long id = null;
         try
         {
-            id = yugiohPlayerDAO.insertOne(yugiohPlayers[0]);
+            wantedPlayer = yugiohPlayerDAO.findByUsername(username[0]);
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
 
-        return id;
+        return wantedPlayer;
     }
 
     @Override
     protected void onPreExecute()
     {
-        onExecute.onPlayerInserting();
+        onExecute.onPlayerFetching();
     }
 
     @Override
-    protected void onPostExecute(Long id)
+    protected void onPostExecute(YugiohPlayer yugiohPlayer)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onPlayerInserted(id);
+        else onSuccess.onPlayerFetched(yugiohPlayer);
     }
 
-    public interface ListenerInserted
+    public interface ListenerFetched
     {
-        void onPlayerInserted(Long id);
+        void onPlayerFetched(YugiohPlayer yugiohPlayer);
     }
 
-    public interface ListenerInserting
+    public interface ListenerFetching
     {
-        void onPlayerInserting();
+        void onPlayerFetching();
     }
 }

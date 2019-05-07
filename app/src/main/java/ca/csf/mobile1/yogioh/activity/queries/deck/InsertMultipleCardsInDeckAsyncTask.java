@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Deck;
+package ca.csf.mobile1.yogioh.activity.queries.deck;
 
 import android.os.AsyncTask;
 

@@ -1,13 +1,11 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Card;
+package ca.csf.mobile1.yogioh.activity.queries.player;
 
 import android.os.AsyncTask;
 
-import java.util.List;
+import ca.csf.mobile1.yogioh.model.YugiohPlayer;
+import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
 
-import ca.csf.mobile1.yogioh.model.YugiohCard;
-import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
-
-public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
+public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]>
 {
     private boolean isDataBaseError;
 
@@ -15,32 +13,37 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     private ListenerInserted onSuccess;
     private final Runnable onDataBaseError;
 
-    private YugiohCardDAO yugiohCardDAO;
+    private YugiohPlayerDAO yugiohPlayerDAO;
 
-    public InsertCardsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public InsertPlayersAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
     {
+        if (yugiohPlayerDAO == null) throw new IllegalArgumentException("yugiohPlayerDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
         if (onDataBaseError == null) throw new IllegalArgumentException("onDataBaseError cannot be null");
 
+        this.yugiohPlayerDAO = yugiohPlayerDAO;
         this.onExecute = onExecute;
         this.onSuccess = onSuccess;
         this.onDataBaseError = onDataBaseError;
-
-        this.yugiohCardDAO = yugiohCardDAO;
 
         isDataBaseError = false;
     }
 
     @Override
-    protected Long[] doInBackground(YugiohCard... yugiohCards)
+    protected  Long[] doInBackground(YugiohPlayer... yugiohPlayers)
     {
+
         Long[] ids = null;
-        try {
-            ids = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
-        }catch (Exception e){
+        try
+        {
+            ids = convertPrimitiveToWrapper(yugiohPlayerDAO.insertAll(yugiohPlayers));
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
+
         return ids;
     }
 
@@ -55,23 +58,23 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsInserting();
+        onExecute.onPlayerInserting();
     }
 
     @Override
-    protected void onPostExecute(Long[] longs)
+    protected void onPostExecute(Long[] ids)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsInserted(longs);
+        else onSuccess.onPlayerInserted(ids);
     }
 
     public interface ListenerInserted
     {
-        void onCardsInserted(Long[] longs);
+        void onPlayerInserted(Long[] ids);
     }
 
     public interface ListenerInserting
     {
-        void onCardsInserting();
+        void onPlayerInserting();
     }
 }

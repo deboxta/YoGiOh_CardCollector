@@ -47,7 +47,7 @@ public class DailyNotificationSetup extends BroadcastReceiver
         SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("gift", true);
-        editor.commit();
+        editor.apply();
 
         context.startService(new Intent(context, DailyNotificationService.class));
     }

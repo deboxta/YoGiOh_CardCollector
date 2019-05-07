@@ -1,48 +1,51 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Player;
+package ca.csf.mobile1.yogioh.activity.queries.card;
 
 import android.os.AsyncTask;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.model.YugiohPlayer;
-import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
 
-public class FetchPlayersAsyncTask extends AsyncTask<Void, Void, List<YugiohPlayer>>
+public class FetchCardsAsyncTask extends AsyncTask<Void, Void, List<YugiohCard>>
 {
     private boolean isDataBaseError;
 
     private ListenerFetching onExecute;
     private ListenerFetched onSuccess;
     private final Runnable onDataBaseError;
+    private YugiohCardDAO yugiohCardDAO;
 
-    private YugiohPlayerDAO yugiohPlayerDAO;
-
-    public FetchPlayersAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
+    public FetchCardsAsyncTask(YugiohCardDAO yugiohCardDAO, ListenerFetching onExecute, ListenerFetched onSuccess, Runnable onDataBaseError)
     {
+        if (yugiohCardDAO == null) throw new IllegalArgumentException("yugiohCardDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
         if (onSuccess == null) throw new IllegalArgumentException("onSuccess cannot be null");
         if (onDataBaseError == null) throw new IllegalArgumentException("onDataBaseError cannot be null");
 
+        this.yugiohCardDAO = yugiohCardDAO;
         this.onExecute = onExecute;
         this.onSuccess = onSuccess;
         this.onDataBaseError = onDataBaseError;
-
-        this.yugiohPlayerDAO = yugiohPlayerDAO;
 
         isDataBaseError = false;
     }
 
     @Override
-    protected List<YugiohPlayer> doInBackground(Void... voids)
+    protected List<YugiohCard> doInBackground(Void... voids)
     {
-        List<YugiohPlayer> yugiohPlayers = null;
-        try {
-            yugiohPlayerDAO.selectAll();
-        }catch (Exception e){
+        List<YugiohCard> wantedCards = null;
+
+        try
+        {
+            wantedCards = yugiohCardDAO.selectAll();
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
 
-        return yugiohPlayers;
+        return wantedCards;
     }
 
     @Override
@@ -52,15 +55,15 @@ public class FetchPlayersAsyncTask extends AsyncTask<Void, Void, List<YugiohPlay
     }
 
     @Override
-    protected void onPostExecute(List<YugiohPlayer> yugiohPlayers)
+    protected void onPostExecute(List<YugiohCard> yugiohCards)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched(yugiohPlayers);
+        else onSuccess.onCardsFetched(yugiohCards);
     }
 
     public interface ListenerFetched
     {
-        void onCardsFetched(List<YugiohPlayer> yugiohPlayers);
+        void onCardsFetched(List<YugiohCard> yugiohCards);
     }
 
     public interface ListenerFetching
