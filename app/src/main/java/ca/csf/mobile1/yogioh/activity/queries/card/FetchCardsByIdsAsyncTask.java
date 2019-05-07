@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 
 public class FetchCardsByIdsAsyncTask extends AsyncTask<Long,Void,List<YugiohCard>>
@@ -36,20 +37,15 @@ public class FetchCardsByIdsAsyncTask extends AsyncTask<Long,Void,List<YugiohCar
     protected List<YugiohCard> doInBackground(Long... ids)
     {
         List<YugiohCard> yugiohCards = null;
-        try {
-            yugiohCards =  yugiohCardDAO.findAllByIds(convertWrapperToPrimitive(ids));
-        }catch (Exception e){
+        try
+        {
+            yugiohCards =  yugiohCardDAO.findAllByIds(ConvertUtil.convertWrapperToPrimitive(ids));
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
         return yugiohCards;
-    }
-
-    private long[] convertWrapperToPrimitive(Long[] wrapperIds) {
-        long[] ids = new long[wrapperIds.length];
-        for (int i = 0; i < wrapperIds.length; i++) {
-            ids[i] = wrapperIds[i];
-        }
-        return ids;
     }
 
     @Override

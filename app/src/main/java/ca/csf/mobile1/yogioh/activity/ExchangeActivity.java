@@ -10,6 +10,7 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private NfcAdapter nfcAdapter;
     private TextView idView;
     private PendingIntent pendingIntent;
+    private ImageView cardView;
 
     //TODO : Keep
     public static void start(Context context, String cardId) {
@@ -48,6 +50,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         idGivenCard = getIntent().getStringExtra("EXTRA_ID");
 
         idView = findViewById(R.id.textView);
+        cardView = findViewById(R.id.cardView);
         View rootView = findViewById(R.id.rootView);
         ImageView cardView = findViewById(R.id.cardView);
 

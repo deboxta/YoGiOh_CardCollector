@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 
 public class FetchPlayersByIdsAsyncTask extends AsyncTask<Long, Void, List<YugiohPlayer>>
@@ -39,7 +40,7 @@ public class FetchPlayersByIdsAsyncTask extends AsyncTask<Long, Void, List<Yugio
         List<YugiohPlayer> yugiohPlayers = null;
         try
         {
-            yugiohPlayers = yugiohPlayerDAO.FindAllByIds(convertWrapperToPrimitive(ids));
+            yugiohPlayers = yugiohPlayerDAO.FindAllByIds(ConvertUtil.convertWrapperToPrimitive(ids));
         }
         catch (Exception e)
         {
@@ -47,14 +48,6 @@ public class FetchPlayersByIdsAsyncTask extends AsyncTask<Long, Void, List<Yugio
         }
 
         return yugiohPlayers;
-    }
-
-    private long[] convertWrapperToPrimitive(Long[] wrapperIds) {
-        long[] ids = new long[wrapperIds.length];
-        for (int i = 0; i < wrapperIds.length; i++) {
-            ids[i] = wrapperIds[i];
-        }
-        return ids;
     }
 
     @Override
