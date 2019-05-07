@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.model;
+package ca.csf.mobile1.yogioh.repository.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,6 +6,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
+
+import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 @Dao
 public interface YugiohCardDAO

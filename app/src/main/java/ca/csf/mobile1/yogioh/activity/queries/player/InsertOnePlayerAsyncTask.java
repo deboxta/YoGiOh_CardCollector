@@ -1,13 +1,11 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Player;
+package ca.csf.mobile1.yogioh.activity.queries.player;
 
 import android.os.AsyncTask;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
-import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 
-public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]>
+public class InsertOnePlayerAsyncTask extends AsyncTask<YugiohPlayer, Void, Long>
 {
     private boolean isDataBaseError;
 
@@ -17,7 +15,7 @@ public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]
 
     private YugiohPlayerDAO yugiohPlayerDAO;
 
-    public InsertPlayersAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
+    public InsertOnePlayerAsyncTask(YugiohPlayerDAO yugiohPlayerDAO, ListenerInserting onExecute, ListenerInserted onSuccess, Runnable onDataBaseError)
     {
         if (yugiohPlayerDAO == null) throw new IllegalArgumentException("yugiohPlayerDAO cannot be null");
         if (onExecute == null) throw new IllegalArgumentException("onExecute cannot be null");
@@ -33,28 +31,20 @@ public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]
     }
 
     @Override
-    protected  Long[] doInBackground(YugiohPlayer... yugiohPlayers)
+    protected  Long doInBackground(YugiohPlayer... yugiohPlayers)
     {
 
-        Long[] ids = null;
+        Long id = null;
         try
         {
-            ids = convertPrimitiveToWrapper(yugiohPlayerDAO.insertAll(yugiohPlayers));
+            id = yugiohPlayerDAO.insertOne(yugiohPlayers[0]);
         }
         catch (Exception e)
         {
             isDataBaseError = true;
         }
 
-        return ids;
-    }
-
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
-        }
-        return ids;
+        return id;
     }
 
     @Override
@@ -64,15 +54,15 @@ public class InsertPlayersAsyncTask extends AsyncTask<YugiohPlayer, Void, Long[]
     }
 
     @Override
-    protected void onPostExecute(Long[] ids)
+    protected void onPostExecute(Long id)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onPlayerInserted(ids);
+        else onSuccess.onPlayerInserted(id);
     }
 
     public interface ListenerInserted
     {
-        void onPlayerInserted(Long[] ids);
+        void onPlayerInserted(Long id);
     }
 
     public interface ListenerInserting
