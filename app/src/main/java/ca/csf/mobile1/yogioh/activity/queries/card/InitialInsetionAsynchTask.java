@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Card;
+package ca.csf.mobile1.yogioh.activity.queries.card;
 
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -35,11 +35,11 @@ public class InitialInsetionAsynchTask extends AsyncTask<Void, Void, YugiohCard>
                 text.append(line);
                 text.append('\n');
             }
-            br.close();;
+            br.close();
         }
         catch(Exception e)
         {
-            //Bonjour
+            throw new RuntimeException(e);
         }
 
     }

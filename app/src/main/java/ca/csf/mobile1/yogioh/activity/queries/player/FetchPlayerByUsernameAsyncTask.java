@@ -1,10 +1,9 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Player;
+package ca.csf.mobile1.yogioh.activity.queries.player;
 
 import android.os.AsyncTask;
-import ca.csf.mobile1.yogioh.model.YugiohCard;
-import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
+
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
-import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 
 public class FetchPlayerByUsernameAsyncTask extends AsyncTask<String, Void, YugiohPlayer>
 {

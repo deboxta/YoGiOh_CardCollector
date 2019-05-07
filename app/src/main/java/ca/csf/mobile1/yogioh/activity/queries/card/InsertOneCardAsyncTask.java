@@ -1,9 +1,9 @@
-package ca.csf.mobile1.yogioh.activity.Queries.Card;
+package ca.csf.mobile1.yogioh.activity.queries.card;
 
 import android.os.AsyncTask;
 
 import ca.csf.mobile1.yogioh.model.YugiohCard;
-import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 
 public class InsertOneCardAsyncTask extends AsyncTask<YugiohCard, Void, Long>
 {

@@ -28,7 +28,9 @@ public class YugiohDeckCard
 
     public YugiohDeckCard()
     {
-
+        playerId = 1;
+        cardId = 0;
+        amountOwned = 1;
     }
 
     public YugiohDeckCard(int playerId, int cardId, int amountOwned)

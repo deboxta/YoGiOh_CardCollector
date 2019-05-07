@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.model.YugiohPlayer;
-import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 
 public class FetchPlayersAsyncTask extends AsyncTask<Void, Void, List<YugiohPlayer>>
 {

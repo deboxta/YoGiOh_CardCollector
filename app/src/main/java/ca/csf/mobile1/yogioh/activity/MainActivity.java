@@ -24,9 +24,9 @@ import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InsertCardsAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
-import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
-import ca.csf.mobile1.yogioh.model.YugiohDeckDAO;
-import ca.csf.mobile1.yogioh.model.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 
@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
+        //TODO getResources().openRawResource(R.raw.yugiohinsertion)
+        //TODO Remove this ............
         InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
         insertCardsAsyncTask.execute(new YugiohCard());
 
@@ -76,9 +78,7 @@ public class MainActivity extends AppCompatActivity
         task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
-        Intent intent = new Intent(this, ExchangeActivity.class);
-        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
-        startActivity(intent);
+        ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
 
         //gift = false;
 
