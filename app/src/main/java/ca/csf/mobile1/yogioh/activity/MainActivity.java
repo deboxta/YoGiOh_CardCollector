@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
     private boolean gift;
-    Dialog myDialog;
+    private Dialog myDialog;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;

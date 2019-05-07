@@ -36,8 +36,6 @@ public class DailyNotificationService extends Service
         notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, 5500, pendingNotificationIntent);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        boolean gift = sharedPreferences.getBoolean("gift", false);
-        int x = 5;
 
         return super.onStartCommand(intent, flags, startId);
     }
