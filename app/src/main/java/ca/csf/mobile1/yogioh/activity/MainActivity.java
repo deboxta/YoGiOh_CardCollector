@@ -2,28 +2,26 @@ package ca.csf.mobile1.yogioh.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 
+import java.util.List;
+
+import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.activity.Queries.Card.FetchCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.Queries.Card.InsertCardsAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohCardDAO;
@@ -34,19 +32,25 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 public class MainActivity extends AppCompatActivity
 {
-    private RecyclerView myDeck;
+    private RecyclerView yugiohDeckRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private DeckAdapter deckAdapter;
 
     public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
     private boolean gift;
     private Dialog myDialog;
 
+    private static final int PLAYER_NUMBER = 1;
+
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
+    private List<YugiohCard> currentDeck;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,12 +65,15 @@ public class MainActivity extends AppCompatActivity
         InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
         insertCardsAsyncTask.execute(new YugiohCard());
 
-        myDeck = findViewById(R.id.myDeck);
-        myDeck.setHasFixedSize(true);
+        yugiohDeckRecyclerView = findViewById(R.id.myDeck);
+        yugiohDeckRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        myDeck.setLayoutManager(layoutManager);
-        //deckAdapter = new DeckAdapter(this, db.yugiohDAO().selectAll());
-        // myDeck.setAdapter(deckAdapter);
+        yugiohDeckRecyclerView.setLayoutManager(layoutManager);
+        deckAdapter = new DeckAdapter(this, null);
+        yugiohDeckRecyclerView.setAdapter(deckAdapter);
+
+        FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
+        task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
         Intent intent = new Intent(this, ExchangeActivity.class);
@@ -84,6 +91,17 @@ public class MainActivity extends AppCompatActivity
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
 
+    }
+
+    private void onCardsFetching()
+    {
+
+    }
+
+    private void onCardsFetched(List<YugiohCard> cards)
+    {
+        currentDeck = cards;
+        deckAdapter.setDataSet(currentDeck);
     }
 
     private void onCardInserted(Long[] longs)
