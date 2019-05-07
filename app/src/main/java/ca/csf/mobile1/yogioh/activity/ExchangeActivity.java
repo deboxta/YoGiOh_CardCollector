@@ -28,6 +28,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private NfcAdapter nfcAdapter;
     private TextView idView;
     private PendingIntent pendingIntent;
+    private ImageView cardView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -38,6 +39,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         idGivenCard = getIntent().getStringExtra("EXTRA_ID");
 
         idView = findViewById(R.id.textView);
+        cardView = findViewById(R.id.cardView);
         View rootView = findViewById(R.id.rootView);
         ImageView cardView = findViewById(R.id.cardView);
 

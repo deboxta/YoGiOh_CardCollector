@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity
         // myDeck.setAdapter(deckAdapter);
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
-//        Intent intent = new Intent(this, ExchangeActivity.class);
-//        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
-//        startActivity(intent);
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        intent.putExtra("EXTRA_ID", "15");      //Replace the value by the id of the selected card to transfer via nfc
+        startActivity(intent);
 
         //gift = false;
 
