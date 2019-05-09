@@ -2,6 +2,7 @@ package ca.csf.mobile1.yogioh.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity
 {
     private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
+    private LinearLayoutManager deckLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
 
     public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
@@ -69,11 +72,17 @@ public class MainActivity extends AppCompatActivity
 
         currentDeck = new ArrayList<>();
 
+
+
+        deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
-        yugiohDeckRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
         deckAdapter = new DeckAdapter(this, currentDeck);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
+        yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
+
+
 
         FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         task.execute();

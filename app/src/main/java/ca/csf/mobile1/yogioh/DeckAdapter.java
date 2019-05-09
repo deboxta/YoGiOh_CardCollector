@@ -1,6 +1,7 @@
 package ca.csf.mobile1.yogioh;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,14 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v)
+                {
+                    Log.i("Click", "Item " + getAdapterPosition() + " clicked");
+                }
+            });
         }
     }
 }
