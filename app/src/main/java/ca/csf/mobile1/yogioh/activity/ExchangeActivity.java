@@ -22,13 +22,10 @@ import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
-import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
 {
@@ -137,24 +134,12 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idView.setText(new String(operationMessage.getRecords()[0].getPayload()));
 
-        changeCardById();
+        cardView.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(idGivenCard)));
+        cardView.setOnClickListener(this::onClickedCardView);
     }
 
-    private void changeCardById() {
-        FetchCardsByIdsAsyncTask fetchId = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
-        fetchId.execute(Long.parseLong(idGivenCard));
-
-    }
-
-    private void onDatabaseError() {
-
-    }
-
-    private void onCardsFetched(List<YugiohCard> yugiohCards) {
-
-    }
-
-    private void onCardsFetching() {
-
+    private void onClickedCardView(View view)
+    {
+        MainActivity.start(this,idGivenCard);
     }
 }

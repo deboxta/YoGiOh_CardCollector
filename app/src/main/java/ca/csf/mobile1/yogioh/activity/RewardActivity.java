@@ -2,6 +2,9 @@ package ca.csf.mobile1.yogioh.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +21,13 @@ public class RewardActivity extends AppCompatActivity
     private Button openButton;
     private ImageView cardImage;
     private StringBuilder idCard;
+
+    public static void start(Context context)
+    {
+        Intent rewardPopup = new Intent(context, RewardActivity.class);
+
+        context.startActivity(rewardPopup);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +51,7 @@ public class RewardActivity extends AppCompatActivity
     private void closeReward(View view)
     {
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, 5));
-        //finish();
+        finish();
     }
 
     private void openReward(View view)

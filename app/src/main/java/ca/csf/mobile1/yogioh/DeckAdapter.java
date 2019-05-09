@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ca.csf.mobile1.yogioh.activity.CardDetailActivity;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 

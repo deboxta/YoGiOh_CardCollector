@@ -26,6 +26,8 @@ import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class CardDetailActivity extends AppCompatActivity
 {
+    public static final String EXTRA_CARD_ID = "EXTRA_ID";
+
     private ImageView cardImage;
     private Button exchangeButton;
     private View rootView;
@@ -38,8 +40,8 @@ public class CardDetailActivity extends AppCompatActivity
     private YugiohDeckDAO yugiohDeckDAO;
 
     public static void start(Context context, String cardId) {
-        Intent intent = new Intent(context, CardDetailActivity.class);
-        intent.putExtra(ExchangeActivity.EXTRA__CARD_ID, cardId);
+        Intent intent = new Intent(context, ExchangeActivity.class);
+        intent.putExtra(EXTRA_CARD_ID, cardId);
 
         context.startActivity(intent);
     }
