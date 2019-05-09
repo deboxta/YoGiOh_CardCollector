@@ -4,11 +4,10 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.model.CardTypes;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 
-public class FetchCardsByTypeAsyncTask extends AsyncTask<CardTypes,Void, List<YugiohCard>>
+public class FetchCardsByTypeAsyncTask extends AsyncTask<String,Void, List<YugiohCard>>
 {
     private boolean isDataBaseError;
 
@@ -34,12 +33,12 @@ public class FetchCardsByTypeAsyncTask extends AsyncTask<CardTypes,Void, List<Yu
     }
 
     @Override
-    protected List<YugiohCard> doInBackground(CardTypes... cardType)
+    protected List<YugiohCard> doInBackground(String... cardType)
     {
         List<YugiohCard> yugiohCards = null;
         try
         {
-            yugiohCards =  yugiohCardDAO.findCardByType(cardType[0].toString());
+            yugiohCards =  yugiohCardDAO.findCardByType(cardType[0]);
         }
         catch (Exception e)
         {

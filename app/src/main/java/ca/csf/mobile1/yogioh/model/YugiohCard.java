@@ -9,11 +9,8 @@ import java.util.Objects;
 @Entity
 public class YugiohCard
 {
-    //TODO: Move to test eventually.
-    private static final String DEFAULT_DESCRIPTION = "This legendary dragon is a powerful engine of destruction. Virtually invincible, very few have faced this awesome creature and lived to tell the tale";
-    private static final String DEFAULT_NAME = "Blue-Eyes White Dragon";
-    private static final int DEFAULT_ATTACK_VALUE = 3000;
-    private static final int DEFAULT_DEFENSE_VALUE = 2500;
+    public static final String EMPTY_STRING = "";
+    public static final int VALUE_ZERO = 0;
 
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -44,14 +41,14 @@ public class YugiohCard
 
     public YugiohCard()
     {
-        cardName = DEFAULT_NAME;
-        type = CardTypes.Monster.toString();
-        attribute = CardAttributes.Light.toString();
-        monsterType = MonsterTypes.Dragon.toString();
-        nbStars = 8;
-        cardDescription = DEFAULT_DESCRIPTION;
-        cardAttack = DEFAULT_ATTACK_VALUE;
-        cardDefense = DEFAULT_DEFENSE_VALUE;
+        cardName = EMPTY_STRING;
+        type = EMPTY_STRING;
+        attribute = EMPTY_STRING;
+        monsterType = EMPTY_STRING;
+        nbStars = VALUE_ZERO;
+        cardDescription = EMPTY_STRING;
+        cardAttack = VALUE_ZERO;
+        cardDefense = VALUE_ZERO;
     }
 
     public YugiohCard(int id, String cardName, String type, String attribute, String monsterType, int nbStars, String cardDescription, int cardAttack, int cardDefense)

@@ -25,6 +25,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class YugiohPlayerDAOTest
 {
+    private static final String TEST_DEFAULT_PLAYER_USERNAME = "plucTheMachine";
+    private static final String TEST_DEFAULT_PLAYER_NAME = "Pierre-Luc Maltais";
+
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDatabase db;
 
@@ -53,6 +56,7 @@ public class YugiohPlayerDAOTest
     public void writePlayerAndReadAllInList()
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
+        generateDefaultPlayer(yugiohPlayer);
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
         yugiohPlayer.id = (int) newId;
         assertEquals(yugiohPlayer, yugiohPlayerDAO.selectAll().get(0));
@@ -62,6 +66,7 @@ public class YugiohPlayerDAOTest
     public void removePlayerFromList()
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
+        generateDefaultPlayer(yugiohPlayer);
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
         yugiohPlayer.id = (int) newId;
         yugiohPlayerDAO.delete(yugiohPlayer);
@@ -72,19 +77,25 @@ public class YugiohPlayerDAOTest
     public void findPlayerById()
     {
         YugiohPlayer yugiohPlayer = new YugiohPlayer();
+        generateDefaultPlayer(yugiohPlayer);
         long newId = yugiohPlayerDAO.insertOne(yugiohPlayer);
         yugiohPlayer.id = (int) newId;
 
         YugiohPlayer yugiohPlayer1 = new YugiohPlayer();
+        generateDefaultPlayer(yugiohPlayer1);
         newId = yugiohPlayerDAO.insertOne(yugiohPlayer1);
         yugiohPlayer1.id = (int) newId;
 
         long[] ids = {yugiohPlayer.id};
         List<YugiohPlayer> foundPlayer = yugiohPlayerDAO.FindAllByIds(ids);
 
-
         assertEquals(yugiohPlayer, foundPlayer.get(0));
+    }
 
+    private void generateDefaultPlayer(YugiohPlayer yugiohPlayer)
+    {
+        yugiohPlayer.name = TEST_DEFAULT_PLAYER_NAME;
+        yugiohPlayer.playerUserName = TEST_DEFAULT_PLAYER_USERNAME;
     }
 
 
