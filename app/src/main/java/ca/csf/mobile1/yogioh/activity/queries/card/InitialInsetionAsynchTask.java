@@ -28,9 +28,7 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
     @Override
     protected Void doInBackground(InputStream... inputStreams)
     {
-        List<YugiohCard> yugiohCardList = prepareInitialCards(inputStreams[0]);
-        yugiohCardDAO.insertAll(yugiohCardList);
-
+        yugiohCardDAO.insertAll(prepareInitialCards(inputStreams[0]));
         return null;
     }
 
@@ -53,7 +51,7 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
                 yugiohCard.type = cardsInformations[2];
                 yugiohCard.attribute = cardsInformations[3];
                 yugiohCard.monsterType = cardsInformations[4];
-                yugiohCard.nbStars = Integer.valueOf( cardsInformations[5]);
+                yugiohCard.nbStars = Integer.valueOf(cardsInformations[5]);
                 yugiohCard.cardDescription = cardsInformations[6];
                 yugiohCard.cardAttack = Integer.valueOf(cardsInformations[7]);
                 yugiohCard.cardDefense = Integer.valueOf(cardsInformations[8]);

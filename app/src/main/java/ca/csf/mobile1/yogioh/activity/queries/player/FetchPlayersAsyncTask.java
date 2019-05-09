@@ -37,34 +37,33 @@ public class FetchPlayersAsyncTask extends AsyncTask<Void, Void, List<YugiohPlay
     {
         List<YugiohPlayer> yugiohPlayers = null;
         try {
-            yugiohPlayerDAO.selectAll();
+            yugiohPlayers = yugiohPlayerDAO.selectAll();
         }catch (Exception e){
             isDataBaseError = true;
         }
-
         return yugiohPlayers;
     }
 
     @Override
     protected void onPreExecute()
     {
-        onExecute.onCardsFetching();
+        onExecute.onPlayerFetching();
     }
 
     @Override
     protected void onPostExecute(List<YugiohPlayer> yugiohPlayers)
     {
         if (isDataBaseError) onDataBaseError.run();
-        else onSuccess.onCardsFetched(yugiohPlayers);
+        else onSuccess.onPlayersFetched(yugiohPlayers);
     }
 
     public interface ListenerFetched
     {
-        void onCardsFetched(List<YugiohPlayer> yugiohPlayers);
+        void onPlayersFetched(List<YugiohPlayer> yugiohPlayers);
     }
 
     public interface ListenerFetching
     {
-        void onCardsFetching();
+        void onPlayerFetching();
     }
 }

@@ -26,7 +26,10 @@ import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InsertCardsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.player.FetchPlayersAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.player.InsertOnePlayerAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
@@ -52,9 +55,12 @@ public class MainActivity extends AppCompatActivity
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
+    private List<YugiohPlayer> playerList;
+
+    private List<YugiohCard> allCards;
     private List<YugiohCard> currentDeck;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,15 +72,14 @@ public class MainActivity extends AppCompatActivity
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
-        InitialInsetionAsynchTask initialInsetionAsynchTask = new InitialInsetionAsynchTask(yugiohCardDAO);
-        initialInsetionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
 
-//        InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
-//        insertCardsAsyncTask.execute(new YugiohCard());
+        FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
+        fetchCardsAsyncTask.execute();
+
+        FetchPlayersAsyncTask fetchPlayersAsyncTask = new FetchPlayersAsyncTask(yugiohPlayerDAO, this::onPlayerFetching, this::onPlayersFetched, this::onDatabaseError);
+        fetchPlayersAsyncTask.execute();
 
         currentDeck = new ArrayList<>();
-
-
 
         deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
@@ -84,10 +89,6 @@ public class MainActivity extends AppCompatActivity
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
 
-
-
-        //FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
-        //task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
         //ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
@@ -105,6 +106,36 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void onPlayerFetching()
+    {
+
+    }
+
+    private void onPlayersFetched(List<YugiohPlayer> players)
+    {
+        playerList = players;
+        if(playerList.size() == 0)
+        {
+            createInitialPlayer();
+        }
+    }
+
+    private void createInitialPlayer()
+    {
+        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onPlayerInserting,this::onPlayerInserted, this::onDatabaseError);
+        insertOnePlayerAsyncTask.execute(new YugiohPlayer());
+    }
+
+    private void onPlayerInserted(Long id)
+    {
+
+    }
+
+    private void onPlayerInserting()
+    {
+
+    }
+
     private void onCardsFetching()
     {
 
@@ -112,13 +143,22 @@ public class MainActivity extends AppCompatActivity
 
     private void onCardsFetched(List<YugiohCard> cards)
     {
-        currentDeck = cards;
-        deckAdapter.setDataSet(currentDeck);
+        allCards = cards;
+        if (allCards.size() == 0)
+        {
+            createInitialCards();
+        }
+    }
+
+    private void createInitialCards()
+    {
+        InitialInsetionAsynchTask initialInsetionAsynchTask = new InitialInsetionAsynchTask(yugiohCardDAO);
+        initialInsetionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
     }
 
     private void onCardInserted(Long[] longs)
     {
-        Log.i("InsertedInDatabase","inserted");
+        Log.i("InsertedInDatabase", "inserted");
     }
 
     private void onInsertingCard()
