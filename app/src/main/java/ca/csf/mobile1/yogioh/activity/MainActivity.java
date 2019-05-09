@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity
         task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
-        //ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
 
         //gift = false;
 

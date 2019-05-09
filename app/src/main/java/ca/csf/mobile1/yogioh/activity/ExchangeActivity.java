@@ -18,25 +18,33 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
+import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
 {
-    public static final String EXTRA__CARD_ID = "EXTRA_ID";
+    public static final String EXTRA_CARD_ID = "EXTRA_ID";
     private String idGivenCard;
     private NdefMessage operationMessage;
     private NfcAdapter nfcAdapter;
     private TextView idView;
     private PendingIntent pendingIntent;
     private ImageView cardView;
+    private YugiohCardDAO yugiohCardDAO;
+    private YugiohDatabase yugiohDatabase;
 
-    //TODO : Keep
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
-        intent.putExtra(EXTRA__CARD_ID, cardId);
+        intent.putExtra(EXTRA_CARD_ID, cardId);
 
         context.startActivity(intent);
     }
@@ -46,8 +54,14 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
+
+        Integer id = getTaskId();
+        Log.e("Id task oncreate :", id.toString());
         
-        idGivenCard = getIntent().getStringExtra("EXTRA_ID");
+        idGivenCard = getIntent().getStringExtra(EXTRA_CARD_ID);
+
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "yugiohDatabase").build();
+        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
 
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
@@ -76,6 +90,9 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     {
         super.onResume();
 
+        Integer id = getTaskId();
+        Log.e("Id task onResume :", id.toString());
+
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
         {
             processIntentData(getIntent());
@@ -87,6 +104,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     protected void onPause()
     {
         super.onPause();
+        Integer id = getTaskId();
+        Log.e("Id de la task onPause :", id.toString());
 
         nfcAdapter.disableForegroundDispatch(this);
     }
@@ -94,6 +113,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     @Override
     protected void onNewIntent(Intent intent)
     {
+        Integer id = getTaskId();
+        Log.e("Id task NewIntent :", id.toString());
         setIntent(intent);
     }
 
@@ -115,5 +136,25 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idView.setText(new String(operationMessage.getRecords()[0].getPayload()));
+
+        changeCardById();
+    }
+
+    private void changeCardById() {
+        FetchCardsByIdsAsyncTask fetchId = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
+        fetchId.execute(Long.parseLong(idGivenCard));
+
+    }
+
+    private void onDatabaseError() {
+
+    }
+
+    private void onCardsFetched(List<YugiohCard> yugiohCards) {
+
+    }
+
+    private void onCardsFetching() {
+
     }
 }

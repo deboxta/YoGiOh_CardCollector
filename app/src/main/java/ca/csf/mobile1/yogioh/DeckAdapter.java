@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ca.csf.mobile1.yogioh.activity.ExchangeActivity;
 import ca.csf.mobile1.yogioh.model.CardTypes;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 
@@ -81,7 +82,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         }
     }
 
-    int getCardId(int position)
+    public int getCardId(int position)
     {
         return dataSet.get(position).id;
     }
@@ -103,6 +104,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
                 public void onClick(View v)
                 {
                     Log.i("Click", "Item " + getAdapterPosition() + " clicked");
+
                 }
             });
         }
