@@ -37,9 +37,12 @@ public class FetchCardsByTypeAsyncTask extends AsyncTask<CardTypes,Void, List<Yu
     protected List<YugiohCard> doInBackground(CardTypes... cardType)
     {
         List<YugiohCard> yugiohCards = null;
-        try {
+        try
+        {
             yugiohCards =  yugiohCardDAO.findCardByType(cardType[0].toString());
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
         return yugiohCards;

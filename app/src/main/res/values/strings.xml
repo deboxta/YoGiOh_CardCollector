@@ -9,7 +9,7 @@
     <string name="close">Close</string>
     <string name="open">Open</string>
     <string name="LEVEL_TEXT">Level : </string>
-    <string name="ATK_TEXT">ATK : </string>
-    <string name="DEF_TEXT">DEF : </string>
+    <string name="ATK_TEXT">ATK/</string>
+    <string name="DEF_TEXT">DEF/</string>
     <string name="notification_reward_title">Daily Reward Available</string>
 </resources>

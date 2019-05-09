@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
 public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
 {
@@ -34,18 +35,13 @@ public class InsertCardsAsyncTask extends AsyncTask<YugiohCard, Void, Long[]>
     protected Long[] doInBackground(YugiohCard... yugiohCards)
     {
         Long[] ids = null;
-        try {
-            ids = convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
-        }catch (Exception e){
-            isDataBaseError = true;
+        try
+        {
+            ids = ConvertUtil.convertPrimitiveToWrapper(yugiohCardDAO.insertAll(yugiohCards));
         }
-        return ids;
-    }
-
-    private Long[] convertPrimitiveToWrapper(long[] primitiveIds) {
-        Long[] ids = new Long[primitiveIds.length];
-        for (int i = 0; i < primitiveIds.length; i++) {
-            ids[i] = primitiveIds[i];
+        catch (Exception e)
+        {
+            isDataBaseError = true;
         }
         return ids;
     }
