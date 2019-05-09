@@ -9,8 +9,8 @@
     <string name="close_text_button">Close</string>
     <string name="open_text_button">Open</string>
     <string name="level_text">Level : </string>
-    <string name="atk_text">ATK : </string>
-    <string name="def_text">DEF : </string>
+    <string name="atk_text">ATK/</string>
+    <string name="def_text">DEF/</string>
     <string name="daily_reward_title">Daily Reward Available</string>
     <string name="daily_reward_description">Come and get your reward!</string>
     <string name="daily_reward">DAILY REWARD</string>
