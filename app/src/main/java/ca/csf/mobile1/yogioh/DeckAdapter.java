@@ -61,14 +61,14 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         if (type.equals(CardTypes.Monster.toString()))
         {
             StringBuilder attackAndDefenseBuilder = new StringBuilder();
-            attackAndDefenseBuilder.append(context.getString(R.string.ATK_TEXT));
+            attackAndDefenseBuilder.append(context.getString(R.string.atk_text));
             attackAndDefenseBuilder.append(card.cardAttack);
             attackAndDefenseBuilder.append("\t");
-            attackAndDefenseBuilder.append(context.getString(R.string.DEF_TEXT));
+            attackAndDefenseBuilder.append(context.getString(R.string.def_text));
             attackAndDefenseBuilder.append(card.cardDefense);
 
             StringBuilder levelBuilder = new StringBuilder();
-            levelBuilder.append(context.getString(R.string.LEVEL_TEXT));
+            levelBuilder.append(context.getString(R.string.level_text));
             levelBuilder.append(card.nbStars);
 
             cardLevel.setText(levelBuilder.toString());

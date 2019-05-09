@@ -7,4 +7,4 @@
 7+Change of Heart+Spell+Spell+ + Target 1 monster your opponent controls; take control of it until the end phase.+ + 
 8+Trap Jammer+Trap+Trap+ + When your opponent activates a Trap Card during the Battle Phase: Negate the activation, and if you do, destroy it.+ + 
 9+Mirror Force+Trap+Trap+ + When an opponent's monster declares an attack: Destroy all your opponent's attack position monsters.+ + 
-10+ Graverobber+Trap+Trap+ + Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.+ +
+10+Graverobber+Trap+Trap+ + Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.+ +

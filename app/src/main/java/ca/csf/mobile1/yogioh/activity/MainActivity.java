@@ -1,6 +1,5 @@
 package ca.csf.mobile1.yogioh.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,11 +8,7 @@ import androidx.room.Room;
 
 import android.app.Dialog;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -39,7 +34,6 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager deckLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
 
-    public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
     private boolean gift;
     private Dialog myDialog;
@@ -53,7 +47,6 @@ public class MainActivity extends AppCompatActivity
 
     private List<YugiohCard> currentDeck;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -92,10 +85,13 @@ public class MainActivity extends AppCompatActivity
         //myDialog.setContentView(R.layout.notificationpopup);
         //myDialog.show();
 
-        createNotificationChannel(); //Creer le channel de notif
+
         //startService(new Intent(this, DailyNotificationService.class));
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
+
+        //Intent rewardPopup = new Intent(this, RewardActivity.class);
+        //startActivity(rewardPopup);
 
     }
 
@@ -123,31 +119,6 @@ public class MainActivity extends AppCompatActivity
     private void onDatabaseError()
     {
 
-    }
-
-    private void createNotificationChannel()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            NotificationManager manager = getSystemService(NotificationManager.class);
-
-            if (manager.getNotificationChannel(CHANNEL_ID) == null)
-            {
-                NotificationChannel channel = new NotificationChannel(
-                        CHANNEL_ID,
-                        "Channel",
-                        NotificationManager.IMPORTANCE_HIGH
-                );
-
-                channel.setDescription("Daily Rewards");
-                channel.enableLights(true);
-                channel.enableVibration(true);
-                channel.setLightColor(R.color.colorPrimary);
-                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-                manager.createNotificationChannel(channel);
-            }
-        }
     }
 
 }
