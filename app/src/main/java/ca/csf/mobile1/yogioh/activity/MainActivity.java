@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
 
-        Intent rewardPopup = new Intent(this, RewardActivity.class);
-        startActivity(rewardPopup);
+        //Intent rewardPopup = new Intent(this, RewardActivity.class);
+        //startActivity(rewardPopup);
 
     }
 
