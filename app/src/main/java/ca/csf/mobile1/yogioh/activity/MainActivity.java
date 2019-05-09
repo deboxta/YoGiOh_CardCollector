@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity
 
         currentDeck = new ArrayList<>();
 
-
-
         deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
@@ -81,8 +79,6 @@ public class MainActivity extends AppCompatActivity
         deckAdapter = new DeckAdapter(this, currentDeck);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
-
-
 
         FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         task.execute();

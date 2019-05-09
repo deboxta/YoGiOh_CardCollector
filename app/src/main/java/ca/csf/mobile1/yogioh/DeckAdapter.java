@@ -81,6 +81,11 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         }
     }
 
+    int getCardId(int position)
+    {
+        return dataSet.get(position).id;
+    }
+
     @Override
     public int getItemCount()
     {
