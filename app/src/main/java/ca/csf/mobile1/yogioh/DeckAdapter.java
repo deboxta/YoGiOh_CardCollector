@@ -81,7 +81,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         }
     }
 
-    int getCardId(int position)
+    public int getCardId(int position)
     {
         return dataSet.get(position).id;
     }

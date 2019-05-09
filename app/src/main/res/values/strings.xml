@@ -14,4 +14,5 @@
     <string name="daily_reward_title">Daily Reward Available</string>
     <string name="daily_reward_description">Come and get your reward!</string>
     <string name="daily_reward">DAILY REWARD</string>
+    <string name="card_detail_image_description">Card details image</string>
 </resources>
