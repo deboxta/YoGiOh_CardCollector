@@ -36,20 +36,17 @@ public class RewardActivity extends AppCompatActivity
 
         idCard = new StringBuilder();
 
-        idCard.append("card");
-        idCard.append("5");
     }
 
     private void closeReward(View view)
     {
-        finish();
+        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, 5));
+        //finish();
     }
 
     private void openReward(View view)
     {
-
-        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, idCard.toString()));
-
+        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, 4));
     }
 
 }
