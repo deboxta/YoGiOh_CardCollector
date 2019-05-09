@@ -28,6 +28,9 @@ public interface YugiohCardDAO
     long[] insertAll(YugiohCard...yugiohCards);
 
     @Insert
+    long[] insertAll(List<YugiohCard> yugiohCardList);
+
+    @Insert
     long insertOne(YugiohCard yugiohCards);
 
     @Delete

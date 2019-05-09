@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.List;
 
+import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.model.CardTypes;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;

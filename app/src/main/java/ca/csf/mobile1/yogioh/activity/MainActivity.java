@@ -22,6 +22,7 @@ import java.util.List;
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InsertCardsAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
@@ -62,10 +63,11 @@ public class MainActivity extends AppCompatActivity
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
-        //TODO getResources().openRawResource(R.raw.yugiohinsertion)
-        //TODO Remove this ............
-        InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
-        insertCardsAsyncTask.execute(new YugiohCard());
+        InitialInsetionAsynchTask initialInsetionAsynchTask = new InitialInsetionAsynchTask(yugiohCardDAO);
+        initialInsetionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
+
+//        InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
+//        insertCardsAsyncTask.execute(new YugiohCard());
 
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
@@ -74,8 +76,8 @@ public class MainActivity extends AppCompatActivity
         deckAdapter = new DeckAdapter(this, null);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
 
-        FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
-        task.execute();
+        //FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
+        //task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
         ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         //myDialog.show();
 
         createNotificationChannel(); //Creer le channel de notif
-        startService(new Intent(this, DailyNotificationService.class));
+        //startService(new Intent(this, DailyNotificationService.class));
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
 

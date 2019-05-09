@@ -1,10 +1,10 @@
-1+Kuriboh+Monster+Dark+Fiend+1+During your opponent's  turn, at damage calculation: You can discard this card: you take no battle damage from that battle(this is a Quick Effect).+300+200
-2+Blue-Eyes White Dragon+Monster+Light+Dragon+8+This legendary dragon is a powerful engine of destruction. Virtually invincible, very few have faced his awesome creature and lived to tell the tale.+3000+2500
-3+Uria, Lord of Searing Flames+Monster+Fire+Pyro+10+Cannot be Normal Summoned or Set. Must be Special Summoned(from your hand) by sending 3 face-up Trap Cards you control to the graveyard, and cannot be special summoned by other ways. This card gains 1000 ATK for each continuous trap card in your graveyard. Once per turn: You can target 1 set Spell/Trap Card your opponent controls; destroy that target. Spell and Trap Cards canot be activated in response to this effect's activation.+0+0
-4+Dark Magician+Monster+Dark+Spellcaster+7+The ultimate wizard in terms of attack and defense+2500+2100
-5+Pot of Duality+Spell+Spell+ +Excavate the top 3 cards of your Deck, add 1 of them to your hand, also, after that, shuffle the rest back into your Deck. You can only activate 1 "Pot of Duality" per turn. You cannot Special Summon during the turn you activate this card.+ + 
-6+Twin Twisters+Spell+Spell+ + Discard 1 card, then target up to 2 Spell/Trap Cards on the field; destroy them. + + 
-7+Change of Heart+Spell+Spell+ + Target 1 monster your opponent controls; take control of it until the end phase.+ + 
-8+Trap Jammer+Trap+Trap+ + When your opponent activates a Trap Card during the Battle Phase: Negate the activation, and if you do, destroy it.+ + 
-9+Mirror Force+Trap+Trap+ + When an opponent's monster declares an attack: Destroy all your opponent's attack position monsters.+ + 
-10+ Graverobber+Trap+Trap+ + Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.+ +
+1!Kuriboh!Monster!Dark!Fiend!1!During your opponent's turn, at damage calculation: You can discard this card: you take no battle damage from that battle(this is a Quick Effect).!300!200
+2!Blue!Eyes White Dragon!Monster!Light!Dragon!8!This legendary dragon is a powerful engine of destruction. Virtually invincible, very few have faced his awesome creature and lived to tell the tale.!3000!2500
+3!Uria, Lord of Searing Flames!Monster!Fire!Pyro!10!Cannot be Normal Summoned or Set. Must be Special Summoned(from your hand) by sending 3 face!up Trap Cards you control to the graveyard, and cannot be special summoned by other ways. This card gains 1000 ATK for each continuous trap card in your graveyard. Once per turn: You can target 1 set Spell/Trap Card your opponent controls; destroy that target. Spell and Trap Cards canot be activated in response to this effect's activation.!0!0
+4!Dark Magician!Monster!Dark!Spellcaster!7!The ultimate wizard in terms of attack and defense!2500!2100
+5!Pot of Duality!Spell!Spell! !Excavate the top 3 cards of your Deck, add 1 of them to your hand, also, after that, shuffle the rest back into your Deck. You can only activate 1 "Pot of Duality" per turn. You cannot Special Summon during the turn you activate this card.! !
+6!Twin Twisters!Spell!Spell! ! Discard 1 card, then target up to 2 Spell/Trap Cards on the field; destroy them. ! !
+7!Change of Heart!Spell!Spell! ! Target 1 monster your opponent controls; take control of it until the end phase.! !
+8!Trap Jammer!Trap!Trap! ! When your opponent activates a Trap Card during the Battle Phase: Negate the activation, and if you do, destroy it.! !
+9!Mirror Force!Trap!Trap! ! When an opponent's monster declares an attack: Destroy all your opponent's attack position monsters.! !
+10!Graverobber!Trap!Trap! ! Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.! !
