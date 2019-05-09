@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.R;
@@ -20,13 +22,15 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class CardDetailActivity extends AppCompatActivity
 {
     private ImageView cardImage;
     private Button exchangeButton;
+    private View rootView;
 
-    private String recievedCardId;
+    private String receivedCardId;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
@@ -45,19 +49,22 @@ public class CardDetailActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        receivedCardId = getIntent().getStringExtra("EXTRA_ID");
+
         yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "yugiohDatabase").build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
+        rootView = findViewById(R.id.rootView);
         cardImage = findViewById(R.id.card_details_image);
         exchangeButton = findViewById(R.id.exchange_btn);
         exchangeButton.setOnClickListener(this::onExchangeButtonClicked);
 
-        recievedCardId = getIntent().getStringExtra("EXTRA_ID");
 
+        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
         FetchCardsByIdsAsyncTask fetchCard = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onCardFetching, this::onCardFetched, this::onDatabaseError);
-        fetchCard.execute(Long.parseLong(recievedCardId));
+        fetchCard.execute(Long.parseLong(receivedCardId));
 
 
     }
@@ -65,7 +72,7 @@ public class CardDetailActivity extends AppCompatActivity
     private void onExchangeButtonClicked(View view)
     {
         //This is the action to do when a card is selected on the deck to transfer via nfc
-        ExchangeActivity.start(this, recievedCardId);
+        ExchangeActivity.start(this, receivedCardId);
     }
 
     private void onCardFetching()
@@ -75,11 +82,11 @@ public class CardDetailActivity extends AppCompatActivity
 
     private void onCardFetched(List<YugiohCard> card)
     {
-        
+        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
     }
 
     private void onDatabaseError()
     {
-
+        Snackbar.make(rootView, R.string.database_error, Snackbar.LENGTH_LONG).show();
     }
 }
