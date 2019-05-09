@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey;
 public class YugiohPlayer
 {
 
-    public static final String DEFAULTPLAYERUSERNAME = "plucTheMachine";
-    public static final String DEFAULTUSERNAME = "Pierre-Luc Maltais";
+
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -21,13 +20,12 @@ public class YugiohPlayer
 
     public YugiohPlayer()
     {
-        playerUserName = DEFAULTPLAYERUSERNAME;
-        name = DEFAULTUSERNAME;
+        playerUserName = YugiohCard.EMPTY_STRING;
+        name = YugiohCard.EMPTY_STRING;
     }
 
     public YugiohPlayer(int id, String playerUserName, String name)
     {
-        this.id = id;
         this.playerUserName = playerUserName;
         this.name = name;
     }

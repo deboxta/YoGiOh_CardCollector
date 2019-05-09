@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.model.CardTypes;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 {
+    public static final String CARD_TYPE_MONSTER = "Monster";
     private final Context context;
     private List<YugiohCard> dataSet;
 
@@ -58,7 +58,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         TextView cardLevel = holder.itemView.findViewById(R.id.cardLevel);
         TextView cardAttackAndDefense = holder.itemView.findViewById(R.id.cardAttackAndDefense);
 
-        if (type.equals(CardTypes.Monster.toString()))
+        if (type.equals(CARD_TYPE_MONSTER))
         {
             StringBuilder attackAndDefenseBuilder = new StringBuilder();
             attackAndDefenseBuilder.append(context.getString(R.string.atk_text));
