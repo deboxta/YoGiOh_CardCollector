@@ -33,9 +33,12 @@ public class DeleteCardAsyncTask extends AsyncTask<YugiohCard, Void, Void>
     @Override
     protected Void doInBackground(YugiohCard... yugiohCards)
     {
-        try {
+        try
+        {
             yugiohCardDAO.delete(yugiohCards[0]);
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             isDataBaseError = true;
         }
         return null;

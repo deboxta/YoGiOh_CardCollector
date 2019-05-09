@@ -2,6 +2,7 @@ package ca.csf.mobile1.yogioh.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.csf.mobile1.yogioh.DeckAdapter;
@@ -34,8 +36,9 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 public class MainActivity extends AppCompatActivity
 {
     private RecyclerView yugiohDeckRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private DeckAdapter deckAdapter;
+    private LinearLayoutManager deckLayoutManager;
+    private DividerItemDecoration dividerItemDecoration;
 
     public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
@@ -69,18 +72,25 @@ public class MainActivity extends AppCompatActivity
 //        InsertCardsAsyncTask insertCardsAsyncTask = new InsertCardsAsyncTask(yugiohCardDAO,this::onInsertingCard,this::onCardInserted,this::onDatabaseError);
 //        insertCardsAsyncTask.execute(new YugiohCard());
 
+        currentDeck = new ArrayList<>();
+
+
+
+        deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        yugiohDeckRecyclerView.setLayoutManager(layoutManager);
-        deckAdapter = new DeckAdapter(this, null);
+        yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
+        deckAdapter = new DeckAdapter(this, currentDeck);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
+        yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
+
+
 
         //FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         //task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
-        ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
+        //ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
 
         //gift = false;
 
