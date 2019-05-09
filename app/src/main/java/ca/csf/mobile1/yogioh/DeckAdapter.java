@@ -1,6 +1,7 @@
 package ca.csf.mobile1.yogioh;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull DeckAdapter.ViewHolder holder, int position)
     {
         YugiohCard card = dataSet.get(position);
+
+        holder.cardId = card.id;
 
         TextView cardName = holder.itemView.findViewById(R.id.cardName);
         cardName.setText(card.cardName);
@@ -94,6 +97,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
+        public int cardId;
+
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
@@ -102,6 +107,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
                 @Override
                 public void onClick(View v)
                 {
+                    CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId));
+
                     Log.i("Click", "Item " + getAdapterPosition() + " clicked");
                 }
             });

@@ -1,5 +1,7 @@
 package ca.csf.mobile1.yogioh.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +32,13 @@ public class CardDetailActivity extends AppCompatActivity
     private YugiohCardDAO yugiohCardDAO;
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
+
+    public static void start(Context context, String cardId) {
+        Intent intent = new Intent(context, CardDetailActivity.class);
+        intent.putExtra(ExchangeActivity.EXTRA__CARD_ID, cardId);
+
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -66,7 +75,7 @@ public class CardDetailActivity extends AppCompatActivity
 
     private void onCardFetched(List<YugiohCard> card)
     {
-
+        
     }
 
     private void onDatabaseError()
