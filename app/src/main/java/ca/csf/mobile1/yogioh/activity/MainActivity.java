@@ -1,6 +1,5 @@
 package ca.csf.mobile1.yogioh.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,11 +8,7 @@ import androidx.room.Room;
 
 import android.app.Dialog;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -43,7 +38,6 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager deckLayoutManager;
     private DividerItemDecoration dividerItemDecoration;
 
-    public static final String CHANNEL_ID = "channel";
     private static final String INSERTIONCARTELOGMESSAGE = "insertionCarte";
     private boolean gift;
     private Dialog myDialog;
@@ -59,7 +53,6 @@ public class MainActivity extends AppCompatActivity
 
     private List<YugiohCard> allCards;
     private List<YugiohCard> currentDeck;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -89,6 +82,8 @@ public class MainActivity extends AppCompatActivity
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
 
+        FetchCardsAsyncTask task = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
+        task.execute();
 
         //This is the action to do when a card is selected on the deck to transfer via nfc
         //ExchangeActivity.start(this, "15");      //Replace the value by the id of the selected card to transfer via nfc
@@ -99,10 +94,13 @@ public class MainActivity extends AppCompatActivity
         //myDialog.setContentView(R.layout.notificationpopup);
         //myDialog.show();
 
-        createNotificationChannel(); //Creer le channel de notif
+
         //startService(new Intent(this, DailyNotificationService.class));
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
+
+        //Intent rewardPopup = new Intent(this, RewardActivity.class);
+        //startActivity(rewardPopup);
 
     }
 
@@ -169,31 +167,6 @@ public class MainActivity extends AppCompatActivity
     private void onDatabaseError()
     {
 
-    }
-
-    private void createNotificationChannel()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            NotificationManager manager = getSystemService(NotificationManager.class);
-
-            if (manager.getNotificationChannel(CHANNEL_ID) == null)
-            {
-                NotificationChannel channel = new NotificationChannel(
-                        CHANNEL_ID,
-                        "Channel",
-                        NotificationManager.IMPORTANCE_HIGH
-                );
-
-                channel.setDescription("Daily Rewards");
-                channel.enableLights(true);
-                channel.enableVibration(true);
-                channel.setLightColor(R.color.colorPrimary);
-                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
-                manager.createNotificationChannel(channel);
-            }
-        }
     }
 
 }

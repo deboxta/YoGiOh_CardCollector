@@ -14,8 +14,8 @@ import ca.csf.mobile1.yogioh.R;
 
 public class DailyNotificationSetup extends BroadcastReceiver
 {
-
-    public static final String CHANNEL_ID = "channel";
+    public static final int NOTIFICATION_ID = 9;
+    public static final int NOTIFICATION_PENDING_REQUEST_CODE = 1;
     private NotificationManagerCompat notificationManagerCompat;
     private Notification notification;
     private PendingIntent notificationPendingIntent;
@@ -29,27 +29,25 @@ public class DailyNotificationSetup extends BroadcastReceiver
         Intent reapeatingIntent = new Intent(context, MainActivity.class);
         reapeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        notificationPendingIntent = PendingIntent.getActivity(context, 1, reapeatingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //TODO context.getResources().getString()
+        notificationPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_PENDING_REQUEST_CODE, reapeatingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
-        notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        notification = new NotificationCompat.Builder(context, DailyNotificationService.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Daily Reward Available") //TODO : STRING RESSOURCE
-                .setContentText("Come and get ur reward!") //TODO : STRING RESSOURCE
+                .setContentTitle(context.getResources().getString(R.string.daily_reward_title))
+                .setContentText(context.getResources().getString(R.string.daily_reward_description))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(notificationPendingIntent)
                 .setAutoCancel(true)
                 .build();
 
-        notificationManagerCompat.notify(9, notification);
+        notificationManagerCompat.notify(NOTIFICATION_ID, notification);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("gift", true);
-        editor.commit();
+        editor.apply();
 
         context.startService(new Intent(context, DailyNotificationService.class));
     }

@@ -6,10 +6,12 @@
     <string name="error_text_nfc_not_activated">Enable NFC via settings</string>
     <string name="snack_nfc_activation_text">Settings</string>
     <string name="text_card_description">Card image default</string>
-    <string name="close">Close</string>
-    <string name="open">Open</string>
-    <string name="LEVEL_TEXT">Level : </string>
-    <string name="ATK_TEXT">ATK/</string>
-    <string name="DEF_TEXT">DEF/</string>
-    <string name="notification_reward_title">Daily Reward Available</string>
+    <string name="close_text_button">Close</string>
+    <string name="open_text_button">Open</string>
+    <string name="level_text">Level : </string>
+    <string name="atk_text">ATK : </string>
+    <string name="def_text">DEF : </string>
+    <string name="daily_reward_title">Daily Reward Available</string>
+    <string name="daily_reward_description">Come and get your reward!</string>
+    <string name="daily_reward">DAILY REWARD</string>
 </resources>
