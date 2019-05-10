@@ -25,17 +25,6 @@ public class DailyNotificationService extends Service
 
     public static final String CHANNEL_ID = "channel";
 
-    public static Boolean start(Context context, Boolean gift)
-    {
-        context.startService(new Intent(context, DailyNotificationService.class));
-        SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        gift = sharedPreferences.getBoolean("gift", false);
-
-        return gift;
-    }
-
-
-
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");

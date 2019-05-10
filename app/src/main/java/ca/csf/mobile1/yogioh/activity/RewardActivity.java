@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,7 +22,7 @@ public class RewardActivity extends AppCompatActivity
     private Button closeButton;
     private Button openButton;
     private ImageView cardImage;
-    private StringBuilder idCard;
+    CountDownTimer countDownTimer;
 
     public static void start(Context context)
     {
@@ -44,7 +46,14 @@ public class RewardActivity extends AppCompatActivity
         openButton.setOnClickListener(this::openReward);
         closeButton.setOnClickListener(this::closeReward);
 
-        idCard = new StringBuilder();
+         countDownTimer = new CountDownTimer(5000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                finish();
+            }
+        };
 
     }
 
@@ -57,6 +66,6 @@ public class RewardActivity extends AppCompatActivity
     private void openReward(View view)
     {
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, 4));
+        countDownTimer.start();
     }
-
 }

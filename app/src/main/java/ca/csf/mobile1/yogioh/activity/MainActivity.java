@@ -8,6 +8,7 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -79,10 +80,13 @@ public class MainActivity extends AppCompatActivity
         currentDeck = new ArrayList<>();
 
         //Notification section (Anthony)
-        gift = false;
-
-        //gift = DailyNotificationService.start(this, gift);
-        //RewardActivity.start(this);
+        //gift = false;
+        //Start the notification service
+        this.startService(new Intent(this, DailyNotificationService.class));
+        //Look to see if the gift is available
+        //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        //gift = sharedPreferences.getBoolean("gift", false);
+        RewardActivity.start(this);
 
     }
 
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
-        
+
         FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         fetchCardsAsyncTask.execute();
 
@@ -152,7 +156,7 @@ public class MainActivity extends AppCompatActivity
 
     private void onInitialPlayerInserted(Long id)
     {
-        
+
     }
 
     private void onInitialPlayerInserting() { }
