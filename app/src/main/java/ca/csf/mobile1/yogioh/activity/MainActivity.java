@@ -6,14 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.app.Dialog;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,6 @@ import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchPlayerDeckAsyncTask;
-import ca.csf.mobile1.yogioh.activity.queries.deck.InsertMultipleCardsInDeckAsyncTask;
-import ca.csf.mobile1.yogioh.activity.queries.deck.InsertOneCardInDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.FetchPlayersAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.InsertOnePlayerAsyncTask;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
@@ -40,9 +37,11 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 public class MainActivity extends AppCompatActivity
 {
     private static final String EXTRA_CARD_ID_RETURN = "EXTRA_ID_RETURN";
+    public static final String YUGIOH_DATABASE_NAME = "yugiohDatabase";
     private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
     private LinearLayoutManager deckLayoutManager;
+    private View rootView;
 
     private boolean gift;
 
@@ -70,39 +69,35 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rootView = findViewById(R.id.rootView);
 
         beamedCardId = getIntent().getStringExtra(EXTRA_CARD_ID_RETURN);
-
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "yugiohDatabase").build();
-        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
-        yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
-        yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
         //BD setup and fetching
         initialBdSetup();
 
         currentDeck = new ArrayList<>();
 
-        currentDeck.add(new YugiohDeckCard(playerList.get(1).id, 2, 1));
-
-        //Notification section (Antony)
+        //Notification section (Anthony)
         gift = false;
 
-//        gift = DailyNotificationService.start(this, gift);
-//        RewardActivity.start(this);
+        //gift = DailyNotificationService.start(this, gift);
+        //RewardActivity.start(this);
 
     }
 
     private void initialBdSetup()
     {
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, YUGIOH_DATABASE_NAME).build();
+        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
+        yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
+        yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
+        
         FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onCardsFetching, this::onCardsFetched, this::onDatabaseError);
         fetchCardsAsyncTask.execute();
 
         FetchPlayersAsyncTask fetchPlayersAsyncTask = new FetchPlayersAsyncTask(yugiohPlayerDAO, this::onPlayerFetching, this::onPlayersFetched, this::onDatabaseError);
         fetchPlayersAsyncTask.execute();
-
-        FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onPlayerCardsFetching, this::onPlayerCardsFetched, this::onDatabaseError);
-        fetchPlayerDeckAsyncTask.execute(playerList.get(1));
     }
 
     private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
@@ -141,19 +136,27 @@ public class MainActivity extends AppCompatActivity
         {
             createInitialPlayer();
         }
+        else
+        {
+            FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onPlayerCardsFetching, this::onPlayerCardsFetched, this::onDatabaseError);
+            fetchPlayerDeckAsyncTask.execute(players.get(0));
+        }
     }
 
     private void onPlayerFetching() { }
 
     private void createInitialPlayer()
     {
-        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onPlayerInserting,this::onPlayerInserted, this::onDatabaseError);
+        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onInitialPlayerInserting,this::onInitialPlayerInserted, this::onDatabaseError);
         insertOnePlayerAsyncTask.execute(new YugiohPlayer());
     }
 
-    private void onPlayerInserted(Long id) { }
+    private void onInitialPlayerInserted(Long id)
+    {
+        
+    }
 
-    private void onPlayerInserting() { }
+    private void onInitialPlayerInserting() { }
 
     private void onCardsFetched(List<YugiohCard> cards)
     {
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity
             createInitialCards();
         }
 
-        setDeckAdapter();
+        initializeDeckRecyclerView();
 
     }
 
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         initialInsetionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
     }
 
-    private void setDeckAdapter()
+    private void initializeDeckRecyclerView()
     {
         deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
@@ -186,6 +189,9 @@ public class MainActivity extends AppCompatActivity
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
     }
 
-    private void onDatabaseError() { }
+    private void onDatabaseError()
+    {
+        Snackbar.make(rootView, R.string.database_error, Snackbar.LENGTH_LONG).show();
+    }
 
 }
