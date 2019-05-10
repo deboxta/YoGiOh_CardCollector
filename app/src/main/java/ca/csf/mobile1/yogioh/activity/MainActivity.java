@@ -86,11 +86,10 @@ public class MainActivity extends AppCompatActivity
         //Notification section (Anthony)
         //gift = false;
         //Start the notification service
-        this.startService(new Intent(this, DailyNotificationService.class));
+        //this.startService(new Intent(this, DailyNotificationService.class));
         //Look to see if the gift is available
         //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         //gift = sharedPreferences.getBoolean("gift", false);
-        RewardActivity.start(this);
 
     }
 
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity
     {
         progressBar.setVisibility(View.INVISIBLE);
 
-        //TODO: Lancer le daily reward
+        RewardActivity.start(this);
     }
 
     private void onCardsFetched(List<YugiohCard> cards)

@@ -1,7 +1,6 @@
 package ca.csf.mobile1.yogioh.activity;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
