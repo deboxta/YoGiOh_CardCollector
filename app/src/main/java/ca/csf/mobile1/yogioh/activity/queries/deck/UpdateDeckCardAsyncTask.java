@@ -8,6 +8,8 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 public class UpdateDeckCardAsyncTask extends AsyncTask<YugiohDeckCard, Void, Void>
 {
 
+    private boolean isDataBaseError;
+
     private ListenerModifying onExecute;
     private ListenerModified onSuccess;
     private final Runnable onDataBaseError;
@@ -24,18 +26,32 @@ public class UpdateDeckCardAsyncTask extends AsyncTask<YugiohDeckCard, Void, Voi
         this.onSuccess = onSuccess;
         this.yugiohDeckDAO = yugiohDeckDAO;
         this.onDataBaseError = onDataBaseError;
+
+        isDataBaseError = false;
     }
 
     @Override
     protected Void doInBackground(YugiohDeckCard... yugiohDeckCards)
     {
-        yugiohDeckDAO.updateCardAmount(yugiohDeckCards[0]);
+        try
+        {
+            yugiohDeckDAO.updateCardAmount(yugiohDeckCards[0]);
+        }
+        catch(Exception e)
+        {
+            isDataBaseError = true;
+        }
+
         return null;
     }
 
     protected void onPreExecute(){onExecute.onModifying();}
 
-    protected void onPostExecute(Void...voids){onSuccess.onModified();}
+    protected void onPostExecute(Void...voids)
+    {
+        if(isDataBaseError == true)onDataBaseError.run();
+        onSuccess.onModified();
+    }
 
     public interface ListenerModifying
     {

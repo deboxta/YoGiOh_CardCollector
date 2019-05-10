@@ -55,6 +55,7 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
     @Override
     protected void onPostExecute(Long cardAdded)
     {
+        if(isDataBaseError == true)onDataBaseError.run();
         onSuccess.onCardInserted(cardAdded);
     }
 
