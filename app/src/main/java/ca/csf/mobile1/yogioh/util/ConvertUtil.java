@@ -12,6 +12,13 @@ public class ConvertUtil
         return ids;
     }
 
+    public static long convertWrapperToPrimitive(Long wrapperId)
+    {
+        long id;
+        id = wrapperId;
+        return id;
+    }
+
     public static Long[] convertPrimitiveToWrapper(long[] primitiveIds)
     {
         Long[] ids = new Long[primitiveIds.length];

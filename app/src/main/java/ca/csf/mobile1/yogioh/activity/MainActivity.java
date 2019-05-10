@@ -34,6 +34,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
 
 public class MainActivity extends AppCompatActivity
@@ -99,12 +100,12 @@ public class MainActivity extends AppCompatActivity
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
-        
-        FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onLoading, this::onCardsFetched, this::onDatabaseError);
-        fetchCardsAsyncTask.execute();
 
         FetchPlayersAsyncTask fetchPlayersAsyncTask = new FetchPlayersAsyncTask(yugiohPlayerDAO, this::onLoading, this::onPlayersFetched, this::onDatabaseError);
         fetchPlayersAsyncTask.execute();
+
+        FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onLoading, this::onCardsFetched, this::onDatabaseError);
+        fetchCardsAsyncTask.execute();
     }
 
     private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
@@ -139,20 +140,22 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
-            fetchPlayerDeckAsyncTask.execute(players.get(0));
+
         }
     }
 
     private void createInitialPlayer()
     {
         InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onLoading,this::onInitialPlayerInserted, this::onDatabaseError);
-        insertOnePlayerAsyncTask.execute(new YugiohPlayer());
+        playerList.add(new YugiohPlayer());
+        insertOnePlayerAsyncTask.execute(playerList.get(0));
     }
 
     private void onInitialPlayerInserted(Long id)
     {
         progressBar.setVisibility(View.INVISIBLE);
+        long newid = ConvertUtil.convertWrapperToPrimitive(id);
+        playerList.get(0).id = (int)newid;
 
         RewardActivity.start(this);
     }
@@ -165,6 +168,9 @@ public class MainActivity extends AppCompatActivity
         if (allCards.size() == 0)
         {
             createInitialCards();
+
+            FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
+            fetchPlayerDeckAsyncTask.execute(playerList.get(0));
         }
 
         initializeDeckRecyclerView();
