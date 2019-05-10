@@ -17,4 +17,5 @@
     <string name="card_detail_image_description">Card details image</string>
     <string name="database_error">Error : database unavailable</string>
     <string name="trade_button_text">Trade using NFC</string>
+    <string name="number_of_cards_text">Quantity of that card possessed : %d</string>
 </resources>

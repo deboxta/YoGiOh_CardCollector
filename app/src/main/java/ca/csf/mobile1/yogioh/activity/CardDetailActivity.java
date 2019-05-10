@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,29 +14,24 @@ import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
-import ca.csf.mobile1.yogioh.model.YugiohCard;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
+import ca.csf.mobile1.yogioh.activity.queries.deck.FetchCardInDeckAsyncTask;
+import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
-import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class CardDetailActivity extends AppCompatActivity
 {
+    private View rootView;
+    private TextView quantityHeldTextView;
     private ImageView cardImage;
     private Button exchangeButton;
-    private View rootView;
 
     private String receivedCardId;
 
     private YugiohDatabase yugiohDatabase;
-    private YugiohCardDAO yugiohCardDAO;
-    private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
     public static void start(Context context, String cardId) {
@@ -53,39 +49,45 @@ public class CardDetailActivity extends AppCompatActivity
 
         receivedCardId = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
 
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
-        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
-        yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
-        yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
+        initiateDatabaseConnection();
 
+        createView();
+
+    }
+
+    private void createView()
+    {
         rootView = findViewById(R.id.rootView);
+        quantityHeldTextView = findViewById(R.id.quantityHeldTextView);
         cardImage = findViewById(R.id.cardDetailsImage);
         exchangeButton = findViewById(R.id.exchangeButton);
-
         exchangeButton.setOnClickListener(this::onExchangeButtonClicked);
 
-
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
-        FetchCardsByIdsAsyncTask fetchCard = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onCardFetching, this::onCardFetched, this::onDatabaseError);
-        fetchCard.execute(Long.parseLong(receivedCardId));
 
+        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardInDeckFetched, this::onDatabaseError);
+        fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId));
+    }
 
+    private void initiateDatabaseConnection()
+    {
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
+        yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
     }
 
     private void onExchangeButtonClicked(View view)
     {
-        //This is the action to do when a card is selected on the deck to transfer via nfc
         ExchangeActivity.start(this, receivedCardId);
     }
 
-    private void onCardFetching()
+    private void onLoading()
     {
 
     }
 
-    private void onCardFetched(List<YugiohCard> card)
+    private void onCardInDeckFetched(YugiohDeckCard playerCard)
     {
-        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
+        quantityHeldTextView.setText(getString(R.string.number_of_cards_text, playerCard.amountOwned));
     }
 
     private void onDatabaseError()

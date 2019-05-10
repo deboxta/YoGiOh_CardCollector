@@ -18,10 +18,11 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
 {
 
     private YugiohCardDAO yugiohCardDAO;
+    private Listener onSuccess;
 
-    public InitialInsetionAsynchTask(YugiohCardDAO yugiohCardDAO)
+    public InitialInsetionAsynchTask(YugiohCardDAO yugiohCardDAO, Listener onSuccess)
     {
-
+        this.onSuccess = onSuccess;
         this.yugiohCardDAO = yugiohCardDAO;
     }
 
@@ -64,7 +65,19 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
         {
             throw new RuntimeException(e);
         }
+    }
 
+    @Override
+    protected void onPostExecute(Void aVoid)
+    {
+        super.onPostExecute(aVoid);
+
+        onSuccess.onCardsInitialised();
+    }
+
+    public interface Listener
+    {
+        void onCardsInitialised();
     }
 }
 
