@@ -1,7 +1,6 @@
 package ca.csf.mobile1.yogioh.activity;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,17 +23,6 @@ public class DailyNotificationService extends Service
     private PendingIntent pendingNotificationIntent;
 
     public static final String CHANNEL_ID = "channel";
-
-    public static Boolean start(Context context, Boolean gift)
-    {
-        context.startService(new Intent(context, DailyNotificationService.class));
-        SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        gift = sharedPreferences.getBoolean("gift", false);
-
-        return gift;
-    }
-
-
 
     @Override
     public IBinder onBind(Intent intent) {
