@@ -19,7 +19,7 @@ import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 {
-    public static final String CARD_TYPE_MONSTER = "Monster";
+    private static final String CARD_TYPE_MONSTER = "Monster";
     private final Context context;
     private List<YugiohCard> dataSet;
 
@@ -85,11 +85,6 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         }
     }
 
-    public int getCardId(int position)
-    {
-        return dataSet.get(position).id;
-    }
-
     @Override
     public int getItemCount()
     {
@@ -109,9 +104,6 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
                 public void onClick(View v)
                 {
                     CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId));
-
-                    Log.i("Click", "Item " + getAdapterPosition() + " clicked");
-
                 }
             });
         }

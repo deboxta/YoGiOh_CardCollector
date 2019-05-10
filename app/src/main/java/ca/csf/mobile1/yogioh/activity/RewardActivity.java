@@ -22,7 +22,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
-import ca.csf.mobile1.yogioh.util.ConvertUtil;
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class RewardActivity extends AppCompatActivity
@@ -97,7 +97,7 @@ public class RewardActivity extends AppCompatActivity
 
     private void initialBdSetup()
     {
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, MainActivity.YUGIOH_DATABASE_NAME).build();
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();

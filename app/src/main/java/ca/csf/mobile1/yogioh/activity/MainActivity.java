@@ -34,13 +34,13 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
 
 public class MainActivity extends AppCompatActivity
 {
     private static final String EXTRA_CARD_ID_RETURN = "EXTRA_ID_RETURN";
-    public static final String YUGIOH_DATABASE_NAME = "yugiohDatabase";
     private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
     private LinearLayoutManager deckLayoutManager;
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initialBdSetup()
     {
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, YUGIOH_DATABASE_NAME).build();
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();

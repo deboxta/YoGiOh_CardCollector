@@ -25,11 +25,12 @@ import com.google.android.material.snackbar.Snackbar;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
 {
-    public static final String EXTRA_CARD_ID = "EXTRA_ID";
+
     private String idGivenCard;
     private NdefMessage operationMessage;
     private NfcAdapter nfcAdapter;
@@ -41,7 +42,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
-        intent.putExtra(EXTRA_CARD_ID, cardId);
+        intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, cardId);
 
         context.startActivity(intent);
     }
@@ -55,9 +56,9 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         Integer id = getTaskId();
         Log.e("Id task oncreate :", id.toString());
         
-        idGivenCard = getIntent().getStringExtra(EXTRA_CARD_ID);
+        idGivenCard = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
 
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, "yugiohDatabase").build();
+        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
 
         idView = findViewById(R.id.textView);

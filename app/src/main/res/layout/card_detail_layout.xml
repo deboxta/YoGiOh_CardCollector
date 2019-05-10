@@ -9,7 +9,7 @@
     tools:context=".activity.CardDetailActivity">
 
     <ImageView
-        android:id="@+id/card_details_image"
+        android:id="@+id/cardDetailsImage"
         android:layout_width="match_parent"
         android:layout_height="552dp"
         android:layout_marginLeft="8dp"
@@ -21,12 +21,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/exchange_btn"
+        android:id="@+id/exchangeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_details_image"
+        app:layout_constraintTop_toBottomOf="@id/cardDetailsImage"
+        android:text="@string/trade_button_text"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
