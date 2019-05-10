@@ -102,8 +102,7 @@ public class MainActivity extends AppCompatActivity
 
     private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
     {
-        FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onCardInDeckFetching, this::onCardInDeckFetched, this::onDatabaseError);
-        fetchCardsByIdsAsyncTask.execute(Long.valueOf(yugiohDeckCards.get(1).cardId));
+
     }
 
     private void onPlayerCardsFetching() { }
