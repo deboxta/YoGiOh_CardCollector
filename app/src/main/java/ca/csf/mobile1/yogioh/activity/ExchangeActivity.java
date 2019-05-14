@@ -10,7 +10,6 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,10 +21,21 @@ import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.deck.DeleteDeckCardInPlayerDeck;
+import ca.csf.mobile1.yogioh.activity.queries.deck.FetchCardInDeckAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.deck.InsertOneCardInDeckAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.deck.UpdateDeckCardAsyncTask;
+import ca.csf.mobile1.yogioh.model.YugiohCard;
+import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
+import ca.csf.mobile1.yogioh.util.ConvertUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
@@ -38,7 +48,9 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private PendingIntent pendingIntent;
     private ImageView cardView;
     private YugiohCardDAO yugiohCardDAO;
+    private YugiohDeckDAO yugiohDeckDAO;
     private YugiohDatabase yugiohDatabase;
+    private YugiohDeckCard cardInDeck;
     private View rootView;
 
     public static void start(Context context, String cardId) {
@@ -56,8 +68,11 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         idGivenCard = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
 
+        cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), 1);
+
         yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
+        yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
@@ -85,9 +100,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     {
         super.onResume();
 
-        Integer id = getTaskId();
-        Log.e("Id task onResume :", id.toString());
-
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
         {
             processIntentData(getIntent());
@@ -99,8 +111,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     protected void onPause()
     {
         super.onPause();
-        Integer id = getTaskId();
-        Log.e("Id de la task onPause :", id.toString());
 
         nfcAdapter.disableForegroundDispatch(this);
     }
@@ -108,8 +118,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     @Override
     protected void onNewIntent(Intent intent)
     {
-        Integer id = getTaskId();
-        Log.e("Id task NewIntent :", id.toString());
         setIntent(intent);
     }
 
@@ -117,8 +125,37 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     public NdefMessage createNdefMessage(NfcEvent event)
     {
         operationMessage = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "text/plain", idGivenCard.getBytes())});
-
+        deleteCardFromDeck(idGivenCard);
         return operationMessage;
+    }
+
+    private void deleteCardFromDeck(String idGivenCard)
+    {
+        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onFetchingDeckCard, this::onCardFetchedDeckCard, this::onDatabaseError);
+        fetchCardInDeckAsyncTask.execute(Integer.valueOf(idGivenCard), ConstantsUtil.PLAYER_ID);
+
+    }
+
+    private void onCardFetchedDeckCard(YugiohDeckCard yugiohDeckCard)
+    {
+        DeleteDeckCardInPlayerDeck deleteDeckCardInPlayerDeck = new DeleteDeckCardInPlayerDeck(yugiohDeckDAO, this::onDeleting, this::onDeleted, this::onDatabaseError);
+        deleteDeckCardInPlayerDeck.execute(yugiohDeckCard);
+    }
+
+    private void onFetchingDeckCard()
+    {
+
+    }
+
+    private void onDeleting()
+    {
+
+    }
+
+    private void onDeleted()
+    {
+        Toast.makeText(this, "Carte supprimée de votre deck", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void activateNFC(View view)
@@ -130,6 +167,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     {
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
+
         idView.setText(new String(operationMessage.getRecords()[0].getPayload()));
 
         cardView.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(idGivenCard)));
@@ -138,6 +176,52 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private void onClickedCardView(View view)
     {
-        MainActivity.start(this,idGivenCard);
+        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
+        fetchCardInDeckAsyncTask.execute(Integer.valueOf(idGivenCard), ConstantsUtil.PLAYER_ID);
+
+        InsertOneCardInDeckAsyncTask insertOneCardInDeckAsyncTask = new InsertOneCardInDeckAsyncTask(yugiohDeckDAO, this::onInsertingCard, this::onInsertedCard, this::onDatabaseError);
+        insertOneCardInDeckAsyncTask.execute(cardInDeck);
+    }
+
+    private void onCardFetched(YugiohDeckCard yugiohDeckCard)
+    {
+        if (yugiohDeckCard != null)
+        {
+            cardInDeck.amountOwned++;
+            UpdateDeckCardAsyncTask updateDeckCardAsyncTask = new UpdateDeckCardAsyncTask(yugiohDeckDAO, this::onUpdating, this::onUpdated, this::onDatabaseError);
+            updateDeckCardAsyncTask.execute(cardInDeck);
+        }
+    }
+
+    private void onUpdating()
+    {
+
+    }
+
+    private void onUpdated()
+    {
+        Toast.makeText(this, "Carte ajoutée à votre deck en double", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void onLoading()
+    {
+
+    }
+
+    private void onInsertingCard()
+    {
+
+    }
+
+    private void onInsertedCard(Long aLong)
+    {
+        Toast.makeText(this, "Carte ajoutée à votre deck", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void onDatabaseError()
+    {
+
     }
 }
