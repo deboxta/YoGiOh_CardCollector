@@ -97,7 +97,7 @@ public class RewardActivity extends AppCompatActivity
         openButton.setClickable(false);
 
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
-        fetchCardInDeckAsyncTask.execute(cardId, 1);
+        fetchCardInDeckAsyncTask.execute(cardId, ConstantsUtil.PLAYER_ID);
     }
 
     private void initialBdSetup()
@@ -115,9 +115,9 @@ public class RewardActivity extends AppCompatActivity
 
     private void onCardAdded(Long cardAdded)
     {
-        SharedPreferences sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences(ConstantsUtil.SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("availableGift", false);
+        editor.putBoolean(ConstantsUtil.SHARED_PREFERENCE_ID, false);
         editor.apply();
         countDownTimer.start();
     }
@@ -132,11 +132,11 @@ public class RewardActivity extends AppCompatActivity
         if (cardInDeck == null)
         {
             InsertOneCardInDeckAsyncTask insertOneCardInDeckAsyncTask = new InsertOneCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardAdded, this::onDatabaseError);
-            insertOneCardInDeckAsyncTask.execute(new YugiohDeckCard(1,cardId,1));
+            insertOneCardInDeckAsyncTask.execute(new YugiohDeckCard(ConstantsUtil.PLAYER_ID, cardId, ConstantsUtil.NUMBER_OF_CARDS_TO_ADD));
         }
         else
         {
-            cardInDeck.amountOwned += 1;
+            cardInDeck.amountOwned += ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
             UpdateDeckCardAsyncTask updateDeckCardAsyncTask = new UpdateDeckCardAsyncTask(yugiohDeckDAO, this::onLoading, this::onDeckCardUpdated, this::onDatabaseError);
             updateDeckCardAsyncTask.execute(cardInDeck);
         }
@@ -144,9 +144,9 @@ public class RewardActivity extends AppCompatActivity
 
     public void onDeckCardUpdated()
     {
-        SharedPreferences sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences(ConstantsUtil.SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("availableGift", false);
+        editor.putBoolean(ConstantsUtil.SHARED_PREFERENCE_ID, false);
         editor.apply();
 
         countDownTimer.start();

@@ -2,6 +2,4 @@
 <resources>
     <color name="colorPrimary">#000000</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="clickable_reward_button">#00ff01</color>
-    <color name="disable_reward_button">#ff0000</color>
 </resources>
