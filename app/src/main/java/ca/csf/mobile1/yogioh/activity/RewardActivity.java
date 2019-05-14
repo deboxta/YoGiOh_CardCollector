@@ -23,6 +23,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
+import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
@@ -31,7 +32,6 @@ public class RewardActivity extends AppCompatActivity
 
     public static final int MAX_CARD_ID = 9;
     private Button closeButton;
-    private Button openButton;
     private ImageView cardImage;
     CountDownTimer countDownTimer;
 
@@ -59,12 +59,10 @@ public class RewardActivity extends AppCompatActivity
         initialBdSetup();
 
         cardImage = findViewById(R.id.rewardImageView);
-        openButton = findViewById(R.id.buttonOpen);
         closeButton = findViewById(R.id.buttonClose);
 
         cardImage.setImageResource(R.drawable.backside_card);
 
-        openButton.setOnClickListener(this::openReward);
         closeButton.setOnClickListener(this::closeReward);
 
         cardIdRandomizer = new Random();
@@ -82,6 +80,11 @@ public class RewardActivity extends AppCompatActivity
             }
         };
 
+        if(AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
+        {
+            giveReward();
+        }
+
     }
 
     private void closeReward(View view)
@@ -89,15 +92,14 @@ public class RewardActivity extends AppCompatActivity
         finish();
     }
 
-    private void openReward(View view)
+    private void giveReward()
     {
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, cardId));
 
-        closeButton.setClickable(false);
-        openButton.setClickable(false);
-
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(cardId, ConstantsUtil.PLAYER_ID);
+
+        AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, false);
     }
 
     private void initialBdSetup()
@@ -115,11 +117,7 @@ public class RewardActivity extends AppCompatActivity
 
     private void onCardAdded(Long cardAdded)
     {
-        SharedPreferences sharedPref = this.getSharedPreferences(ConstantsUtil.SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(ConstantsUtil.SHARED_PREFERENCE_ID, false);
-        editor.apply();
-        countDownTimer.start();
+       countDownTimer.start();
     }
 
     private void onDatabaseError()
@@ -144,11 +142,6 @@ public class RewardActivity extends AppCompatActivity
 
     public void onDeckCardUpdated()
     {
-        SharedPreferences sharedPref = this.getSharedPreferences(ConstantsUtil.SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(ConstantsUtil.SHARED_PREFERENCE_ID, false);
-        editor.apply();
-
         countDownTimer.start();
     }
 }

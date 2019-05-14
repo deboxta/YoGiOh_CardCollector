@@ -34,6 +34,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity
     private List<YugiohCard> allCards;
     private List<YugiohDeckCard> playerDeck;
     private List<YugiohCard> cardsOfPlayerDeck;
-
-    public SharedPreferences sharedPref;
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -88,11 +87,6 @@ public class MainActivity extends AppCompatActivity
         playerDeck = new ArrayList<>();
 
         this.startService(new Intent(this, DailyNotificationService.class));
-
-        sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("availableGift", true);
-        editor.apply();
     }
 
     private void initialBdSetup()
@@ -204,6 +198,11 @@ public class MainActivity extends AppCompatActivity
         deckAdapter = new DeckAdapter(this, allCards);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
+
+        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
+        {
+            RewardActivity.start(this);
+        }
     }
 
     private void fetchPlayers()
@@ -228,4 +227,5 @@ public class MainActivity extends AppCompatActivity
         numberOfAsyncTasksRunning--;
         if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
     }
+
 }
