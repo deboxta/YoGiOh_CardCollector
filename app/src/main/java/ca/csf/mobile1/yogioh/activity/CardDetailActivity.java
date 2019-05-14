@@ -57,7 +57,6 @@ public class CardDetailActivity extends AppCompatActivity
         initiateDatabaseConnection();
 
         createView();
-
     }
 
     private void createView()

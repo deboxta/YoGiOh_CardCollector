@@ -47,10 +47,8 @@ public class MainActivity extends AppCompatActivity
     private View rootView;
     private ProgressBar progressBar;
 
-    private boolean gift;
     private int numberOfAsyncTasksRunning;
     private String beamedCardId;
-    private Button rewardButton;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
