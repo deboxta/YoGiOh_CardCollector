@@ -39,6 +39,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private ImageView cardView;
     private YugiohCardDAO yugiohCardDAO;
     private YugiohDatabase yugiohDatabase;
+    private View rootView;
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -53,9 +54,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
 
-        Integer id = getTaskId();
-        Log.e("Id task oncreate :", id.toString());
-        
         idGivenCard = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
 
         yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
@@ -63,8 +61,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
-        View rootView = findViewById(R.id.rootView);
-        ImageView cardView = findViewById(R.id.cardView);
+        rootView = findViewById(R.id.rootView);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null)
