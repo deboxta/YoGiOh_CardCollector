@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.IBinder;
 
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 
 
 public class DailyNotificationService extends Service
@@ -82,5 +83,8 @@ public class DailyNotificationService extends Service
                 manager.createNotificationChannel(channel);
             }
         }
+
+        AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, true);
+
     }
 }

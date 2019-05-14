@@ -34,6 +34,7 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohPlayerDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
+import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
@@ -89,10 +90,11 @@ public class MainActivity extends AppCompatActivity
 
         this.startService(new Intent(this, DailyNotificationService.class));
 
-        sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("availableGift", true);
-        editor.apply();
+        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this));
+        {
+            startActivity(new Intent(this, RewardActivity.class));
+        }
+
     }
 
     private void initialBdSetup()
@@ -228,4 +230,5 @@ public class MainActivity extends AppCompatActivity
         numberOfAsyncTasksRunning--;
         if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
     }
+
 }
