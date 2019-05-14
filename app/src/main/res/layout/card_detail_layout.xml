@@ -16,20 +16,29 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/cardDetailsImage"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/cardDetailsImage" />
 
     <ImageView
         android:id="@+id/cardDetailsImage"
         android:layout_width="match_parent"
-        android:layout_height="552dp"
+        android:layout_height="475dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:contentDescription="@string/card_detail_image_description"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cardDescriptionTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/quantityHeldTextView" />
+
+    <TextView
+        android:id="@+id/cardDescriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toBottomOf="@id/cardDetailsImage"
+        app:layout_constraintBottom_toTopOf="@id/exchangeButton"
+        android:scrollbars="vertical"/>
 
     <Button
         android:id="@+id/exchangeButton"
@@ -38,7 +47,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardDetailsImage"
-        android:text="@string/trade_button_text"
-        />
+        app:layout_constraintTop_toBottomOf="@id/cardDescriptionTextView"
+        android:text="@string/trade_button_text" />
 </androidx.constraintlayout.widget.ConstraintLayout>

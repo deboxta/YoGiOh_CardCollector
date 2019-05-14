@@ -3,6 +3,7 @@ package ca.csf.mobile1.yogioh.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,15 +29,18 @@ public class CardDetailActivity extends AppCompatActivity
     private TextView quantityHeldTextView;
     private ImageView cardImage;
     private Button exchangeButton;
+    private TextView cardDescriptionTextView;
 
     private String receivedCardId;
+    private String receivedCardDescription;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohDeckDAO yugiohDeckDAO;
 
-    public static void start(Context context, String cardId) {
+    public static void start(Context context, String cardId, String cardDescription) {
         Intent intent = new Intent(context, CardDetailActivity.class);
         intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, cardId);
+        intent.putExtra(ConstantsUtil.EXTRA_CARD_DESCRIPTION, cardDescription);
 
         context.startActivity(intent);
     }
@@ -48,6 +52,7 @@ public class CardDetailActivity extends AppCompatActivity
         setContentView(R.layout.card_detail_layout);
 
         receivedCardId = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
+        receivedCardDescription = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_DESCRIPTION);
 
         initiateDatabaseConnection();
 
@@ -62,6 +67,9 @@ public class CardDetailActivity extends AppCompatActivity
         cardImage = findViewById(R.id.cardDetailsImage);
         exchangeButton = findViewById(R.id.exchangeButton);
         exchangeButton.setOnClickListener(this::onExchangeButtonClicked);
+        cardDescriptionTextView = findViewById(R.id.cardDescriptionTextView);
+        cardDescriptionTextView.setText(receivedCardDescription);
+        cardDescriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
 

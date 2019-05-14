@@ -50,6 +50,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         YugiohCard card = dataSet.get(position);
 
         holder.cardId = card.id;
+        holder.cardDescription = card.cardDescription;
 
         TextView cardName = holder.itemView.findViewById(R.id.cardName);
         cardName.setText(card.cardName);
@@ -64,19 +65,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 
         if (type.equals(CARD_TYPE_MONSTER))
         {
-            StringBuilder attackAndDefenseBuilder = new StringBuilder();
-            attackAndDefenseBuilder.append(context.getString(R.string.atk_text));
-            attackAndDefenseBuilder.append(card.cardAttack);
-            attackAndDefenseBuilder.append("\t");
-            attackAndDefenseBuilder.append(context.getString(R.string.def_text));
-            attackAndDefenseBuilder.append(card.cardDefense);
-
-            StringBuilder levelBuilder = new StringBuilder();
-            levelBuilder.append(context.getString(R.string.level_text));
-            levelBuilder.append(card.nbStars);
-
-            cardLevel.setText(levelBuilder.toString());
-            cardAttackAndDefense.setText(attackAndDefenseBuilder.toString());
+            cardAttackAndDefense.setText(context.getString(R.string.attack_defense_text, card.cardAttack, card.cardDefense));
+            cardLevel.setText(context.getString(R.string.level_text, card.nbStars));
         }
         else
         {
@@ -94,6 +84,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         public int cardId;
+        public String cardDescription;
 
         public ViewHolder(@NonNull View itemView)
         {
@@ -103,7 +94,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
                 @Override
                 public void onClick(View v)
                 {
-                    CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId));
+                    CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId), cardDescription);
                 }
             });
         }

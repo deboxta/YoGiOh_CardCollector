@@ -8,9 +8,9 @@
     <string name="text_card_description">Card image default</string>
     <string name="close_text_button">Close</string>
     <string name="open_text_button">Open</string>
-    <string name="level_text">Level : </string>
-    <string name="atk_text">ATK/</string>
-    <string name="def_text">DEF/</string>
+    <string name="level_text">Level : %d</string>
+    <string name="atk_text">ATK/%d</string>
+    <string name="def_text">DEF/%d</string>
     <string name="daily_reward_title">Daily Reward Available</string>
     <string name="daily_reward_description">Come and get your reward!</string>
     <string name="daily_reward">DAILY REWARD</string>
@@ -21,5 +21,6 @@
     <string name="database_error">Error : database unavailable</string>
     <string name="trade_button_text">Trade using NFC</string>
     <string name="number_of_cards_text">Quantity of that card possessed : %d</string>
+    <string name="attack_defense_text">ATK/%1$d   DEF/%2$d</string>
     <string name="reward_button_text">Button</string>
 </resources>
