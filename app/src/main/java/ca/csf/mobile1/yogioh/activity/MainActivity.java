@@ -79,9 +79,6 @@ public class MainActivity extends AppCompatActivity
         rootView = findViewById(R.id.rootView);
         progressBar = findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
-        rewardButton = findViewById(R.id.rewardButton);
-
-
 
         beamedCardId = getIntent().getStringExtra(EXTRA_CARD_ID_RETURN);
 
@@ -92,46 +89,12 @@ public class MainActivity extends AppCompatActivity
 
         playerDeck = new ArrayList<>();
 
-        //TODO: Notification section (Anthony)
-        //gift = false;
-        //Notification section (Anthony)
-        //Start the notification service
-        //this.startService(new Intent(this, DailyNotificationService.class));
-        //Look to see if the gift is available
-        //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        //gift = sharedPreferences.getBoolean("gift", false);
         this.startService(new Intent(this, DailyNotificationService.class));
 
         sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("availableGift", true);
         editor.apply();
-
-        rewardButton.setOnClickListener(this::openRewardActivity);
-
-        setupRewardButton();
-
-    }
-
-    private void setupRewardButton()
-    {
-        if (sharedPref.getBoolean("availableGift", true))
-        {
-            rewardButton.setBackgroundColor(getResources().getColor(R.color.clickable_reward_button));
-            rewardButton.setText(R.string.daily_reward_button_available);
-            rewardButton.setClickable(true);
-        }
-        else
-        {
-            rewardButton.setBackgroundColor(getResources().getColor(R.color.disable_reward_button));
-            rewardButton.setText(R.string.daily_reward_button_disable);
-            rewardButton.setClickable(false);
-        }
-    }
-
-    private void openRewardActivity(View view)
-    {
-        startActivity(new Intent(this, RewardActivity.class));
     }
 
     private void initialBdSetup()
@@ -267,12 +230,4 @@ public class MainActivity extends AppCompatActivity
         numberOfAsyncTasksRunning--;
         if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
     }
-
-    @Override
-    protected void onRestart()
-    {
-        super.onRestart();
-        setupRewardButton();
-    }
-
 }
