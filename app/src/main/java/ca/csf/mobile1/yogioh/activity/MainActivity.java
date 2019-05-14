@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity
     private List<YugiohDeckCard> playerDeck;
     private List<YugiohCard> cardsOfPlayerDeck;
 
-    public SharedPreferences sharedPref;
-
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
         intent.putExtra(EXTRA_CARD_ID_RETURN, cardId);
@@ -89,12 +87,6 @@ public class MainActivity extends AppCompatActivity
         playerDeck = new ArrayList<>();
 
         this.startService(new Intent(this, DailyNotificationService.class));
-
-        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this));
-        {
-            startActivity(new Intent(this, RewardActivity.class));
-        }
-
     }
 
     private void initialBdSetup()
@@ -206,6 +198,11 @@ public class MainActivity extends AppCompatActivity
         deckAdapter = new DeckAdapter(this, allCards);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
+
+        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
+        {
+            RewardActivity.start(this);
+        }
     }
 
     private void fetchPlayers()

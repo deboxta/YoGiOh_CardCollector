@@ -12,7 +12,6 @@ import androidx.core.app.NotificationManagerCompat;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
-import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class DailyNotificationSetup extends BroadcastReceiver
 {

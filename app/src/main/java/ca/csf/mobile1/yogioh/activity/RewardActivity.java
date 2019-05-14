@@ -98,6 +98,8 @@ public class RewardActivity extends AppCompatActivity
 
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(cardId, ConstantsUtil.PLAYER_ID);
+
+        AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, false);
     }
 
     private void initialBdSetup()
@@ -115,7 +117,6 @@ public class RewardActivity extends AppCompatActivity
 
     private void onCardAdded(Long cardAdded)
     {
-       AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, false);
        countDownTimer.start();
     }
 
@@ -141,7 +142,6 @@ public class RewardActivity extends AppCompatActivity
 
     public void onDeckCardUpdated()
     {
-        AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, false);
         countDownTimer.start();
     }
 }

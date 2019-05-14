@@ -18,7 +18,7 @@ import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 
 public class DailyNotificationService extends Service
 {
-    public static final int NOTIFICATION_DELAY = 15000;
+    public static final int NOTIFICATION_DELAY = 25000;
     public static final int PENDING_REQUEST_CODE = 5;
     public static final String CHANNEL_DESCRIPTION = "Daily Rewards";
     public static final String CHANNEL_NAME = "Channel";
@@ -81,10 +81,10 @@ public class DailyNotificationService extends Service
                 channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
                 manager.createNotificationChannel(channel);
+
+                AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, true);
             }
         }
-
-        AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, true);
 
     }
 }
