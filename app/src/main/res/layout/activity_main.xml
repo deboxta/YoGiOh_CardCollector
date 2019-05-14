@@ -10,11 +10,12 @@
 
     <ProgressBar
         android:id="@+id/loadingProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        tools:layout_editor_absoluteX="0dp" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myDeck"
         android:layout_width="match_parent"
@@ -22,6 +23,35 @@
         android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@+id/loadingProgressBar"
         />
+
+    <TextView
+        android:id="@+id/DailyRewardTextView"
+        android:layout_width="208dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/daily_reward_view_text"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/rewardButton"
+        android:layout_width="187dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/daily_reward_button_disable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

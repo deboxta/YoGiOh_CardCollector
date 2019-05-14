@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import ca.csf.mobile1.yogioh.R;
+import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class DailyNotificationSetup extends BroadcastReceiver
 {
@@ -44,11 +45,12 @@ public class DailyNotificationSetup extends BroadcastReceiver
 
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("gift", true);
+        SharedPreferences sharedPref = context.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("availableGift", true);
         editor.apply();
 
         context.startService(new Intent(context, DailyNotificationService.class));
+
     }
 }

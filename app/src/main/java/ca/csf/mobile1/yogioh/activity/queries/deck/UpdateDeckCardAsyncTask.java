@@ -41,13 +41,14 @@ public class UpdateDeckCardAsyncTask extends AsyncTask<YugiohDeckCard, Void, Voi
         {
             isDataBaseError = true;
         }
-
         return null;
     }
 
+    @Override
     protected void onPreExecute(){onExecute.onModifying();}
 
-    protected void onPostExecute(Void...voids)
+    @Override
+    protected void onPostExecute(Void aVoid)
     {
         if(isDataBaseError == true)onDataBaseError.run();
         onSuccess.onModified();

@@ -14,8 +14,12 @@
     <string name="daily_reward_title">Daily Reward Available</string>
     <string name="daily_reward_description">Come and get your reward!</string>
     <string name="daily_reward">DAILY REWARD</string>
+    <string name="daily_reward_view_text">DAILY REWARD :</string>
+    <string name="daily_reward_button_disable">Not available</string>
+    <string name="daily_reward_button_available">Available</string>
     <string name="card_detail_image_description">Card details image</string>
     <string name="database_error">Error : database unavailable</string>
     <string name="trade_button_text">Trade using NFC</string>
     <string name="number_of_cards_text">Quantity of that card possessed : %d</string>
+    <string name="reward_button_text">Button</string>
 </resources>
