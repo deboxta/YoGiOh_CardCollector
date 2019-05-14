@@ -17,27 +17,32 @@ import ca.csf.mobile1.yogioh.R;
 
 public class DailyNotificationService extends Service
 {
-    public static final int NOTIFICATION_DELAY = 5500;
+    public static final int NOTIFICATION_DELAY = 15000;
     public static final int PENDING_REQUEST_CODE = 5;
+    public static final String CHANNEL_DESCRIPTION = "Daily Rewards";
+    public static final String CHANNEL_NAME = "Channel";
     private AlarmManager notificationAlarmManager;
     private PendingIntent pendingNotificationIntent;
 
     public static final String CHANNEL_ID = "channel";
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         createNotificationChannel();
     }
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
 
         Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
         pendingNotificationIntent = PendingIntent.getBroadcast(this, PENDING_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -45,13 +50,12 @@ public class DailyNotificationService extends Service
         notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_DELAY, pendingNotificationIntent);
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
     }
 
@@ -65,11 +69,11 @@ public class DailyNotificationService extends Service
             {
                 NotificationChannel channel = new NotificationChannel(
                         CHANNEL_ID,
-                        "Channel",
+                        CHANNEL_NAME,
                         NotificationManager.IMPORTANCE_HIGH
                 );
 
-                channel.setDescription("Daily Rewards");
+                channel.setDescription(CHANNEL_DESCRIPTION);
                 channel.enableLights(true);
                 channel.enableVibration(true);
                 channel.setLightColor(R.color.colorPrimary);

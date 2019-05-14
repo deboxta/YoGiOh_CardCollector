@@ -10,7 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 
@@ -22,7 +24,6 @@ import java.util.List;
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
-import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchPlayerDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.FetchPlayersAsyncTask;
@@ -46,9 +47,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager deckLayoutManager;
     private View rootView;
     private ProgressBar progressBar;
-
-    private boolean gift;
-
+    private Button rewardButton;
 
     private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
@@ -60,6 +59,8 @@ public class MainActivity extends AppCompatActivity
     private List<YugiohCard> playerCards;
     private List<YugiohDeckCard> currentDeck;
     private String beamedCardId;
+
+    public SharedPreferences sharedPref;
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -76,6 +77,9 @@ public class MainActivity extends AppCompatActivity
         rootView = findViewById(R.id.rootView);
         progressBar = findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        rewardButton = findViewById(R.id.rewardButton);
+
+
 
         beamedCardId = getIntent().getStringExtra(EXTRA_CARD_ID_RETURN);
 
@@ -85,13 +89,39 @@ public class MainActivity extends AppCompatActivity
         currentDeck = new ArrayList<>();
 
         //Notification section (Anthony)
-        //gift = false;
         //Start the notification service
-        //this.startService(new Intent(this, DailyNotificationService.class));
-        //Look to see if the gift is available
-        //SharedPreferences sharedPreferences = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
-        //gift = sharedPreferences.getBoolean("gift", false);
+        this.startService(new Intent(this, DailyNotificationService.class));
 
+        sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("availableGift", true);
+        editor.apply();
+
+        rewardButton.setOnClickListener(this::openRewardActivity);
+
+        setupRewardButton();
+
+    }
+
+    private void setupRewardButton()
+    {
+        if (sharedPref.getBoolean("availableGift", true))
+        {
+            rewardButton.setBackgroundColor(getResources().getColor(R.color.clickable_reward_button));
+            rewardButton.setText(R.string.daily_reward_button_available);
+            rewardButton.setClickable(true);
+        }
+        else
+        {
+            rewardButton.setBackgroundColor(getResources().getColor(R.color.disable_reward_button));
+            rewardButton.setText(R.string.daily_reward_button_disable);
+            rewardButton.setClickable(false);
+        }
+    }
+
+    private void openRewardActivity(View view)
+    {
+        startActivity(new Intent(this, RewardActivity.class));
     }
 
     private void initialBdSetup()
@@ -203,4 +233,12 @@ public class MainActivity extends AppCompatActivity
     {
         progressBar.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    protected void onRestart()
+    {
+        super.onRestart();
+        setupRewardButton();
+    }
+
 }

@@ -5,6 +5,7 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -28,7 +29,7 @@ import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 public class RewardActivity extends AppCompatActivity
 {
 
-    public static final int MAX_CARD_ID = 10;
+    public static final int MAX_CARD_ID = 9;
     private Button closeButton;
     private Button openButton;
     private ImageView cardImage;
@@ -53,7 +54,7 @@ public class RewardActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reward_popup);
+        setContentView(R.layout.activity_reward);
 
         initialBdSetup();
 
@@ -67,13 +68,16 @@ public class RewardActivity extends AppCompatActivity
         closeButton.setOnClickListener(this::closeReward);
 
         cardIdRandomizer = new Random();
-        cardId = cardIdRandomizer.nextInt(MAX_CARD_ID);
+        cardId = cardIdRandomizer.nextInt(MAX_CARD_ID) + 1;
 
-         countDownTimer = new CountDownTimer(5000, 1000) {
-            public void onTick(long millisUntilFinished) {
+        countDownTimer = new CountDownTimer(5000, 1000)
+        {
+            public void onTick(long millisUntilFinished)
+            {
+
             }
-
-            public void onFinish() {
+            public void onFinish()
+            {
                 finish();
             }
         };
@@ -82,17 +86,18 @@ public class RewardActivity extends AppCompatActivity
 
     private void closeReward(View view)
     {
-        cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, 5));
         finish();
     }
 
     private void openReward(View view)
     {
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, cardId));
-        countDownTimer.start();
+
+        closeButton.setClickable(false);
+        openButton.setClickable(false);
 
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
-        fetchCardInDeckAsyncTask.execute(cardId);
+        fetchCardInDeckAsyncTask.execute(cardId, 1);
     }
 
     private void initialBdSetup()
@@ -110,7 +115,11 @@ public class RewardActivity extends AppCompatActivity
 
     private void onCardAdded(Long cardAdded)
     {
-
+        SharedPreferences sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("availableGift", false);
+        editor.apply();
+        countDownTimer.start();
     }
 
     private void onDatabaseError()
@@ -122,12 +131,12 @@ public class RewardActivity extends AppCompatActivity
     {
         if (cardInDeck == null)
         {
-            //TODO: envoyé la bonne carte
-            /*InsertOneCardInDeckAsyncTask insertOneCardInDeckAsyncTask = new InsertOneCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardAdded, this::onDatabaseError);
-        insertOneCardInDeckAsyncTask.execute();*/
+            InsertOneCardInDeckAsyncTask insertOneCardInDeckAsyncTask = new InsertOneCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardAdded, this::onDatabaseError);
+            insertOneCardInDeckAsyncTask.execute(new YugiohDeckCard(1,cardId,1));
         }
         else
         {
+            cardInDeck.amountOwned += 1;
             UpdateDeckCardAsyncTask updateDeckCardAsyncTask = new UpdateDeckCardAsyncTask(yugiohDeckDAO, this::onLoading, this::onDeckCardUpdated, this::onDatabaseError);
             updateDeckCardAsyncTask.execute(cardInDeck);
         }
@@ -135,6 +144,11 @@ public class RewardActivity extends AppCompatActivity
 
     public void onDeckCardUpdated()
     {
-        //TODO: timer 5 second et puis finish quand il est terminé
+        SharedPreferences sharedPref = this.getSharedPreferences("availableGift", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("availableGift", false);
+        editor.apply();
+
+        countDownTimer.start();
     }
 }
