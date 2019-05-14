@@ -8,3 +8,7 @@
 8!Trap Jammer!Trap!Trap!NULL!-1!When your opponent activates a Trap Card during the Battle Phase: Negate the activation, and if you do, destroy it.!-1!-1
 9!Mirror Force!Trap!Trap!NULL!-1!When an opponent's monster declares an attack: Destroy all your opponent's attack position monsters.!-1!-1
 10!Graverobber!Trap!Trap!NULL!-1!Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.!-1!-1
+11!Exodia the Forbidden One!Monster!Dark!Spellcaster!3!If you have "Right leg of the Forbidden One", "Left leg of the Forbidden One", "Right arm of the Forbidden One" and "Left arm of the forbidden One" in addition to this card in your hand, you win the duel!1000!1000
+12!Mystical Beast of Serket!Monster!Earth!Fairy!6!Destroy this card if you do not control 'Temple of the Kings'. Each time this card destroys a monster by battle, the destroyed monster is removed from play, and this card gains 500 ATK.!2500!2000
+13!Luster Dragon!Monster!Wind!Dragon!4!A very beautiful dragon covered with sapphire. It does not like fights, but has incredibly high attack power.!1900!1600
+14!Big Shield Gardna!Monster!Earth!Warrior!4!When a Spell Card is activated that targets this face-down card (and no other cards)(Quick effect): Change this card to face-up Defense Position and if you do, negate the activation. If this card is attacked, change it to Attack Position at the end of the Damage Step.!100!2600
