@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
+
 @Entity
 public class YugiohPlayer
 {
@@ -18,12 +20,24 @@ public class YugiohPlayer
     @ColumnInfo(name = "name")
     public String name;
 
+
+    /**
+     * Default constructor of the YugiohPlayer Class.
+     */
     public YugiohPlayer()
     {
-        playerUserName = YugiohCard.EMPTY_STRING;
-        name = YugiohCard.EMPTY_STRING;
+        playerUserName = ConstantsUtil.EMPTY_STRING;
+        name = ConstantsUtil.EMPTY_STRING;
     }
 
+
+    /**
+     * Constructor of the YugiohPlayer class. There should not be more then 1 player as the feature is not supported.
+     *
+     * @param id                Id of the player (should always be 1)
+     * @param playerUserName    The username of the player.
+     * @param name              The real name of the player.
+     */
     public YugiohPlayer(int id, String playerUserName, String name)
     {
         this.playerUserName = playerUserName;

@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity
 
         long newid = ConvertUtil.convertWrapperToPrimitive(id);
         playerList.get(0).id = (int)newid;
-
         RewardActivity.start(this);
         //TODO: What happens next?
     }

@@ -6,12 +6,11 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
+
 @Entity
 public class YugiohCard
 {
-    public static final String EMPTY_STRING = "";
-    public static final int VALUE_ZERO = 0;
-
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -41,16 +40,33 @@ public class YugiohCard
 
     public YugiohCard()
     {
-        cardName = EMPTY_STRING;
-        type = EMPTY_STRING;
-        attribute = EMPTY_STRING;
-        monsterType = EMPTY_STRING;
-        nbStars = VALUE_ZERO;
-        cardDescription = EMPTY_STRING;
-        cardAttack = VALUE_ZERO;
-        cardDefense = VALUE_ZERO;
+
+        cardName = ConstantsUtil.EMPTY_STRING;
+        type = ConstantsUtil.EMPTY_STRING;
+        attribute = ConstantsUtil.EMPTY_STRING;
+        monsterType = ConstantsUtil.EMPTY_STRING;
+        nbStars = ConstantsUtil.VALUE_ZERO;
+        cardDescription = ConstantsUtil.EMPTY_STRING;
+        cardAttack = ConstantsUtil.VALUE_ZERO;
+        cardDefense = ConstantsUtil.VALUE_ZERO;
     }
 
+    /**
+     * Constructor of the YugiohCard class that takes arguments.
+     *
+     * @param id                The id of the card
+     * @param cardName          The name of the card
+     * @param type              The type of the card (Monster, Spell, Trap)
+     * @param attribute         The attribute of the card (Dark, Divine, Earth, Fire, Light, Water or Wind),
+     *                          send argument "null" if card type is Spell or Trap
+     * @param monsterType       The type of the monster chosen from (Aqua, Beast, Beast-Warrior, Creator God, Cyberse, Dinosaur, Divine-Beast, Dragon,
+     *                          Fairy, Fiend, Fish, Insect, Machine, Plant, Psychic, Pyro, Reptile, Rock, Sea Serpent, SpellCaster, Thunder,
+     *                          Warrior, Winged Beast, Wyrm or Zombie), send argument "null" if card type is Spell or Trap.
+     * @param nbStars           The number of star/level of the monster. send -1 if card type is a spell or a  trap.
+     * @param cardDescription   Description of the card.
+     * @param cardAttack        Damage of the card represented by a int. Send -1 if the card type is a spell or a trap.
+     * @param cardDefense       Defense of the card represented by a int. Send -1 if the card type is a spell or a trap.
+     */
     public YugiohCard(int id, String cardName, String type, String attribute, String monsterType, int nbStars, String cardDescription, int cardAttack, int cardDefense)
     {
         this.id = id;
