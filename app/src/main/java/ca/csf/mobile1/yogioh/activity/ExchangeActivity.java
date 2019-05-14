@@ -47,11 +47,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private TextView idView;
     private PendingIntent pendingIntent;
     private ImageView cardView;
-    private YugiohCardDAO yugiohCardDAO;
     private YugiohDeckDAO yugiohDeckDAO;
-    private YugiohDatabase yugiohDatabase;
     private YugiohDeckCard cardInDeck;
-    private View rootView;
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -70,13 +67,12 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), 1);
 
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
-        yugiohCardDAO = yugiohDatabase.yugiohCardDao();
+        YugiohDatabase yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
-        rootView = findViewById(R.id.rootView);
+        View rootView = findViewById(R.id.rootView);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null)
@@ -129,35 +125,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         return operationMessage;
     }
 
-    private void deleteCardFromDeck(String idGivenCard)
-    {
-        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onFetchingDeckCard, this::onCardFetchedDeckCard, this::onDatabaseError);
-        fetchCardInDeckAsyncTask.execute(Integer.valueOf(idGivenCard), ConstantsUtil.PLAYER_ID);
-
-    }
-
-    private void onCardFetchedDeckCard(YugiohDeckCard yugiohDeckCard)
-    {
-        DeleteDeckCardInPlayerDeck deleteDeckCardInPlayerDeck = new DeleteDeckCardInPlayerDeck(yugiohDeckDAO, this::onDeleting, this::onDeleted, this::onDatabaseError);
-        deleteDeckCardInPlayerDeck.execute(yugiohDeckCard);
-    }
-
-    private void onFetchingDeckCard()
-    {
-
-    }
-
-    private void onDeleting()
-    {
-
-    }
-
-    private void onDeleted()
-    {
-        Toast.makeText(this, "Carte supprimée de votre deck", Toast.LENGTH_LONG).show();
-        finish();
-    }
-
     private void activateNFC(View view)
     {
         startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
@@ -174,6 +141,12 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         cardView.setOnClickListener(this::onClickedCardView);
     }
 
+    private void deleteCardFromDeck(String idGivenCard)
+    {
+        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onFetchingDeckCard, this::onCardFetchedDeckCard, this::onDatabaseError);
+        fetchCardInDeckAsyncTask.execute(Integer.valueOf(idGivenCard), ConstantsUtil.PLAYER_ID);
+    }
+
     private void onClickedCardView(View view)
     {
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
@@ -181,6 +154,29 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         InsertOneCardInDeckAsyncTask insertOneCardInDeckAsyncTask = new InsertOneCardInDeckAsyncTask(yugiohDeckDAO, this::onInsertingCard, this::onInsertedCard, this::onDatabaseError);
         insertOneCardInDeckAsyncTask.execute(cardInDeck);
+    }
+
+    private void onCardFetchedDeckCard(YugiohDeckCard yugiohDeckCard)
+    {
+        DeleteDeckCardInPlayerDeck deleteDeckCardInPlayerDeck = new DeleteDeckCardInPlayerDeck(yugiohDeckDAO, this::onDeleting, this::onDeleted, this::onDatabaseError);
+        deleteDeckCardInPlayerDeck.execute(yugiohDeckCard);
+    }
+
+    private void onDeleting()
+    {
+
+    }
+
+    private void onDeleted()
+    {
+        Toast.makeText(this, "Carte supprimée de votre deck", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+
+    private void onFetchingDeckCard()
+    {
+
     }
 
     private void onCardFetched(YugiohDeckCard yugiohDeckCard)
