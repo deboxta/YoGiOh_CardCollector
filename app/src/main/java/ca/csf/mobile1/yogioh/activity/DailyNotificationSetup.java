@@ -27,7 +27,7 @@ public class DailyNotificationSetup extends BroadcastReceiver
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
-        Intent reapeatingIntent = new Intent(context, RewardActivity.class);
+        Intent reapeatingIntent = new Intent(context, MainActivity.class);
         reapeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         notificationPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_PENDING_REQUEST_CODE, reapeatingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
