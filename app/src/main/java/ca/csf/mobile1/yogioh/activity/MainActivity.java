@@ -23,6 +23,7 @@ import java.util.List;
 import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
+import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchPlayerDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.FetchPlayersAsyncTask;
@@ -41,7 +42,6 @@ import ca.csf.mobile1.yogioh.util.ConvertUtil;
 
 public class MainActivity extends AppCompatActivity
 {
-    private static final String EXTRA_CARD_ID_RETURN = "EXTRA_ID_RETURN";
     private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
     private LinearLayoutManager deckLayoutManager;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     public static void start(Context context, String cardId) {
         Intent intent = new Intent(context, ExchangeActivity.class);
-        intent.putExtra(EXTRA_CARD_ID_RETURN, cardId);
+        intent.putExtra(ConstantsUtil.EXTRA_CARD_ID_RETURN, cardId);
 
         context.startActivity(intent);
     }
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         progressBar = findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        beamedCardId = getIntent().getStringExtra(EXTRA_CARD_ID_RETURN);
+        beamedCardId = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID_RETURN);
 
         numberOfAsyncTasksRunning = 0;
 
@@ -110,11 +110,10 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            //TODO: Antoine : Je sais pas si ça fonctionne puisque l'activité de DailyReward fonctionne pas donc pas de cartes dans le deck
-            /*long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
+            long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
 
             FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onLoading, this::onSpecificCardsFetched, this::onDatabaseError);
-            fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));*/
+            fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));
         }
     }
 
@@ -171,9 +170,6 @@ public class MainActivity extends AppCompatActivity
         {
             fetchPlayers();
         }
-
-        //TODO:enlever éventuellement quand on va vouloir voir les cartes du deck et non toutes les cartes + note dans initializeDeckRecyclerView
-        initializeDeckRecyclerView();
     }
 
     private void createInitialCards()
@@ -194,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
         yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
-        deckAdapter = new DeckAdapter(this, allCards);
+        deckAdapter = new DeckAdapter(this, cardsOfPlayerDeck);
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
 
