@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -15,19 +16,32 @@ import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 
 public class DailyNotificationSetup extends BroadcastReceiver
 {
-    public static final int NOTIFICATION_ID = 9;
-    public static final int NOTIFICATION_PENDING_REQUEST_CODE = 1;
+    public static final int NOTIFICATION_ID = 11;
+    public static final int NOTIFICATION_PENDING_REQUEST_CODE = 6;
     private NotificationManagerCompat notificationManagerCompat;
     private Notification notification;
     private PendingIntent notificationPendingIntent;
+    private CountDownTimer countDownTimer;
 
     @Override
     public void onReceive(Context context, Intent intent)
     {
 
+        /*countDownTimer = new CountDownTimer(5000, 1000)
+        {
+            public void onTick(long millisUntilFinished)
+            {
+
+            }
+            public void onFinish()
+            {
+                sendNotification(context);
+            }
+        };*/
+
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
-        Intent reapeatingIntent = new Intent(context, RewardActivity.class);
+        Intent reapeatingIntent = new Intent(context, MainActivity.class);
         reapeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         notificationPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_PENDING_REQUEST_CODE, reapeatingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -41,13 +55,17 @@ public class DailyNotificationSetup extends BroadcastReceiver
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(notificationPendingIntent)
                 .setAutoCancel(true)
+                .setVibrate(null)
                 .build();
 
+        sendNotification(context);
+        //countDownTimer.start();
+    }
+
+    private void sendNotification(Context context)
+    {
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);
-
         AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(context, true);
-
         context.startService(new Intent(context, DailyNotificationService.class));
-
     }
 }

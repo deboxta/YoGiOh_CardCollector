@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.SystemClock;
+
+import java.util.Calendar;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
@@ -18,14 +21,15 @@ import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 
 public class DailyNotificationService extends Service
 {
-    public static final int NOTIFICATION_DELAY = 25000;
-    public static final int PENDING_REQUEST_CODE = 5;
+    public static final int NOTIFICATION_DELAY = 15000;
+    public static final int PENDING_REQUEST_CODE = 8;
     public static final String CHANNEL_DESCRIPTION = "Daily Rewards";
-    public static final String CHANNEL_NAME = "Channel";
+
     private AlarmManager notificationAlarmManager;
     private PendingIntent pendingNotificationIntent;
 
     public static final String CHANNEL_ID = "channel";
+    public static final String CHANNEL_NAME = "Channel";
 
     @Override
     public IBinder onBind(Intent intent)
@@ -44,43 +48,36 @@ public class DailyNotificationService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-
         Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
         pendingNotificationIntent = PendingIntent.getBroadcast(this, PENDING_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        notificationAlarmManager.set(AlarmManager.RTC_WAKEUP, NOTIFICATION_DELAY, pendingNotificationIntent);
+        notificationAlarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + NOTIFICATION_DELAY, pendingNotificationIntent);
 
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
     }
 
     private void createNotificationChannel()
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            NotificationManager manager = getSystemService(NotificationManager.class);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
-            if (manager.getNotificationChannel(CHANNEL_ID) == null)
+            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null)
             {
-                NotificationChannel channel = new NotificationChannel(
+                NotificationChannel notificationChannel = new NotificationChannel(
                         CHANNEL_ID,
                         CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_HIGH
+                        NotificationManager.IMPORTANCE_DEFAULT
                 );
 
-                channel.setDescription(CHANNEL_DESCRIPTION);
-                channel.enableLights(true);
-                channel.enableVibration(true);
-                channel.setLightColor(R.color.colorPrimary);
-                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                notificationChannel.setDescription(CHANNEL_DESCRIPTION);
+                notificationChannel.enableLights(true);
+                notificationChannel.enableVibration(false);
+                notificationChannel.setLightColor(R.color.colorLight);
+                notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-                manager.createNotificationChannel(channel);
+                notificationManager.createNotificationChannel(notificationChannel);
 
                 AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, true);
             }

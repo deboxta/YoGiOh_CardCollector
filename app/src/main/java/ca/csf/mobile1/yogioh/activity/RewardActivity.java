@@ -33,7 +33,7 @@ public class RewardActivity extends AppCompatActivity
     public static final int MAX_CARD_ID = 9;
     private Button closeButton;
     private ImageView cardImage;
-    CountDownTimer countDownTimer;
+    private CountDownTimer countDownTimer;
 
     private int cardId;
     private Random cardIdRandomizer;
