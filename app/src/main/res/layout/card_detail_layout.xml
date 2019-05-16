@@ -12,11 +12,12 @@
         android:id="@+id/quantityHeldTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="36sp"
+        android:textSize="20sp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/cardDetailsImage" />
+        app:layout_constraintBottom_toTopOf="@+id/cardDetailsImage"
+        android:textAlignment="center"/>
 
     <ImageView
         android:id="@+id/cardDetailsImage"
