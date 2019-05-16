@@ -64,7 +64,7 @@ public class DailyNotificationService extends Service
                 NotificationChannel notificationChannel = new NotificationChannel(
                         CHANNEL_ID,
                         CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        NotificationManager.IMPORTANCE_HIGH
                 );
 
                 notificationChannel.setDescription(CHANNEL_DESCRIPTION);
