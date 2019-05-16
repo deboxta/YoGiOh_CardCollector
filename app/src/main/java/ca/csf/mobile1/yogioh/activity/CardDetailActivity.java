@@ -73,7 +73,7 @@ public class CardDetailActivity extends AppCompatActivity
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
 
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardInDeckFetched, this::onDatabaseError);
-        fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId));
+        fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId), ConstantsUtil.PLAYER_ID);
     }
 
     private void initiateDatabaseConnection()

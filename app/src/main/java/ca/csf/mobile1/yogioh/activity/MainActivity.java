@@ -89,6 +89,17 @@ public class MainActivity extends AppCompatActivity
         this.startService(new Intent(this, DailyNotificationService.class));
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (deckAdapter != null)
+        {
+            fetchPlayerDeck();
+        }
+    }
+
     private void initialBdSetup()
     {
         yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
@@ -98,6 +109,12 @@ public class MainActivity extends AppCompatActivity
 
         FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onLoading, this::onCardsFetched, this::onDatabaseError);
         fetchCardsAsyncTask.execute();
+    }
+
+    private void fetchPlayerDeck()
+    {
+        FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
+        fetchPlayerDeckAsyncTask.execute(playerList.get(0));
     }
 
     private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
@@ -128,8 +145,7 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
-            fetchPlayerDeckAsyncTask.execute(playerList.get(0));
+            fetchPlayerDeck();
         }
     }
 
@@ -147,6 +163,8 @@ public class MainActivity extends AppCompatActivity
         long newid = ConvertUtil.convertWrapperToPrimitive(id);
         playerList.get(0).id = (int)newid;
         //TODO: What happens next?
+
+        checkForRewardAvailability();
     }
 
     private void onSpecificCardsFetched(List<YugiohCard> cards)
@@ -154,7 +172,15 @@ public class MainActivity extends AppCompatActivity
         hideProgressBar();
 
         cardsOfPlayerDeck = cards;
-        initializeDeckRecyclerView();
+        if (yugiohDeckRecyclerView == null)
+        {
+            initializeDeckRecyclerView();
+        }
+        else
+        {
+            deckAdapter.setDataSet(cardsOfPlayerDeck);
+        }
+
     }
 
     private void onCardsFetched(List<YugiohCard> cards)
@@ -185,7 +211,6 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDeckRecyclerView()
     {
-        //TODO: changer allCards par cardsOfPlayerDeck
         deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView = findViewById(R.id.myDeck);
         yugiohDeckRecyclerView.setHasFixedSize(true);
@@ -194,10 +219,7 @@ public class MainActivity extends AppCompatActivity
         yugiohDeckRecyclerView.setAdapter(deckAdapter);
         yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
 
-        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
-        {
-            RewardActivity.start(this);
-        }
+        checkForRewardAvailability();
     }
 
     private void fetchPlayers()
@@ -221,6 +243,14 @@ public class MainActivity extends AppCompatActivity
     {
         numberOfAsyncTasksRunning--;
         if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void checkForRewardAvailability()
+    {
+        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
+        {
+            RewardActivity.start(this);
+        }
     }
 
 }
