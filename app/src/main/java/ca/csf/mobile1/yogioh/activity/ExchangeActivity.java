@@ -181,6 +181,10 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idGivenCard = new String(operationMessage.getRecords()[0].getPayload());
+
+
+        //ici
+        
         cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), ConstantsUtil.NUMBER_OF_CARDS_TO_ADD);
         cardView.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(idGivenCard)));
         cardView.setOnClickListener(this::onClickedCardView);

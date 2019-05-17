@@ -8,6 +8,7 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
 
         fetchAllCards();
-        checkForRewardAvailability();
     }
 
     private void initialBdSetup()
@@ -106,11 +106,10 @@ public class MainActivity extends AppCompatActivity
     {
         hideProgressBar();
 
-        if (0 == cards.size())
+        if (cards.isEmpty())
         {
             createInitialCards();
-        }
-        else
+        } else
         {
             fetchPlayers();
         }
@@ -138,11 +137,10 @@ public class MainActivity extends AppCompatActivity
         hideProgressBar();
 
         playerList = players;
-        if(0 == playerList.size())
+        if (playerList.isEmpty())
         {
             createInitialPlayer();
-        }
-        else
+        } else
         {
             fetchPlayerDeck();
         }
@@ -150,7 +148,7 @@ public class MainActivity extends AppCompatActivity
 
     private void createInitialPlayer()
     {
-        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onLoading,this::onInitialPlayerInserted, this::onDatabaseError);
+        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO, this::onLoading, this::onInitialPlayerInserted, this::onDatabaseError);
         playerList.add(new YugiohPlayer(ConstantsUtil.PLAYER_ID, PLAYER_USERNAME, PLAYER_NAME));
         insertOnePlayerAsyncTask.execute(playerList.get(0));
     }
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity
         hideProgressBar();
 
         long newId = ConvertUtil.convertWrapperToPrimitive(id);
-        playerList.get(0).id = (int)newId;
+        playerList.get(0).id = (int) newId;
 
         fetchPlayerDeck();
     }
@@ -174,17 +172,13 @@ public class MainActivity extends AppCompatActivity
     private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
     {
         hideProgressBar();
-        if (0 == yugiohDeckCards.size())
-        {
-            checkForRewardAvailability();
-        }
-        else
-        {
-            long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
 
-            FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onLoading, this::onSpecificCardsFetched, this::onDatabaseError);
-            fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));
-        }
+        checkForRewardAvailability();
+
+        long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
+
+        FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onLoading, this::onSpecificCardsFetched, this::onDatabaseError);
+        fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));
     }
 
     private void onSpecificCardsFetched(List<YugiohCard> cards)
@@ -194,6 +188,14 @@ public class MainActivity extends AppCompatActivity
         cardsOfPlayerDeck = cards;
 
         deckAdapter.setDataSet(cardsOfPlayerDeck);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        fetchAllCards();
     }
 
     private void initializeDeckRecyclerView()
@@ -217,7 +219,7 @@ public class MainActivity extends AppCompatActivity
 
     private void onReceiveCardFromTradeClicked(View view)
     {
-        ExchangeActivity.startReceive(this,false);
+        ExchangeActivity.startReceive(this, false);
     }
 
     private void onDatabaseError()

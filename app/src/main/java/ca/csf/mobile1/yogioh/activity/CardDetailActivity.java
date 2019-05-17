@@ -65,8 +65,6 @@ public class CardDetailActivity extends AppCompatActivity
         cardDescriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
-
-        fetchCardsInDeck();
     }
 
     private void fetchCardsInDeck() {
