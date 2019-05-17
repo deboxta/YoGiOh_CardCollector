@@ -76,8 +76,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
 
-        amountOwned = ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
-
         if (savedInstanceState != null)
         {
             idGivenCard = savedInstanceState.getString(CURRENT_ID_CARD);
@@ -88,11 +86,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
             idGivenCard = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID);
         }
 
-        if  (idGivenCard != null)
-        {
-            cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), amountOwned);
-        }
-
         YugiohDatabase yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
@@ -100,14 +93,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         cardView = findViewById(R.id.cardView);
         View rootView = findViewById(R.id.rootView);
 
-        if (typeOfExchange == true)
-        {
-            idView.setText(R.string.text_beam_trade);
-        }
-        else
-        {
-            idView.setText(R.string.text_beam_receive);
-        }
+        setVariables();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null)
@@ -123,10 +109,25 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         }
         nfcAdapter.setNdefPushMessageCallback(this,this);
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
     }
 
+    private void setVariables()
+    {
+        amountOwned = ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
 
+        if (typeOfExchange == true)
+        {
+            idView.setText(R.string.text_beam_trade);
+        }
+        else
+        {
+            idView.setText(R.string.text_beam_receive);
+        }
+        if  (idGivenCard != null)
+        {
+            cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), amountOwned);
+        }
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -182,11 +183,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         return operationMessage;
     }
 
-    private void activateNFC(View view)
-    {
-        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-    }
-
     void processIntentData(Intent intent)
     {
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -195,6 +191,11 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), ConstantsUtil.NUMBER_OF_CARDS_TO_ADD);
         cardView.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(idGivenCard)));
         cardView.setOnClickListener(this::onClickedCardView);
+    }
+
+    private void activateNFC(View view)
+    {
+        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
     }
 
     private void deleteCardFromDeck(String idGivenCard)
@@ -208,6 +209,8 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(Integer.valueOf(idGivenCard), ConstantsUtil.PLAYER_ID);
     }
+
+    private void onFetchingDeckCard() { }
 
     private void onCardFetchedDeckCard(YugiohDeckCard yugiohDeckCard)
     {
@@ -224,10 +227,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         }
     }
 
-    private void onDeleting()
-    {
-
-    }
+    private void onDeleting() { }
 
     private void onDeleted()
     {
@@ -235,11 +235,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         finish();
     }
 
-
-    private void onFetchingDeckCard()
-    {
-
-    }
+    private void onLoading() { }
 
     private void onCardFetched(YugiohDeckCard yugiohDeckCard)
     {
@@ -253,10 +249,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         insertOneCardInDeckAsyncTask.execute(cardInDeck);
     }
 
-    private void onUpdating()
-    {
-
-    }
+    private void onUpdating() { }
 
     private void onUpdated()
     {
@@ -264,15 +257,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         finish();
     }
 
-    private void onLoading()
-    {
-
-    }
-
-    private void onInsertingCard()
-    {
-
-    }
+    private void onInsertingCard() { }
 
     private void onInsertedCard(Long aLong)
     {
@@ -280,8 +265,5 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         finish();
     }
 
-    private void onDatabaseError()
-    {
-
-    }
+    private void onDatabaseError() { }
 }
