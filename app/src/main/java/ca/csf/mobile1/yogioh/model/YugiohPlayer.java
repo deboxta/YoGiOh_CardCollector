@@ -40,6 +40,7 @@ public class YugiohPlayer
      */
     public YugiohPlayer(int id, String playerUserName, String name)
     {
+        this.id = id;
         this.playerUserName = playerUserName;
         this.name = name;
     }

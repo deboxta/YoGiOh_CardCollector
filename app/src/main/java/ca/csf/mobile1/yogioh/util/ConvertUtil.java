@@ -8,22 +8,22 @@ public class ConvertUtil
 {
     public static long[] convertWrapperToPrimitive(Long[] wrapperIds)
     {
-        long[] ids = new long[wrapperIds.length];
+        long[] primitiveIds = new long[wrapperIds.length];
         for (int i = 0; i < wrapperIds.length; i++)
         {
-            ids[i] = wrapperIds[i];
+            primitiveIds[i] = wrapperIds[i];
         }
-        return ids;
+        return primitiveIds;
     }
 
-    public static long[] convertCardIdsFromIntegerToLongArray(List<YugiohDeckCard> cards)
+    public static long[] convertCardIdsFromIntegerToLongArray(List<YugiohDeckCard> yugiohCards)
     {
-        long[] cardsIds = new long[cards.size()];
-        for (int i = 0; i < cards.size(); i++)
+        long[] convertedCardsIds = new long[yugiohCards.size()];
+        for (int i = 0; i < yugiohCards.size(); i++)
         {
-            cardsIds[i] = cards.get(i).cardId;
+            convertedCardsIds[i] = yugiohCards.get(i).cardId;
         }
-        return cardsIds;
+        return convertedCardsIds;
     }
 
     public static long convertWrapperToPrimitive(Long wrapperId)
@@ -35,11 +35,11 @@ public class ConvertUtil
 
     public static Long[] convertPrimitiveToWrapper(long[] primitiveIds)
     {
-        Long[] ids = new Long[primitiveIds.length];
+        Long[] wrapperIds = new Long[primitiveIds.length];
         for (int i = 0; i < primitiveIds.length; i++)
         {
-            ids[i] = primitiveIds[i];
+            wrapperIds[i] = primitiveIds[i];
         }
-        return ids;
+        return wrapperIds;
     }
 }

@@ -1,4 +1,4 @@
-package ca.csf.mobile1.yogioh;
+package ca.csf.mobile1.yogioh.activity;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.activity.CardDetailActivity;
+import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 
 
@@ -45,15 +45,15 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull DeckAdapter.ViewHolder holder, int position)
     {
-        YugiohCard card = dataSet.get(position);
+        YugiohCard cardForRecyclerView = dataSet.get(position);
 
-        holder.cardId = card.id;
-        holder.cardDescription = card.cardDescription;
+        holder.cardId = cardForRecyclerView.id;
+        holder.cardDescription = cardForRecyclerView.cardDescription;
 
         TextView cardName = holder.itemView.findViewById(R.id.cardName);
-        cardName.setText(card.cardName);
+        cardName.setText(cardForRecyclerView.cardName);
 
-        String type = card.type;
+        String type = cardForRecyclerView.type;
 
         TextView cardType = holder.itemView.findViewById(R.id.cardType);
         cardType.setText(type);
@@ -63,8 +63,8 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 
         if (type.equals(CARD_TYPE_MONSTER))
         {
-            cardAttackAndDefense.setText(context.getString(R.string.attack_defense_text, card.cardAttack, card.cardDefense));
-            cardLevel.setText(context.getString(R.string.level_text, card.nbStars));
+            cardAttackAndDefense.setText(context.getString(R.string.attack_defense_text, cardForRecyclerView.cardAttack, cardForRecyclerView.cardDefense));
+            cardLevel.setText(context.getString(R.string.level_text, cardForRecyclerView.nbStars));
         }
         else
         {
@@ -81,14 +81,15 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        public int cardId;
-        public String cardDescription;
+        private int cardId;
+        private String cardDescription;
 
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener(){
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
                 public void onClick(View v)
                 {

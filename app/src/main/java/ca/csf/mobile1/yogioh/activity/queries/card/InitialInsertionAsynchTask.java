@@ -1,11 +1,8 @@
 package ca.csf.mobile1.yogioh.activity.queries.card;
 
 import android.os.AsyncTask;
-import android.os.Environment;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -14,13 +11,14 @@ import java.util.List;
 import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 
-public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void>
+public class InitialInsertionAsynchTask extends AsyncTask<InputStream, Void, Void>
 {
 
+    private static final String LINE_SPLIT_CHAR = "!";
     private YugiohCardDAO yugiohCardDAO;
     private Listener onSuccess;
 
-    public InitialInsetionAsynchTask(YugiohCardDAO yugiohCardDAO, Listener onSuccess)
+    public InitialInsertionAsynchTask(YugiohCardDAO yugiohCardDAO, Listener onSuccess)
     {
         this.onSuccess = onSuccess;
         this.yugiohCardDAO = yugiohCardDAO;
@@ -35,7 +33,7 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
 
     private List<YugiohCard> prepareInitialCards(InputStream inputStream)
     {
-        String[] cardsInformations;
+        String[] cardsInformation;
 
         try
         {
@@ -46,16 +44,16 @@ public class InitialInsetionAsynchTask extends AsyncTask<InputStream, Void, Void
             while((line = br.readLine()) != null)
             {
                 YugiohCard yugiohCard = new YugiohCard();
-                cardsInformations = line.split("!");
-                yugiohCard.id = Integer.valueOf(cardsInformations[0]);
-                yugiohCard.cardName = cardsInformations[1];
-                yugiohCard.type = cardsInformations[2];
-                yugiohCard.attribute = cardsInformations[3];
-                yugiohCard.monsterType = cardsInformations[4];
-                yugiohCard.nbStars = Integer.valueOf(cardsInformations[5]);
-                yugiohCard.cardDescription = cardsInformations[6];
-                yugiohCard.cardAttack = Integer.valueOf(cardsInformations[7]);
-                yugiohCard.cardDefense = Integer.valueOf(cardsInformations[8]);
+                cardsInformation = line.split(LINE_SPLIT_CHAR);
+                yugiohCard.id = Integer.valueOf(cardsInformation[0]);
+                yugiohCard.cardName = cardsInformation[1];
+                yugiohCard.type = cardsInformation[2];
+                yugiohCard.attribute = cardsInformation[3];
+                yugiohCard.monsterType = cardsInformation[4];
+                yugiohCard.nbStars = Integer.valueOf(cardsInformation[5]);
+                yugiohCard.cardDescription = cardsInformation[6];
+                yugiohCard.cardAttack = Integer.valueOf(cardsInformation[7]);
+                yugiohCard.cardDefense = Integer.valueOf(cardsInformation[8]);
                 yugiohCardList.add(yugiohCard);
             }
             br.close();

@@ -40,7 +40,7 @@ public class DeleteDeckCardInPlayerDeck extends AsyncTask<YugiohDeckCard,Void,Vo
     @Override
     protected void onPostExecute(Void aVoid)
     {
-        if(isDataBaseError == true)onDataBaseError.run();
+        if(isDataBaseError) onDataBaseError.run();
         onSuccess.onDeleted();
     }
 

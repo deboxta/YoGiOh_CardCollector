@@ -8,7 +8,6 @@ import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -17,11 +16,10 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.csf.mobile1.yogioh.DeckAdapter;
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
-import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsetionAsynchTask;
+import ca.csf.mobile1.yogioh.activity.queries.card.InitialInsertionAsynchTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchPlayerDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.FetchPlayersAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.player.InsertOnePlayerAsyncTask;
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity
 {
     private static final String PLAYER_USERNAME = "plucthemachine";
     private static final String PLAYER_NAME = "Pierre-Luc";
-    private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
     private View rootView;
     private ProgressBar progressBar;
@@ -109,7 +106,8 @@ public class MainActivity extends AppCompatActivity
         if (cards.isEmpty())
         {
             createInitialCards();
-        } else
+        }
+        else
         {
             fetchPlayers();
         }
@@ -117,8 +115,8 @@ public class MainActivity extends AppCompatActivity
 
     private void createInitialCards()
     {
-        InitialInsetionAsynchTask initialInsetionAsynchTask = new InitialInsetionAsynchTask(yugiohCardDAO, this::onInitialCardsInsertionDone);
-        initialInsetionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
+        InitialInsertionAsynchTask initialInsertionAsynchTask = new InitialInsertionAsynchTask(yugiohCardDAO, this::onInitialCardsInsertionDone);
+        initialInsertionAsynchTask.execute(getResources().openRawResource(R.raw.yugiohinsertion));
     }
 
     private void onInitialCardsInsertionDone()
@@ -140,7 +138,8 @@ public class MainActivity extends AppCompatActivity
         if (playerList.isEmpty())
         {
             createInitialPlayer();
-        } else
+        }
+        else
         {
             fetchPlayerDeck();
         }
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDeckRecyclerView()
     {
-        yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
+        RecyclerView yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
         LinearLayoutManager deckLayoutManager = new LinearLayoutManager(this);
         yugiohDeckRecyclerView.setHasFixedSize(true);
         yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
     private void checkForRewardAvailability()
     {
-        if (AvailableGiftSharedPreferenceUtil.getAvailibilityOfDailyReward(this))
+        if (AvailableGiftSharedPreferenceUtil.getAvailabilityOfDailyReward(this))
         {
             RewardActivity.start(this);
         }
@@ -236,7 +235,7 @@ public class MainActivity extends AppCompatActivity
     private void hideProgressBar()
     {
         --numberOfAsyncTasksRunning;
-        if (0 == numberOfAsyncTasksRunning) progressBar.setVisibility(View.INVISIBLE);
+        if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
     }
 
 }

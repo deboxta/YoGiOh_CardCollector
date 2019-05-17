@@ -13,21 +13,20 @@ import android.os.IBinder;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
+import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 
 
 public class DailyNotificationService extends Service
 {
-    public static final int NOTIFICATION_DELAY = 15000;
-    public static final int PENDING_REQUEST_CODE = 8;
-    public static final String CHANNEL_DESCRIPTION = "Daily Rewards";
+    private static final int NOTIFICATION_DELAY = 15000;
+    private static final int PENDING_REQUEST_CODE = 8;
 
-    public static final String CHANNEL_ID = "channel";
-    public static final String CHANNEL_NAME = "Channel";
+    private static final String NOT_YET_IMPLEMENTED_EXCEPTION_STRING = "Not yet implemented";
 
     @Override
     public IBinder onBind(Intent intent)
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        throw new UnsupportedOperationException(NOT_YET_IMPLEMENTED_EXCEPTION_STRING);
     }
 
     @Override
@@ -56,15 +55,10 @@ public class DailyNotificationService extends Service
         {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
-            if (notificationManager.getNotificationChannel(CHANNEL_ID) == null)
+            if (notificationManager.getNotificationChannel(ConstantsUtil.CHANNEL_ID) == null)
             {
-                NotificationChannel notificationChannel = new NotificationChannel(
-                        CHANNEL_ID,
-                        CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_HIGH
-                );
-
-                notificationChannel.setDescription(CHANNEL_DESCRIPTION);
+                NotificationChannel notificationChannel = new NotificationChannel(ConstantsUtil.CHANNEL_ID, ConstantsUtil.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.setDescription(ConstantsUtil.CHANNEL_DESCRIPTION);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(false);
                 notificationChannel.setLightColor(R.color.colorLight);
@@ -72,7 +66,7 @@ public class DailyNotificationService extends Service
 
                 notificationManager.createNotificationChannel(notificationChannel);
 
-                AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(this, true);
+                AvailableGiftSharedPreferenceUtil.editAvailabilityOfDailyReward(this, true);
             }
         }
 

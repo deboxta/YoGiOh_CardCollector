@@ -45,7 +45,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private ImageView cardView;
     private YugiohDeckDAO yugiohDeckDAO;
     private YugiohDeckCard cardInDeck;
-    private int amountOwned;
     private boolean typeOfExchange;
 
     public static void startTrade(Context context, String cardId, Boolean typeOfExchange) {
@@ -82,9 +81,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         YugiohDatabase yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
 
-        idView = findViewById(R.id.textView);
-        cardView = findViewById(R.id.cardView);
-        View rootView = findViewById(R.id.rootViewExchange);
+        View rootView = createView();
 
         setVariables();
 
@@ -93,7 +90,6 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         {
             Toast.makeText(this, R.string.error_text_nfc, Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
 
         if (!nfcAdapter.isEnabled())
@@ -104,11 +100,18 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     }
 
+    private View createView()
+    {
+        idView = findViewById(R.id.textView);
+        cardView = findViewById(R.id.cardView);
+        return findViewById(R.id.rootViewExchange);
+    }
+
     private void setVariables()
     {
-        amountOwned = ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
+        int amountOwned = ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
 
-        if (typeOfExchange == true)
+        if (typeOfExchange)
         {
             idView.setText(R.string.text_beam_trade);
         }
@@ -166,7 +169,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     @Override
     public NdefMessage createNdefMessage(NfcEvent event)
     {
-        if (typeOfExchange == true)
+        if (typeOfExchange)
 
         {
             idView.setText(R.string.text_beam_trade);

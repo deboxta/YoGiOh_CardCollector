@@ -9,7 +9,7 @@ import ca.csf.mobile1.yogioh.model.YugiohPlayer;
 @androidx.room.Database(entities = {YugiohCard.class, YugiohPlayer.class, YugiohDeckCard.class}, version = YugiohDatabase.VERSION_OF_DATABASE, exportSchema = false)
 public abstract class YugiohDatabase extends RoomDatabase
 {
-    public static final int VERSION_OF_DATABASE = 3;
+    protected static final int VERSION_OF_DATABASE = 3;
     public abstract YugiohCardDAO yugiohCardDao();
     public abstract YugiohPlayerDAO yugiohPlayerDAO();
     public abstract YugiohDeckDAO yugiohDeckDAO();

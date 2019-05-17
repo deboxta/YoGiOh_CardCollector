@@ -33,7 +33,6 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
     protected Long doInBackground(YugiohDeckCard... yugiohDeckCards)
     {
         Long cardId = null;
-
         try
         {
             cardId = yugiohDeckDAO.insertOne(yugiohDeckCards[0]);
@@ -55,7 +54,7 @@ public class InsertOneCardInDeckAsyncTask extends AsyncTask<YugiohDeckCard, Void
     @Override
     protected void onPostExecute(Long cardAdded)
     {
-        if(isDataBaseError == true)onDataBaseError.run();
+        if(isDataBaseError) onDataBaseError.run();
         onSuccess.onCardInserted(cardAdded);
     }
 

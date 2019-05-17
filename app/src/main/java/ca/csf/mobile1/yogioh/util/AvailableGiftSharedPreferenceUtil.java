@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 public class AvailableGiftSharedPreferenceUtil
 {
 
-    public static final String SHARED_PREFERENCE_ID = "availableGift";
+    private static final String SHARED_PREFERENCE_ID = "availableGift";
 
-    public static void editAvailibilityOfDailyReward(Context context, boolean trueOrFalse)
+    public static void editAvailabilityOfDailyReward(Context context, boolean trueOrFalse)
     {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -16,7 +16,7 @@ public class AvailableGiftSharedPreferenceUtil
         editor.apply();
     }
 
-    public static boolean getAvailibilityOfDailyReward(Context context)
+    public static boolean getAvailabilityOfDailyReward(Context context)
     {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREFERENCE_ID, Context.MODE_PRIVATE);
         return sharedPref.getBoolean(SHARED_PREFERENCE_ID, true);

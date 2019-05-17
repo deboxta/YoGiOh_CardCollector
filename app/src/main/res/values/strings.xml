@@ -23,4 +23,5 @@
     <string name="card_deleted_from_deck_text">Card deleted from your deck</string>
     <string name="deck_modified_text">Deck modified</string>
     <string name="card_added_in_deck_text">Card added in deck</string>
+    <string name="card_quantity_error_text">I am Error? (Unknown quantity)</string>
 </resources>

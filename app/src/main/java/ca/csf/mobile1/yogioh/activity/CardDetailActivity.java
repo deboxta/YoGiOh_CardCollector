@@ -68,7 +68,7 @@ public class CardDetailActivity extends AppCompatActivity
     }
 
     private void fetchCardsInDeck() {
-        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardInDeckFetched, this::onDatabaseError);
+        FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, ()->{}, this::onCardInDeckFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId), ConstantsUtil.PLAYER_ID);
     }
 
@@ -89,14 +89,22 @@ public class CardDetailActivity extends AppCompatActivity
         ExchangeActivity.startTrade(this, receivedCardId, true);
     }
 
-    private void onLoading()
-    {
-
-    }
-
     private void onCardInDeckFetched(YugiohDeckCard playerCard)
     {
-        quantityOfCardOwnedTextView.setText(getString(R.string.number_of_cards_text, playerCard.amountOwned));
+        //If card was traded and the previous quantity held was 1, the user is sent back to the main activity
+        // because he does not possess the card anymore
+        if (playerCard == null)
+        {
+            finish();
+        }
+        try
+        {
+            quantityOfCardOwnedTextView.setText(getString(R.string.number_of_cards_text, playerCard.amountOwned));
+        }
+        catch(NullPointerException e)
+        {
+            quantityOfCardOwnedTextView.setText(R.string.card_quantity_error_text);
+        }
     }
 
     private void onDatabaseError()
