@@ -42,7 +42,8 @@ import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
 {
-    public static final String CURRENT_ID_CARD = "CURRENT_ID_CARD";
+    private static final String CURRENT_ID_CARD = "CURRENT_ID_CARD";
+    private static final String TEXT_PLAIN_MIME = "text/plain";
     private String idGivenCard;
     private NdefMessage operationMessage;
     private NfcAdapter nfcAdapter;
@@ -54,9 +55,16 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     private int amountOwned;
     private boolean typeOfExchange;
 
-    public static void start(Context context, String cardId, Boolean typeOfExchange) {
+    public static void startTrade(Context context, String cardId, Boolean typeOfExchange) {
         Intent intent = new Intent(context, ExchangeActivity.class);
         intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, cardId);
+        intent.putExtra(ConstantsUtil.EXTRA_TYPE_OF_EXCHANGE, typeOfExchange);
+
+        context.startActivity(intent);
+    }
+
+    public static void startReceive(Context context, Boolean typeOfExchange) {
+        Intent intent = new Intent(context, ExchangeActivity.class);
         intent.putExtra(ConstantsUtil.EXTRA_TYPE_OF_EXCHANGE, typeOfExchange);
 
         context.startActivity(intent);
@@ -68,7 +76,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
 
-        amountOwned = 1;
+        amountOwned = ConstantsUtil.NUMBER_OF_CARDS_TO_ADD;
 
         if (savedInstanceState != null)
         {
@@ -91,6 +99,15 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
         View rootView = findViewById(R.id.rootView);
+
+        if (typeOfExchange == true)
+        {
+            idView.setText(R.string.text_beam_trade);
+        }
+        else
+        {
+            idView.setText(R.string.text_beam_receive);
+        }
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null)
@@ -124,7 +141,15 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
         {
-            processIntentData(getIntent());
+            try
+            {
+                processIntentData(getIntent());
+
+            }catch (NumberFormatException e)
+            {
+                Toast.makeText(this, R.string.error_trade_conflict, Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
 
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
@@ -148,8 +173,10 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     public NdefMessage createNdefMessage(NfcEvent event)
     {
         if (typeOfExchange == true)
+
         {
-            operationMessage = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( "text/plain", idGivenCard.getBytes())});
+            idView.setText(R.string.text_beam_trade);
+            operationMessage = new NdefMessage(new NdefRecord[] { NdefRecord.createMime( TEXT_PLAIN_MIME, idGivenCard.getBytes())});
             deleteCardFromDeck(idGivenCard);
         }
         return operationMessage;
@@ -165,7 +192,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
         operationMessage = (NdefMessage) rawOperationMessages[0];
         idGivenCard = new String(operationMessage.getRecords()[0].getPayload());
-        cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), 1);
+        cardInDeck = new YugiohDeckCard(ConstantsUtil.PLAYER_ID, Integer.valueOf(idGivenCard), ConstantsUtil.NUMBER_OF_CARDS_TO_ADD);
         cardView.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(idGivenCard)));
         cardView.setOnClickListener(this::onClickedCardView);
     }
@@ -204,7 +231,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private void onDeleted()
     {
-        Toast.makeText(this, "Carte supprimée de votre deck", Toast.LENGTH_LONG).show();
+        Toast.makeText(this,R.string.card_deleted_from_deck_text, Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -233,7 +260,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private void onUpdated()
     {
-        Toast.makeText(this, "Deck modifié", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.deck_modified_text), Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -249,7 +276,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private void onInsertedCard(Long aLong)
     {
-        Toast.makeText(this, "Carte ajoutée à votre deck", Toast.LENGTH_LONG).show();
+        Toast.makeText(this,R.string.card_added_in_deck_text, Toast.LENGTH_LONG).show();
         finish();
     }
 

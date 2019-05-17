@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">YOGIOH</string>
-    <string name="text_beam_result">Result will be here</string>
+    <string name="text_beam_receive">Receive card</string>
     <string name="deck_title_text">Your Deck</string>
     <string name="error_text_nfc">NFC not working properly</string>
     <string name="error_text_nfc_not_activated">Enable NFC via settings</string>
@@ -17,5 +17,10 @@
     <string name="trade_button_text">Trade using NFC</string>
     <string name="number_of_cards_text">Quantity of that card possessed : %d</string>
     <string name="attack_defense_text">ATK/%1$d   DEF/%2$d</string>
-    <string name="receive_button_text">Receive</string>
+    <string name="receive_button_text">Receiving a card</string>
+    <string name="text_beam_trade">Sending card</string>
+    <string name="error_trade_conflict">You can\'t send cards at the same time</string>
+    <string name="card_deleted_from_deck_text">Card deleted from your deck</string>
+    <string name="deck_modified_text">Deck modified</string>
+    <string name="card_added_in_deck_text">Card added in deck</string>
 </resources>

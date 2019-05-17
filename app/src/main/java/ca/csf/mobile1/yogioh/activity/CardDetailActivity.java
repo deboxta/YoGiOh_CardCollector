@@ -29,7 +29,6 @@ public class CardDetailActivity extends AppCompatActivity
     private TextView quantityHeldTextView;
     private ImageView cardImage;
     private Button tradeButton;
-    private Button receiveButton;
     private TextView cardDescriptionTextView;
 
     private String receivedCardId;
@@ -67,16 +66,24 @@ public class CardDetailActivity extends AppCompatActivity
         cardImage = findViewById(R.id.cardDetailsImage);
         tradeButton = findViewById(R.id.tradeButton);
         tradeButton.setOnClickListener(this::ontradeButtonClicked);
-        receiveButton = findViewById(R.id.receiveButton);
-        receiveButton.setOnClickListener(this::onReceiveButtonClicked);
         cardDescriptionTextView = findViewById(R.id.cardDescriptionTextView);
         cardDescriptionTextView.setText(receivedCardDescription);
         cardDescriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
 
+        fetchcardsInDeck();
+    }
+
+    private void fetchcardsInDeck() {
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardInDeckFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId), ConstantsUtil.PLAYER_ID);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchcardsInDeck();
     }
 
     private void initiateDatabaseConnection()
@@ -87,14 +94,8 @@ public class CardDetailActivity extends AppCompatActivity
 
     private void ontradeButtonClicked(View view)
     {
-        ExchangeActivity.start(this, receivedCardId, true);
+        ExchangeActivity.startTrade(this, receivedCardId, true);
     }
-
-    private void onReceiveButtonClicked(View view)
-    {
-        ExchangeActivity.start(this, receivedCardId, false);
-    }
-
 
     private void onLoading()
     {

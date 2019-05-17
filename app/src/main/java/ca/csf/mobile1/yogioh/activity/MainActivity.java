@@ -8,7 +8,6 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager deckLayoutManager;
     private View rootView;
     private ProgressBar progressBar;
+    private Button receiveCardFromTradeButton;
 
     private int numberOfAsyncTasksRunning;
     private String beamedCardId;
@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity
         rootView = findViewById(R.id.rootView);
         progressBar = findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        receiveCardFromTradeButton = findViewById(R.id.receiveCardButton);
+        receiveCardFromTradeButton.setText(R.string.receive_button_text);
+        receiveCardFromTradeButton.setOnClickListener(this::onReceiveCardFromTradeClicked);
 
         beamedCardId = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID_RETURN);
 
@@ -213,7 +216,7 @@ public class MainActivity extends AppCompatActivity
     private void initializeDeckRecyclerView()
     {
         deckLayoutManager = new LinearLayoutManager(this);
-        yugiohDeckRecyclerView = findViewById(R.id.myDeck);
+        yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
         yugiohDeckRecyclerView.setHasFixedSize(true);
         yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
         deckAdapter = new DeckAdapter(this, cardsOfPlayerDeck);
@@ -252,6 +255,11 @@ public class MainActivity extends AppCompatActivity
         {
             RewardActivity.start(this);
         }
+    }
+
+    private void onReceiveCardFromTradeClicked(View view)
+    {
+        ExchangeActivity.startReceive(this,false);
     }
 
 }
