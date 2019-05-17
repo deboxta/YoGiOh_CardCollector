@@ -8,12 +8,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.SystemClock;
-
-import java.util.Calendar;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
@@ -68,7 +64,7 @@ public class DailyNotificationService extends Service
                 NotificationChannel notificationChannel = new NotificationChannel(
                         CHANNEL_ID,
                         CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        NotificationManager.IMPORTANCE_HIGH
                 );
 
                 notificationChannel.setDescription(CHANNEL_DESCRIPTION);

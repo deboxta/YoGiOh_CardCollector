@@ -5,8 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.CountDownTimer;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -21,24 +19,10 @@ public class DailyNotificationSetup extends BroadcastReceiver
     private NotificationManagerCompat notificationManagerCompat;
     private Notification notification;
     private PendingIntent notificationPendingIntent;
-    private CountDownTimer countDownTimer;
 
     @Override
     public void onReceive(Context context, Intent intent)
     {
-
-        /*countDownTimer = new CountDownTimer(5000, 1000)
-        {
-            public void onTick(long millisUntilFinished)
-            {
-
-            }
-            public void onFinish()
-            {
-                sendNotification(context);
-            }
-        };*/
-
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
         Intent reapeatingIntent = new Intent(context, MainActivity.class);
@@ -58,12 +42,6 @@ public class DailyNotificationSetup extends BroadcastReceiver
                 .setVibrate(null)
                 .build();
 
-        sendNotification(context);
-        //countDownTimer.start();
-    }
-
-    private void sendNotification(Context context)
-    {
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);
         AvailableGiftSharedPreferenceUtil.editAvailibilityOfDailyReward(context, true);
         context.startService(new Intent(context, DailyNotificationService.class));
