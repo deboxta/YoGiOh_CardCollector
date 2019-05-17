@@ -5,7 +5,6 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -30,7 +29,7 @@ import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 public class RewardActivity extends AppCompatActivity
 {
 
-    public static final int MAX_CARD_ID = 9;
+    public static final int MAX_CARD_ID = 13;
     private Button closeButton;
     private ImageView cardImage;
     private CountDownTimer countDownTimer;
@@ -65,9 +64,6 @@ public class RewardActivity extends AppCompatActivity
 
         closeButton.setOnClickListener(this::closeReward);
 
-        cardIdRandomizer = new Random();
-        cardId = cardIdRandomizer.nextInt(MAX_CARD_ID) + 1;
-
         countDownTimer = new CountDownTimer(5000, 1000)
         {
             public void onTick(long millisUntilFinished)
@@ -84,7 +80,6 @@ public class RewardActivity extends AppCompatActivity
         {
             giveReward();
         }
-
     }
 
     private void closeReward(View view)
@@ -94,6 +89,9 @@ public class RewardActivity extends AppCompatActivity
 
     private void giveReward()
     {
+        cardIdRandomizer = new Random();
+        cardId = cardIdRandomizer.nextInt(MAX_CARD_ID) + 1;
+
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, cardId));
 
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardFetched, this::onDatabaseError);
