@@ -12,4 +12,5 @@ public class ConstantsUtil
     public static final int VALUE_ZERO = 0;
     public static final String EXTRA_CARD_DESCRIPTION = "EXTRA_DESCRIPTION";
     public static final String EXTRA_CARD_ID_RETURN = "EXTRA_ID_RETURN";
+    public static final String EXTRA_TYPE_OF_EXCHANGE = "EXTRA_TYPE_OF_EXCHANGE";
 }

@@ -28,7 +28,8 @@ public class CardDetailActivity extends AppCompatActivity
     private View rootView;
     private TextView quantityHeldTextView;
     private ImageView cardImage;
-    private Button exchangeButton;
+    private Button tradeButton;
+    private Button receiveButton;
     private TextView cardDescriptionTextView;
 
     private String receivedCardId;
@@ -64,8 +65,10 @@ public class CardDetailActivity extends AppCompatActivity
         rootView = findViewById(R.id.rootView);
         quantityHeldTextView = findViewById(R.id.quantityHeldTextView);
         cardImage = findViewById(R.id.cardDetailsImage);
-        exchangeButton = findViewById(R.id.exchangeButton);
-        exchangeButton.setOnClickListener(this::onExchangeButtonClicked);
+        tradeButton = findViewById(R.id.tradeButton);
+        tradeButton.setOnClickListener(this::ontradeButtonClicked);
+        receiveButton = findViewById(R.id.receiveButton);
+        receiveButton.setOnClickListener(this::onReceiveButtonClicked);
         cardDescriptionTextView = findViewById(R.id.cardDescriptionTextView);
         cardDescriptionTextView.setText(receivedCardDescription);
         cardDescriptionTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -82,10 +85,16 @@ public class CardDetailActivity extends AppCompatActivity
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
     }
 
-    private void onExchangeButtonClicked(View view)
+    private void ontradeButtonClicked(View view)
     {
-        ExchangeActivity.start(this, receivedCardId);
+        ExchangeActivity.start(this, receivedCardId, true);
     }
+
+    private void onReceiveButtonClicked(View view)
+    {
+        ExchangeActivity.start(this, receivedCardId, false);
+    }
+
 
     private void onLoading()
     {
