@@ -9,11 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchCardInDeckAsyncTask;
@@ -22,31 +19,28 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
+import ca.csf.mobile1.yogioh.util.SnackBarUtil;
 
 public class CardDetailActivity extends AppCompatActivity
 {
     private View rootView;
-    private TextView quantityHeldTextView;
-    private ImageView cardImage;
-    private Button tradeButton;
-    private TextView cardDescriptionTextView;
+    private TextView quantityOfCardOwnedTextView;
 
+    //Received from main via intent.
     private String receivedCardId;
     private String receivedCardDescription;
 
-    private YugiohDatabase yugiohDatabase;
     private YugiohDeckDAO yugiohDeckDAO;
 
-    public static void start(Context context, String cardId, String cardDescription) {
+    public static void start(Context context, String receivedCardId, String receivedCardDescription) {
         Intent intent = new Intent(context, CardDetailActivity.class);
-        intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, cardId);
-        intent.putExtra(ConstantsUtil.EXTRA_CARD_DESCRIPTION, cardDescription);
-
+        intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, receivedCardId);
+        intent.putExtra(ConstantsUtil.EXTRA_CARD_DESCRIPTION, receivedCardDescription);
         context.startActivity(intent);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_detail_layout);
@@ -61,21 +55,21 @@ public class CardDetailActivity extends AppCompatActivity
 
     private void createView()
     {
-        rootView = findViewById(R.id.rootView);
-        quantityHeldTextView = findViewById(R.id.quantityHeldTextView);
-        cardImage = findViewById(R.id.cardDetailsImage);
-        tradeButton = findViewById(R.id.tradeButton);
-        tradeButton.setOnClickListener(this::ontradeButtonClicked);
-        cardDescriptionTextView = findViewById(R.id.cardDescriptionTextView);
+        rootView = findViewById(R.id.rootViewCardDetail);
+        quantityOfCardOwnedTextView = findViewById(R.id.quantityHeldTextView);
+        ImageView cardImage = findViewById(R.id.cardDetailsImage);
+        Button tradeButton = findViewById(R.id.tradeButton);
+        tradeButton.setOnClickListener(this::onTradeButtonClicked);
+        TextView cardDescriptionTextView = findViewById(R.id.cardDescriptionTextView);
         cardDescriptionTextView.setText(receivedCardDescription);
         cardDescriptionTextView.setMovementMethod(new ScrollingMovementMethod());
 
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, Integer.valueOf(receivedCardId)));
 
-        fetchcardsInDeck();
+        fetchCardsInDeck();
     }
 
-    private void fetchcardsInDeck() {
+    private void fetchCardsInDeck() {
         FetchCardInDeckAsyncTask fetchCardInDeckAsyncTask = new FetchCardInDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onCardInDeckFetched, this::onDatabaseError);
         fetchCardInDeckAsyncTask.execute(Integer.parseInt(receivedCardId), ConstantsUtil.PLAYER_ID);
     }
@@ -83,16 +77,16 @@ public class CardDetailActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        fetchcardsInDeck();
+        fetchCardsInDeck();
     }
 
     private void initiateDatabaseConnection()
     {
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
+        YugiohDatabase yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
     }
 
-    private void ontradeButtonClicked(View view)
+    private void onTradeButtonClicked(View view)
     {
         ExchangeActivity.startTrade(this, receivedCardId, true);
     }
@@ -104,11 +98,11 @@ public class CardDetailActivity extends AppCompatActivity
 
     private void onCardInDeckFetched(YugiohDeckCard playerCard)
     {
-        quantityHeldTextView.setText(getString(R.string.number_of_cards_text, playerCard.amountOwned));
+        quantityOfCardOwnedTextView.setText(getString(R.string.number_of_cards_text, playerCard.amountOwned));
     }
 
     private void onDatabaseError()
     {
-        Snackbar.make(rootView, R.string.database_error, Snackbar.LENGTH_LONG).show();
+        SnackBarUtil.databaseErrorSnackBar(rootView);
     }
 }

@@ -6,15 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,162 +34,79 @@ import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.util.AvailableGiftSharedPreferenceUtil;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 import ca.csf.mobile1.yogioh.util.ConvertUtil;
+import ca.csf.mobile1.yogioh.util.SnackBarUtil;
 
 
 public class MainActivity extends AppCompatActivity
 {
+    private static final String PLAYER_USERNAME = "plucthemachine";
+    private static final String PLAYER_NAME = "Pierre-Luc";
     private RecyclerView yugiohDeckRecyclerView;
     private DeckAdapter deckAdapter;
-    private LinearLayoutManager deckLayoutManager;
     private View rootView;
     private ProgressBar progressBar;
-    private Button receiveCardFromTradeButton;
 
     private int numberOfAsyncTasksRunning;
-    private String beamedCardId;
 
-    private YugiohDatabase yugiohDatabase;
     private YugiohCardDAO yugiohCardDAO;
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
     private List<YugiohPlayer> playerList;
-    private List<YugiohCard> allCards;
-    private List<YugiohDeckCard> playerDeck;
     private List<YugiohCard> cardsOfPlayerDeck;
-
-    public static void start(Context context, String cardId) {
-        Intent intent = new Intent(context, ExchangeActivity.class);
-        intent.putExtra(ConstantsUtil.EXTRA_CARD_ID_RETURN, cardId);
-
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        rootView = findViewById(R.id.rootView);
+        rootView = findViewById(R.id.rootViewMain);
         progressBar = findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.INVISIBLE);
-        receiveCardFromTradeButton = findViewById(R.id.receiveCardButton);
+
+        cardsOfPlayerDeck = new ArrayList<>();
+
+        initializeDeckRecyclerView();
+
+        Button receiveCardFromTradeButton = findViewById(R.id.receiveCardButton);
         receiveCardFromTradeButton.setText(R.string.receive_button_text);
         receiveCardFromTradeButton.setOnClickListener(this::onReceiveCardFromTradeClicked);
 
-        beamedCardId = getIntent().getStringExtra(ConstantsUtil.EXTRA_CARD_ID_RETURN);
-
         numberOfAsyncTasksRunning = 0;
 
-        //BD setup and fetching
         initialBdSetup();
-
-        playerDeck = new ArrayList<>();
 
         this.startService(new Intent(this, DailyNotificationService.class));
     }
 
     @Override
-    protected void onResume()
+    protected void onStart()
     {
-        super.onResume();
+        super.onStart();
 
-        if (deckAdapter != null)
-        {
-            fetchPlayerDeck();
-        }
+        fetchAllCards();
         checkForRewardAvailability();
     }
 
     private void initialBdSetup()
     {
-        yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
+        YugiohDatabase yugiohDatabase = Room.databaseBuilder(getApplicationContext(), YugiohDatabase.class, ConstantsUtil.YUGIOH_DATABASE_NAME).build();
         yugiohCardDAO = yugiohDatabase.yugiohCardDao();
         yugiohPlayerDAO = yugiohDatabase.yugiohPlayerDAO();
         yugiohDeckDAO = yugiohDatabase.yugiohDeckDAO();
+    }
 
+    private void fetchAllCards()
+    {
         FetchCardsAsyncTask fetchCardsAsyncTask = new FetchCardsAsyncTask(yugiohCardDAO, this::onLoading, this::onCardsFetched, this::onDatabaseError);
         fetchCardsAsyncTask.execute();
-    }
-
-    private void fetchPlayerDeck()
-    {
-        FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
-        fetchPlayerDeckAsyncTask.execute(playerList.get(0));
-    }
-
-    private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
-    {
-        hideProgressBar();
-        playerDeck = yugiohDeckCards;
-        if (playerDeck == null)
-        {
-            RewardActivity.start(this);
-        }
-        else
-        {
-            long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
-
-            FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onLoading, this::onSpecificCardsFetched, this::onDatabaseError);
-            fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));
-        }
-    }
-
-    private void onPlayersFetched(List<YugiohPlayer> players)
-    {
-        hideProgressBar();
-
-        playerList = players;
-        if(playerList.size() == 0)
-        {
-            createInitialPlayer();
-        }
-        else
-        {
-            fetchPlayerDeck();
-        }
-    }
-
-    private void createInitialPlayer()
-    {
-        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onLoading,this::onInitialPlayerInserted, this::onDatabaseError);
-        playerList.add(new YugiohPlayer());
-        insertOnePlayerAsyncTask.execute(playerList.get(0));
-    }
-
-    private void onInitialPlayerInserted(Long id)
-    {
-        hideProgressBar();
-
-        long newid = ConvertUtil.convertWrapperToPrimitive(id);
-        playerList.get(0).id = (int)newid;
-        //TODO: What happens next?
-
-        checkForRewardAvailability();
-    }
-
-    private void onSpecificCardsFetched(List<YugiohCard> cards)
-    {
-        hideProgressBar();
-
-        cardsOfPlayerDeck = cards;
-        if (yugiohDeckRecyclerView == null)
-        {
-            initializeDeckRecyclerView();
-        }
-        else
-        {
-            deckAdapter.setDataSet(cardsOfPlayerDeck);
-        }
-
     }
 
     private void onCardsFetched(List<YugiohCard> cards)
     {
         hideProgressBar();
 
-        allCards = cards;
-        if (allCards.size() == 0)
+        if (0 == cards.size())
         {
             createInitialCards();
         }
@@ -213,40 +127,84 @@ public class MainActivity extends AppCompatActivity
         fetchPlayers();
     }
 
-    private void initializeDeckRecyclerView()
-    {
-        deckLayoutManager = new LinearLayoutManager(this);
-        yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
-        yugiohDeckRecyclerView.setHasFixedSize(true);
-        yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
-        deckAdapter = new DeckAdapter(this, cardsOfPlayerDeck);
-        yugiohDeckRecyclerView.setAdapter(deckAdapter);
-        yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
-
-        checkForRewardAvailability();
-    }
-
     private void fetchPlayers()
     {
         FetchPlayersAsyncTask fetchPlayersAsyncTask = new FetchPlayersAsyncTask(yugiohPlayerDAO, this::onLoading, this::onPlayersFetched, this::onDatabaseError);
         fetchPlayersAsyncTask.execute();
     }
 
-    private void onDatabaseError()
+    private void onPlayersFetched(List<YugiohPlayer> players)
     {
-        Snackbar.make(rootView, R.string.database_error, Snackbar.LENGTH_LONG).show();
+        hideProgressBar();
+
+        playerList = players;
+        if(0 == playerList.size())
+        {
+            createInitialPlayer();
+        }
+        else
+        {
+            fetchPlayerDeck();
+        }
     }
 
-    private void onLoading()
+    private void createInitialPlayer()
     {
-        numberOfAsyncTasksRunning++;
-        progressBar.setVisibility(View.VISIBLE);
+        InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO,this::onLoading,this::onInitialPlayerInserted, this::onDatabaseError);
+        playerList.add(new YugiohPlayer(ConstantsUtil.PLAYER_ID, PLAYER_USERNAME, PLAYER_NAME));
+        insertOnePlayerAsyncTask.execute(playerList.get(0));
     }
 
-    private void hideProgressBar()
+    private void onInitialPlayerInserted(Long id)
     {
-        numberOfAsyncTasksRunning--;
-        if (numberOfAsyncTasksRunning == 0) progressBar.setVisibility(View.INVISIBLE);
+        hideProgressBar();
+
+        long newId = ConvertUtil.convertWrapperToPrimitive(id);
+        playerList.get(0).id = (int)newId;
+
+        fetchPlayerDeck();
+    }
+
+    private void fetchPlayerDeck()
+    {
+        FetchPlayerDeckAsyncTask fetchPlayerDeckAsyncTask = new FetchPlayerDeckAsyncTask(yugiohDeckDAO, this::onLoading, this::onPlayerCardsFetched, this::onDatabaseError);
+        fetchPlayerDeckAsyncTask.execute(playerList.get(0));
+    }
+
+    private void onPlayerCardsFetched(List<YugiohDeckCard> yugiohDeckCards)
+    {
+        hideProgressBar();
+        if (0 == yugiohDeckCards.size())
+        {
+            checkForRewardAvailability();
+        }
+        else
+        {
+            long[] cardsIds = ConvertUtil.convertCardIdsFromIntegerToLongArray(yugiohDeckCards);
+
+            FetchCardsByIdsAsyncTask fetchCardsByIdsAsyncTask = new FetchCardsByIdsAsyncTask(yugiohCardDAO, this::onLoading, this::onSpecificCardsFetched, this::onDatabaseError);
+            fetchCardsByIdsAsyncTask.execute(ConvertUtil.convertPrimitiveToWrapper(cardsIds));
+        }
+    }
+
+    private void onSpecificCardsFetched(List<YugiohCard> cards)
+    {
+        hideProgressBar();
+
+        cardsOfPlayerDeck = cards;
+
+        deckAdapter.setDataSet(cardsOfPlayerDeck);
+    }
+
+    private void initializeDeckRecyclerView()
+    {
+        yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
+        LinearLayoutManager deckLayoutManager = new LinearLayoutManager(this);
+        yugiohDeckRecyclerView.setHasFixedSize(true);
+        yugiohDeckRecyclerView.setLayoutManager(deckLayoutManager);
+        deckAdapter = new DeckAdapter(this, cardsOfPlayerDeck);
+        yugiohDeckRecyclerView.setAdapter(deckAdapter);
+        yugiohDeckRecyclerView.addItemDecoration(new DividerItemDecoration(this, deckLayoutManager.getOrientation()));
     }
 
     private void checkForRewardAvailability()
@@ -260,6 +218,23 @@ public class MainActivity extends AppCompatActivity
     private void onReceiveCardFromTradeClicked(View view)
     {
         ExchangeActivity.startReceive(this,false);
+    }
+
+    private void onDatabaseError()
+    {
+        SnackBarUtil.databaseErrorSnackBar(rootView);
+    }
+
+    private void onLoading()
+    {
+        ++numberOfAsyncTasksRunning;
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar()
+    {
+        --numberOfAsyncTasksRunning;
+        if (0 == numberOfAsyncTasksRunning) progressBar.setVisibility(View.INVISIBLE);
     }
 
 }

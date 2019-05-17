@@ -1,6 +1,5 @@
 package ca.csf.mobile1.yogioh.activity;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
-import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
@@ -23,21 +21,16 @@ import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
 
 import ca.csf.mobile1.yogioh.R;
-import ca.csf.mobile1.yogioh.activity.queries.card.FetchCardsByIdsAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.DeleteDeckCardInPlayerDeck;
 import ca.csf.mobile1.yogioh.activity.queries.deck.FetchCardInDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.InsertOneCardInDeckAsyncTask;
 import ca.csf.mobile1.yogioh.activity.queries.deck.UpdateDeckCardAsyncTask;
-import ca.csf.mobile1.yogioh.model.YugiohCard;
 import ca.csf.mobile1.yogioh.model.YugiohDeckCard;
-import ca.csf.mobile1.yogioh.repository.database.YugiohCardDAO;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDatabase;
 import ca.csf.mobile1.yogioh.repository.database.YugiohDeckDAO;
 import ca.csf.mobile1.yogioh.util.ConstantsUtil;
-import ca.csf.mobile1.yogioh.util.ConvertUtil;
 import ca.csf.mobile1.yogioh.util.GetCardRessourceFileUtil;
 
 public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback
@@ -91,7 +84,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         idView = findViewById(R.id.textView);
         cardView = findViewById(R.id.cardView);
-        View rootView = findViewById(R.id.rootView);
+        View rootView = findViewById(R.id.rootViewExchange);
 
         setVariables();
 

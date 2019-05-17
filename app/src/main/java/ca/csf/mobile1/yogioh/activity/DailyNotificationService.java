@@ -21,9 +21,6 @@ public class DailyNotificationService extends Service
     public static final int PENDING_REQUEST_CODE = 8;
     public static final String CHANNEL_DESCRIPTION = "Daily Rewards";
 
-    private AlarmManager notificationAlarmManager;
-    private PendingIntent pendingNotificationIntent;
-
     public static final String CHANNEL_ID = "channel";
     public static final String CHANNEL_NAME = "Channel";
 
@@ -45,9 +42,9 @@ public class DailyNotificationService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Intent notificationIntent = new Intent(this, DailyNotificationSetup.class);
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, PENDING_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingNotificationIntent = PendingIntent.getBroadcast(this, PENDING_REQUEST_CODE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager notificationAlarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         notificationAlarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + NOTIFICATION_DELAY, pendingNotificationIntent);
 
         return super.onStartCommand(intent, flags, startId);
