@@ -109,7 +109,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
             nfcAdapter.setNdefPushMessage(new NdefMessage(new NdefRecord[] { NdefRecord.createMime( TEXT_PLAIN_MIME, idGivenCard.getBytes())}), this);
         }
         nfcAdapter.setOnNdefPushCompleteCallback(this, this);
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        pendingIntent = PendingIntent.getActivity(this, ConstantsUtil.VALUE_ZERO, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), ConstantsUtil.VALUE_ZERO);
     }
 
     private View createView()
@@ -238,7 +238,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private void onCardFetchedDeckCard(YugiohDeckCard yugiohDeckCard)
     {
-        if (yugiohDeckCard.amountOwned >1)
+        if (yugiohDeckCard.amountOwned > 1)
         {
             yugiohDeckCard.amountOwned--;
             UpdateDeckCardAsyncTask updateDeckCardAsyncTask = new UpdateDeckCardAsyncTask(yugiohDeckDAO, ()->{}, this::onUpdated, this::onDatabaseError);
