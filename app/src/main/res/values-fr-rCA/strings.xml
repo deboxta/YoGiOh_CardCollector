@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YOGIOH</string>
+    <string name="text_beam_receive">Reception d\'une carte</string>
+    <string name="deck_title_text">Votre deck</string>
+    <string name="error_text_nfc">NFC ne fonctionne pas correctement</string>
+    <string name="error_text_nfc_not_activated">Activer le NFC dans les paramêtres</string>
+    <string name="snack_nfc_activation_text">Paramêtres</string>
+    <string name="text_card_description">Image par défaut d\'une carte</string>
+    <string name="close_text_button">Fermer</string>
+    <string name="level_text">Niveau : %d</string>
+    <string name="daily_reward_title">Cadeau quotidien disponible</string>
+    <string name="daily_reward_description">Venez chercher votre nouvelle carte!</string>
+    <string name="daily_reward">CADEAU QUOTIDIEN</string>
+    <string name="card_detail_image_description">Image de la carte</string>
+    <string name="database_error">Erreur : La base de données n\'est pas disponible</string>
+    <string name="trade_button_text">Échanger avec le NFC</string>
+    <string name="number_of_cards_text">Nombre possédée(s) : %d</string>
+    <string name="attack_defense_text">ATK/%1$d   DEF/%2$d</string>
+    <string name="receive_button_text">Recevoir une carte</string>
+    <string name="text_beam_trade">Envoie de la carte</string>
+    <string name="card_deleted_from_deck_text">Carte supprimée de votre deck</string>
+    <string name="deck_modified_text">Deck modifié</string>
+    <string name="card_added_in_deck_text">Carte ajoutée dans votre deck</string>
+    <string name="card_quantity_error_text">Je suis Erreur. (Quantité inconnue)</string>
+</resources>

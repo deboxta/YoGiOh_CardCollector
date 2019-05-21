@@ -88,14 +88,7 @@ public class DeckAdapter extends RecyclerView.Adapter<DeckAdapter.ViewHolder>
         {
             super(itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId), cardDescription);
-                }
-            });
+            itemView.setOnClickListener(v -> CardDetailActivity.start(itemView.getContext(), Integer.toString(cardId), cardDescription));
         }
     }
 }

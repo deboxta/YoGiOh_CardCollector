@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/rewardTextTitle"
-        android:layout_width="285dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"

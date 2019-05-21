@@ -18,7 +18,8 @@ import ca.csf.mobile1.yogioh.util.ConstantsUtil;
 
 public class DailyNotificationService extends Service
 {
-    private static final int NOTIFICATION_DELAY = 15000;
+    //One day
+    private static final int NOTIFICATION_DELAY = 86400000;
     private static final int PENDING_REQUEST_CODE = 8;
 
     private static final String NOT_YET_IMPLEMENTED_EXCEPTION_STRING = "Not yet implemented";
