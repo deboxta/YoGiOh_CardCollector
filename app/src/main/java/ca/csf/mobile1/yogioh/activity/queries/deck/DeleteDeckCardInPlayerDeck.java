@@ -15,6 +15,7 @@ public class DeleteDeckCardInPlayerDeck extends AsyncTask<YugiohDeckCard,Void,Vo
 
     public DeleteDeckCardInPlayerDeck(YugiohDeckDAO yugiohDeckDAO, ListenerDeleting onExecute, ListenerDeleted onSuccess, Runnable onDataBaseError)
     {
+        //BEN_CORRECTION : Validations manquantes ici. Pourtant, vous l'avez fait dans les autres tâches async...
         this.yugiohDeckDAO = yugiohDeckDAO;
         this.onExecute = onExecute;
         this.onSuccess = onSuccess;

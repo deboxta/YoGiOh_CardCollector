@@ -61,6 +61,11 @@ public class RewardActivity extends AppCompatActivity
 
         closeButton.setOnClickListener(this::closeReward);
 
+        //BEN_REVIEW : Il y a des façons beaucoup plus simples pour faire cela.
+        //             Voir "Handler.postDelayed".
+        //             https://developer.android.com/reference/android/os/Handler.html#postDelayed(java.lang.Runnable,%20java.lang.Object,%20long)
+
+        //BEN_REVIEW : Aussi, coté expérience utilisateur, je pense pas que ce soit une bonne idée.
         countDownTimer = new CountDownTimer(TIMER_IN_MILLIS_TOTAL_COUNTDOWN, TIMER_COUNTDOWN_INTERVAL)
         {
             public void onTick(long millisUntilFinished)
@@ -88,6 +93,8 @@ public class RewardActivity extends AppCompatActivity
     private void giveReward()
     {
         Random randomCardId = new Random();
+        //BEN_REVIEW : Le "best" aurait été de demander à la BD un "id" random. C'est quelque chose de facile à faire.
+        //             Par contre, compte tenu du contexte, on va faire avec.
         cardId = randomCardId.nextInt(MAX_CARD_ID) + LOWEST_CARD_ID;
 
         cardImage.setImageResource(GetCardRessourceFileUtil.getCardRessourceFileId(this, cardId));

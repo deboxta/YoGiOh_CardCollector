@@ -32,6 +32,8 @@ public class CardDetailActivity extends AppCompatActivity
 
     private YugiohDeckDAO yugiohDeckDAO;
 
+    //BEN_REVIEW : Au lieu d'envoyer un objet décomposé, mieux vaut envoyer l'objet au grand complet. Comme ça,
+    //             il aura tout ce dont il a besoin potentiellement.
     public static void start(Context context, String receivedCardId, String receivedCardDescription) {
         Intent intent = new Intent(context, CardDetailActivity.class);
         intent.putExtra(ConstantsUtil.EXTRA_CARD_ID, receivedCardId);

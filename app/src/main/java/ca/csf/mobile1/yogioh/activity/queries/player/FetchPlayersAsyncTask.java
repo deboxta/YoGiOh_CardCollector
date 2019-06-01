@@ -35,6 +35,7 @@ public class FetchPlayersAsyncTask extends AsyncTask<Void, Void, List<YugiohPlay
     @Override
     protected List<YugiohPlayer> doInBackground(Void... voids)
     {
+        //BEN_CORRECTION : Placement des accolades ne respecte pas vos standards.
         List<YugiohPlayer> yugiohPlayers = null;
         try {
             yugiohPlayers = yugiohPlayerDAO.selectAll();

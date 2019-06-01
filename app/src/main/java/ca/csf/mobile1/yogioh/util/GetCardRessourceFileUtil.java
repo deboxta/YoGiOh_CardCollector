@@ -2,6 +2,8 @@ package ca.csf.mobile1.yogioh.util;
 
 import android.content.Context;
 
+//BEN_CORRECTION : Nommage ne respecte dans les standards. Ne devrait pas contenir de verbe d'action, tel que "Get".
+//                 Juste "RessourceUtils" aurait suffit.
 public class GetCardRessourceFileUtil
 {
 

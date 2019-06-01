@@ -24,6 +24,9 @@ public interface YugiohCardDAO
     @Query("SELECT * FROM yugiohcard WHERE card_name IN(:cardType)")
     List<YugiohCard>findCardByType(String cardType);
 
+    //BEN_CORRECTION : Dans votre modèle, les "id" sont tous des "int". Or, vous déclarez
+    //                 ici que ce sont des "longs". Vous avez des conversions implicites qui
+    //                 peuvent causer des problèmes. Défaut de structure.
     @Insert
     long[] insertAll(YugiohCard...yugiohCards);
 

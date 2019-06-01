@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     private YugiohPlayerDAO yugiohPlayerDAO;
     private YugiohDeckDAO yugiohDeckDAO;
 
+    //BEN_CORRECTION : N'avez vous pas qu'un seul "Player" ? Alors pourquoi il y a une liste ici ?
+    //                 De toute façon, à chaque fois que vous utilisez la liste, vous ne faites qu'obtenir le premier élément.
+    //                 Logique pauvre.
     private List<YugiohPlayer> playerList;
     private List<YugiohCard> cardsOfPlayerDeck;
 
@@ -67,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         initializeDeckRecyclerView();
 
         Button receiveCardFromTradeButton = findViewById(R.id.receiveCardButton);
+        //BEN_CORRECTION : Le texte devrait être mis dans le fichier XML, pas dans le code.
+        //                 Je l'aurais accepté si le texte de votre bouton aurait changé de manière dynamique, mais ce n'est pas le cas.
+        //                 Logique applicative patchée.
         receiveCardFromTradeButton.setText(R.string.receive_button_text);
         receiveCardFromTradeButton.setOnClickListener(this::onReceiveCardFromTradeClicked);
 
@@ -148,6 +154,8 @@ public class MainActivity extends AppCompatActivity
     private void createInitialPlayer()
     {
         InsertOnePlayerAsyncTask insertOnePlayerAsyncTask = new InsertOnePlayerAsyncTask(yugiohPlayerDAO, this::onLoading, this::onInitialPlayerInserted, this::onDatabaseError);
+        //BEN_REVIEW : Peu performant. Vous ajoutez un élément dans une liste, et ensuite, vous l'obtenez afin de vous en servir.
+        //             Il aurait été mieux de créer une variable temporaire.
         playerList.add(new YugiohPlayer(ConstantsUtil.PLAYER_ID, PLAYER_USERNAME, PLAYER_NAME));
         insertOnePlayerAsyncTask.execute(playerList.get(0));
     }
@@ -197,6 +205,12 @@ public class MainActivity extends AppCompatActivity
         fetchAllCards();
     }
 
+    //BEN_REVIEW : Essayez de regrouper vos fonctions d'une manière logique. Actuellement, c'est plutôt pêle-mêle.
+    //             Par exemple, cette fonction est une fonction d'initialisation utilisé dans le "onCreate".
+    //             Pourtant, elle est bien loin dans le fichier (presque à la fin). Je l'aurais placé plus proche.
+    //
+    //             C'est pas le genre de chose sur laquelle j'ai le droit de pénaliser, mais c'est selon moi une bonne
+    //             pratique à adopter, car cela facilite la lecture du code, et par le fait même, sa maintenance.
     private void initializeDeckRecyclerView()
     {
         RecyclerView yugiohDeckRecyclerView = findViewById(R.id.playerDeckRecyclerView);
@@ -232,6 +246,12 @@ public class MainActivity extends AppCompatActivity
         progressBar.setVisibility(View.VISIBLE);
     }
 
+    //BEN_CORRECTION : Si je me fie au nom de cette fonction, elle devrait cacher la progress bar. Or, ce n'est pas toujours
+    //                 le cas. Nommage mensonger.
+    //
+    //                 Proposition : "updateProgressBar".
+    //
+    //                 De toute façon, cette fonction en fait définitivement trop.
     private void hideProgressBar()
     {
         --numberOfAsyncTasksRunning;

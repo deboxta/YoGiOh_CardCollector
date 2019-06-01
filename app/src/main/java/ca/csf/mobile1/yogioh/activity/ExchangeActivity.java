@@ -53,6 +53,19 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
     private boolean typeOfExchange;
 
+    //BEN_CORRECTION : Type enveloppe utilisé au lieu de type de base pour boolean.
+    //BEN_CORRECTION : Paramêtre drapeau nommé "typeOfExchange" complètement inutile compte tenu que vous
+    //                 avec deux méthodes "start" : une pour "trade" et une pour "receive". Autrement dit,
+    //                 c'est redondant. Erreur de logique et bogue potentiel.
+    //
+    //                 Pourquoi "Bogue Potentiel" ? Imaginez que j'appelle cette fonction comme ceci :
+    //
+    //                      ExchangeActivity.startTrade(this, "123456", false);
+    //
+    //                 L'activité démarre alors en mode "receive", même si on lui a pourtant demandé de
+    //                 démarer en mode "trade".
+    //BEN_CORRECTION : Dans toute votre application, "cardId" est un "int", mais ici, vous le recevez sous
+    //                 la forme d'une "String". Par désign, vous auriez du demander un "int". Patch.
     public static void startTrade(Context context, String cardId, Boolean typeOfExchange)
     {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -62,6 +75,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         context.startActivity(intent);
     }
 
+    //BEN_CORRECTION : Type enveloppe utilisé au lieu de type de base pour boolean.
     public static void startReceive(Context context, Boolean typeOfExchange)
     {
         Intent intent = new Intent(context, ExchangeActivity.class);
@@ -78,6 +92,14 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
 
         if (savedInstanceState != null)
         {
+            //BEN_REVIEW : L'intent contient déjà toutes les infos que vous avez besoin.
+            //BEN_CORRECTION : Bogue. En mode "trade", il suffit de tourner le téléphone pour passer en
+            //                 mode "receive". Ça marche encore, parce que la variable "typeOfExchange" ne sert finalement
+            //                 qu'à de l'affichage.
+            //
+            //                 En passant, bloquer le changement d'orientation est, selon moi, une pratique paresseuse.
+            //                 C'est peut être la raison pour laquelle vous avez pas remarqué ça.
+            //                 Patch.
             idGivenCard = savedInstanceState.getString(CURRENT_ID_CARD);
         }
         else
@@ -96,7 +118,13 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null)
         {
+            //BEN_REVIEW : Toast est considéré comme obsolete, même si ce n'est pas écrit nulle part dans le code.
+            //             Préférez "Snackbar" afin de respecter les standards de la plateforme.
+            //
+            //             Vous le faites pourtant plus bas.
+            //
             showToastMessage(R.string.error_text_nfc);
+            //BEN_CORRECTION : Je vois aussi ici un "early return". Mauvaise pratique.
             return;
         }
 
@@ -116,9 +144,12 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
     {
         idView = findViewById(R.id.textViewNfc);
         cardView = findViewById(R.id.cardView);
+        //BEN_REVIEW : Pourquoi ça retourne la "rootView" ? Pourquoi ne pas avoir fait l'assignation ici aussi, comme
+        //             toutes les autres views ?
         return findViewById(R.id.rootViewExchange);
     }
 
+    //BEN_CORRECTION : Vague. setVariables ne veut absolument rien dire.
     private void setVariables()
     {
         if (typeOfExchange)
@@ -168,6 +199,10 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         setIntent(intent);
     }
 
+    //BEN_CORRECTION : Inutile, car vous appellez "nfcAdapter.setNdefPushMessage". On s'en était parlé quand j'avais résolu le fameux
+    //                 bogue avec vous.
+    //
+    //                 Code mort.
     @Override
     public NdefMessage createNdefMessage(NfcEvent event)
     {
@@ -184,6 +219,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         deleteCardFromDeck(idGivenCard);
     }
 
+    //BEN_CORRECTION : private manquant +  Identation incorrecte.
     void processIntentData(Intent intent)
     {
             Parcelable[] rawOperationMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -218,6 +254,7 @@ public class ExchangeActivity extends AppCompatActivity implements NfcAdapter.Cr
         if (yugiohDeckCard != null)
         {
             cardInDeck.amountOwned = cardInDeck.amountOwned + yugiohDeckCard.amountOwned;
+            //BEN_CORRECTION : Pourquoi n'avez vous pas mis de ProgressBar ici ? C'est pourtant nécessaire.
             UpdateDeckCardAsyncTask updateDeckCardAsyncTask = new UpdateDeckCardAsyncTask(yugiohDeckDAO, ()->{}, this::onUpdated, this::onDatabaseError);
             updateDeckCardAsyncTask.execute(cardInDeck);
         }

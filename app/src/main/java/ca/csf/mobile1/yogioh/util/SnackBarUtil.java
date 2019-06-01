@@ -6,6 +6,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import ca.csf.mobile1.yogioh.R;
 
+//BEN_REVIEW : Était-ce vraiment nécessaire ?
+
 public class SnackBarUtil
 {
     public static void databaseErrorSnackBar(View rootView)

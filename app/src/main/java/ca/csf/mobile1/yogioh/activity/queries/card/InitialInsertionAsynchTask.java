@@ -37,6 +37,7 @@ public class InitialInsertionAsynchTask extends AsyncTask<InputStream, Void, Voi
 
         try
         {
+            //BEN_CORRECTION : Nommage paresseux.
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             List<YugiohCard> yugiohCardList = new ArrayList<>();

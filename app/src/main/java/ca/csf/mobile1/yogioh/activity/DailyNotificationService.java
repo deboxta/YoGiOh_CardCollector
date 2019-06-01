@@ -52,6 +52,8 @@ public class DailyNotificationService extends Service
 
     private void createNotificationChannel()
     {
+        //BEN_CORRECTION : Et si c'est pas Android O ? Si c'est plus bas ? Pas de notifications pour ceux qui ont plus
+        //                 bas que Android O ? Défaut de logique applicative.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
